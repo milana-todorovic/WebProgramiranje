@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Guest</title>
+
+<!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+	<div id="guestApp">
+        <guest-navbar></guest-navbar>
+
+		<h2>Sad sam trenutno u guest.html</h2>
+		<router-view></router-view>
+	</div>
+
+	<!-- <script src="js/vue.js"></script> -->
+	<script src="js/axios.js"></script>
+    
+    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
+	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="js/vue-router.js"></script>
+	    
+
+    <script src="app/guest/guestApp.js"></script>
+	<script src="app/guest/components/guestNavbar.js"></script>
+	<script src="app/guest/components/guestApartment.js"></script>
+	<script src="app/guest/components/guestReservation.js"></script>
+
+
+
+</body>
+</html>
