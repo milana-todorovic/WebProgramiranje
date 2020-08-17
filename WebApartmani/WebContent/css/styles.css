@@ -8,3 +8,12 @@ a {
     text-decoration: none;
     background-color: transparent
 }
+
+#pretraga {
+  background-color:lightsalmon;
+  padding: 0.5%;
+  margin: 2%;
+}
+#pretrazi{
+  margin-left:2%;
+}
