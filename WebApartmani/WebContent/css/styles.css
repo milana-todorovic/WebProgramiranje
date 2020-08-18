@@ -10,10 +10,20 @@ a {
 }
 
 #pretraga {
-  background-color:lightsalmon;
+  background-color:lightgray;
   padding: 0.5%;
   margin: 2%;
 }
 #pretrazi{
   margin-left:2%;
+}
+#filtriranje{
+  border-style:solid;
+  border-color:lightgray;
+  width:17%;
+  padding:3%;
+  
+}
+#filtrirajDugme{
+  text-align:  justify;
 }

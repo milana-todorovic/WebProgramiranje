@@ -18,6 +18,31 @@ Vue.component("guest-apartments",{
                 brojSoba:6,
                 aktivan:true
                 }
+            ],
+            options: [
+                { text: 'Ceo', value: 'ceo' },
+                { text: 'Soba', value: 'soba' },
+               
+              ],
+            options2:[
+                {text:'Tus kabina',value:'tus'},
+                {text:'Posudje',value:'posudje'},
+                {text:'Fen za kosu',value:'fen'},
+                {text: 'Pegla',value:'pegla'},
+                {text:'Ves masina',value:'ves'},
+                {text:'Parking',value:'parking'},
+                {text:'Bazen',value:'bazen'},
+                {text:'Klima',value:'klima'},
+                {text:'Wifi',value:'wifi'},
+                {text:'Smart tv',value:'tv'},
+                {text:'Grejanje',value:'grejanje'},
+                {text:'Peskiri',value:'peskiri'},
+                {text:'Frizider',value:'frizider'},
+                {text:'Lift',value:'lift'}
+            ],
+            options3:[
+                {text:'Rastuce',value:'rastuce'},
+                {text:'Opadajuce',value:'opadajuce'}
             ]
         }
     
@@ -50,77 +75,60 @@ Vue.component("guest-apartments",{
     
         <br><br>
         <b-containter>
-            <b-row class="text-center">
-                <b-col cols="8">
-                    <b-button pill variant="primary"> 
+            <b-col>
+                <div id="filtriranje">
+                    <b><b-form-group label="Sortiranje po ceni"></b>
+                        <b-form-checkbox-group
+                        :options="options3"
+                        plain
+                        stacked
+                        ></b-form-checkbox-group>
+                    </b-form-group>
+                    <br><br>
+                    <b-button id="filtrirajDugme" pill variant="primary"> 
                         <b-icon icon="arrow-down-up"></b-icon>
-                        Sortiraj po ceni
+                        Sortiraj
                     </b-button>
+                </div>
+                <br>
+           
+                <div id="filtriranje">
+                   
+                    <b><b-form-group label="Tip apartmana"></b>
+                        <b-form-checkbox-group
+                            :options="options"
+                            plain
+                            stacked
+                            ></b-form-checkbox-group>
+                        </b-form-group>
+
+                    <br><br>
+
+                    <b><b-form-group label="Sadrzaji"></b>
+                        <b-form-checkbox-group
+                            :options="options2"
+                            plain
+                            stacked
+                            ></b-form-checkbox-group>
+                        </b-form-group>
                 
-                
-                    <b-button pill variant="primary">
+                    <br><br>
+
+                    <b-button id="filtrirajDugme"pill variant="primary">
                         <b-icon icon="funnel-fill"></b-icon>
-                        Filtriraj
+                            Filtriraj
                     </b-button>
-                <b-col>
-            </b-row>
-            <br><br><br>
-            <b-alert
-                :show="dismissCountDown"
-                dismissible
-                fade
-                variant="success"
-                @dismiss-count-down="countDownChanged"
-            >
-            Uspesno ste zakazali apartman!
-            </b-alert>
-            <b-row class="text-center">
-                <b-col>
-                    Apartmani
-                </b-col>
-
-                <b-col cols="8">
-                    <dl>
-                        <dd v-for="apartman in apartmani">
-
-                            <b-card no-body class="overflow-hidden" style="max-width: 740px;">
-                                <b-row no-gutters>
-                                    <b-col md="6">
-                                        <b-card-img src="https://picsum.photos/400/400/?image=20" 			alt="Image" class="rounded-0"></b-card-img>
-                                    </b-col>
-
-                                    <b-col md="6">
-                                        <b-card-body>
-                                            <b-card-text>
-                                                <b>{{apartman.mico}}</b>
-                                                <br><br>
-                                    
-                                                Sadrzaj: {{ apartman.sadrzaj }}
-                                                <br><br>
-                                                Broj soba: {{apartman.brojSoba}}
-                                            </b-card-text>
-                                            <div>
-                                        
-                                                <b-button @click="showAlert" variant="success">
-                                                    Rezervisi apartman
-                                                </b-button>
-                                                <br><br>
-                                            
-                                            
-                                            </div>
-                                        </b-card-body>
-                                    </b-col>
-                                </b-row>
-                            </b-card>
-                            <br><br><br>
-                        </dd>
-                    </dl>
-                </b-col>
-
-                <b-col>
+                            
+                </div>
                 
-                </b-col>
-            </b-row>
+                    
+            </b-col>
+
+
+           
+                
+              
+          
         </b-container>
 
     </div>
