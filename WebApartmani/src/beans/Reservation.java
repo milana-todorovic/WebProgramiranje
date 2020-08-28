@@ -2,17 +2,19 @@ package beans;
 
 import java.time.LocalDate;
 
-public class Reservation {
+import repository.generics.Entity;
+
+public class Reservation implements Entity<Integer> {
 
 	private Apartment apartment;
 	private LocalDate startDate;
-	private int numberOfNights;
-	private double totalPrice;
+	private Integer numberOfNights;
+	private Double totalPrice;
 	private String message;
 	private ReservationStatus status;
 	private Guest guest;
-	private int id;
-		
+	private Integer id;
+
 	public Reservation() {
 		super();
 		status = ReservationStatus.CREATED;
@@ -34,19 +36,19 @@ public class Reservation {
 		this.startDate = startDate;
 	}
 
-	public int getNumberOfNights() {
+	public Integer getNumberOfNights() {
 		return numberOfNights;
 	}
 
-	public void setNumberOfNights(int numberOfNights) {
+	public void setNumberOfNights(Integer numberOfNights) {
 		this.numberOfNights = numberOfNights;
 	}
 
-	public double getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(double totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -74,11 +76,13 @@ public class Reservation {
 		this.guest = guest;
 	}
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
 	}
 

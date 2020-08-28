@@ -1,9 +1,3 @@
-/***********************************************************************
- * Module:  ReservationStatus.java
- * Author:  Lana
- * Purpose: Defines the Class ReservationStatus
- ***********************************************************************/
-
 package beans;
 
 import com.fasterxml.jackson.annotation.JsonValue;

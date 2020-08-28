@@ -3,7 +3,7 @@ package beans;
 public class Address {
 
 	private String street;
-	private int number;
+	private Integer number;
 	private String city;
 
 	public String getStreet() {
@@ -14,11 +14,11 @@ public class Address {
 		this.street = street;
 	}
 
-	public int getNumber() {
+	public Integer getNumber() {
 		return number;
 	}
 
-	public void setNumber(int number) {
+	public void setNumber(Integer number) {
 		this.number = number;
 	}
 

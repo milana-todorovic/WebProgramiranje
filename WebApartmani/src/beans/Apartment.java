@@ -7,18 +7,20 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Apartment {
+import repository.generics.Entity;
+
+public class Apartment implements Entity<Integer> {
 
 	private ApartmentType apartmentType;
-	private int numberOfRooms;
-	private int numberOfGuests;
+	private Integer numberOfRooms;
+	private Integer numberOfGuests;
 	private Location location;
 	private Collection<LocalDate> datesForRenting;
 	@JsonIgnore
 	private Collection<LocalDate> availableDates;
 	private Collection<String> imageKeys;
-	private double pricePerNight;
-	private LocalTime checkInTime;
+	private Double pricePerNight;
+	private LocalTime checkIntegerime;
 	private LocalTime checkOutTime;
 	private ApartmentStatus status;
 	private Collection<Amenity> amenities;
@@ -27,7 +29,7 @@ public class Apartment {
 	@JsonIgnore
 	private Collection<Reservation> reservations;
 	private Host host;
-	private int id;
+	private Integer id;
 
 	public Apartment() {
 		super();
@@ -37,7 +39,7 @@ public class Apartment {
 		amenities = new ArrayList<>();
 		comments = new ArrayList<>();
 		reservations = new ArrayList<>();
-		checkInTime = LocalTime.of(14, 0);
+		checkIntegerime = LocalTime.of(14, 0);
 		checkOutTime = LocalTime.of(10, 0);
 		status = ApartmentStatus.INACIVE;
 	}
@@ -50,19 +52,19 @@ public class Apartment {
 		this.apartmentType = apartmentType;
 	}
 
-	public int getNumberOfRooms() {
+	public Integer getNumberOfRooms() {
 		return numberOfRooms;
 	}
 
-	public void setNumberOfRooms(int numberOfRooms) {
+	public void setNumberOfRooms(Integer numberOfRooms) {
 		this.numberOfRooms = numberOfRooms;
 	}
 
-	public int getNumberOfGuests() {
+	public Integer getNumberOfGuests() {
 		return numberOfGuests;
 	}
 
-	public void setNumberOfGuests(int numberOfGuests) {
+	public void setNumberOfGuests(Integer numberOfGuests) {
 		this.numberOfGuests = numberOfGuests;
 	}
 
@@ -98,20 +100,20 @@ public class Apartment {
 		this.imageKeys = imageKeys;
 	}
 
-	public double getPricePerNight() {
+	public Double getPricePerNight() {
 		return pricePerNight;
 	}
 
-	public void setPricePerNight(double pricePerNight) {
+	public void setPricePerNight(Double pricePerNight) {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public LocalTime getCheckInTime() {
-		return checkInTime;
+	public LocalTime getCheckIntegerime() {
+		return checkIntegerime;
 	}
 
-	public void setCheckInTime(LocalTime checkInTime) {
-		this.checkInTime = checkInTime;
+	public void setCheckIntegerime(LocalTime checkIntegerime) {
+		this.checkIntegerime = checkIntegerime;
 	}
 
 	public LocalTime getCheckOutTime() {
@@ -162,11 +164,13 @@ public class Apartment {
 		this.host = host;
 	}
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
 	}
 

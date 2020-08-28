@@ -1,6 +1,8 @@
 package beans;
 
-public class User {
+import repository.generics.Entity;
+
+public class User implements Entity<Integer>{
 
 	protected String username;
 	protected String password;
@@ -8,7 +10,7 @@ public class User {
 	protected String surname;
 	protected String gender;
 	protected UserRole role;
-	protected int id;
+	protected Integer id;
 
 	public String getUsername() {
 		return username;
@@ -58,11 +60,13 @@ public class User {
 		this.role = role;
 	}
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
 	}
 

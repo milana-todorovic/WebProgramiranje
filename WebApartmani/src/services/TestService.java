@@ -43,6 +43,7 @@ public class TestService {
 		Host host = new Host();
 		host.setName("Ime");
 		host.setSurname("Prezime");
+		host.setID(5);
 		host.getApartments().add(new Apartment());
 		host.getApartments().add(new Apartment());
 		return host;

@@ -1,15 +1,19 @@
 package beans;
 
-public class Amenity {
+import repository.generics.Entity;
 
-	private int id;
+public class Amenity implements Entity<Integer>{
+
+	private Integer id;
 	private String name;
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
 	}
 

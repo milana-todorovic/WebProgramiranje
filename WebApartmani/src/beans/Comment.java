@@ -1,13 +1,15 @@
 package beans;
 
-public class Comment {
+import repository.generics.Entity;
+
+public class Comment implements Entity<Integer> {
 
 	private String text;
-	private int rating;
-	private boolean showing;
+	private Integer rating;
+	private Boolean showing;
 	private Guest guest;
 	private Apartment apartment;
-	private int id;
+	private Integer id;
 
 	public Comment() {
 		super();
@@ -22,19 +24,19 @@ public class Comment {
 		this.text = text;
 	}
 
-	public int getRating() {
+	public Integer getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
 
-	public boolean isShowing() {
+	public Boolean isShowing() {
 		return showing;
 	}
 
-	public void setShowing(boolean showing) {
+	public void setShowing(Boolean showing) {
 		this.showing = showing;
 	}
 
@@ -54,11 +56,13 @@ public class Comment {
 		this.apartment = apartment;
 	}
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
 	}
 
