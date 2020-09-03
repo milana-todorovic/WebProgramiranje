@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,7 +30,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 
 	protected abstract T readResolve(T entity);
 
-	private List<T> readFile() {
+	protected List<T> readFile() {
 		ObjectMapper mapper = new ObjectMapper();
 		List<T> entities = null;
 		try {
@@ -41,8 +42,9 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		return entities;
 	}
 
-	private void writeFile(List<T> entities) {
+	protected void writeFile(List<T> entities) {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(Include.NON_EMPTY);
 		try {
 			mapper.writeValue(Paths.get(filePath).toFile(), entities);
 		} catch (Exception e) {
@@ -84,6 +86,14 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 			entities.add(readResolve(entity));
 		}
 		return entities;
+	}
+
+	public Iterable<ID> getAllIDs() {
+		List<ID> allIDs = new ArrayList<ID>();
+		for (T entity : readFile()) {
+			allIDs.add(entity.getID());
+		}
+		return allIDs;
 	}
 
 	@Override

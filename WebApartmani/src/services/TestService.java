@@ -20,14 +20,14 @@ public class TestService {
 	public String test() {
 		return "test";
 	}
-	
+
 	@GET
 	@Path("/enumTest")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ReservationStatus enumTestWrite() {
 		return ReservationStatus.FINISHED;
 	}
-	
+
 	@POST
 	@Path("/enumTest")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -35,25 +35,26 @@ public class TestService {
 		System.out.println(rs);
 		System.out.println(rs.equals(ReservationStatus.FINISHED));
 	}
-	
+
 	@GET
 	@Path("/ignoreTest")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Host ignoreTestWrite() {
+	public Apartment ignoreTestWrite() {
+		Apartment apartment = new Apartment();
 		Host host = new Host();
 		host.setName("Ime");
 		host.setSurname("Prezime");
 		host.setID(5);
-		host.getApartments().add(new Apartment());
-		host.getApartments().add(new Apartment());
-		return host;
+		host.getApartments().add(apartment);
+		apartment.setHost(host);
+		return apartment;
 	}
 	
 	@POST
 	@Path("/ignoreTest")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void ignoreTestRead(Host host) {
-		System.out.println(host.getApartments().size());
+	public void ignoreTestRead(Apartment apartment) {
+		System.out.println(apartment.getHost().getApartments().size());
 	}
 
 }

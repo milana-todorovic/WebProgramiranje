@@ -11,12 +11,12 @@ import repository.generics.Entity;
 
 public class Apartment implements Entity<Integer> {
 
+	private String name;
 	private ApartmentType apartmentType;
 	private Integer numberOfRooms;
 	private Integer numberOfGuests;
 	private Location location;
 	private Collection<LocalDate> datesForRenting;
-	@JsonIgnore
 	private Collection<LocalDate> availableDates;
 	private Collection<String> imageKeys;
 	private Double pricePerNight;
@@ -39,9 +39,15 @@ public class Apartment implements Entity<Integer> {
 		amenities = new ArrayList<>();
 		comments = new ArrayList<>();
 		reservations = new ArrayList<>();
-		checkIntegerime = LocalTime.of(14, 0);
-		checkOutTime = LocalTime.of(10, 0);
 		status = ApartmentStatus.INACIVE;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public ApartmentType getApartmentType() {
@@ -172,6 +178,31 @@ public class Apartment implements Entity<Integer> {
 	@Override
 	public void setID(Integer id) {
 		this.id = id;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Apartment other = (Apartment) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }

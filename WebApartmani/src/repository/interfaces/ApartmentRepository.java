@@ -1,4 +1,4 @@
-package repository;
+package repository.interfaces;
 
 import beans.Apartment;
 import repository.generics.Repository;

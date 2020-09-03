@@ -14,6 +14,7 @@ public class Guest extends User {
 
 	public Guest() {
 		super();
+		role = UserRole.GUEST;
 		reservations = new ArrayList<Reservation>();
 		rentedApartments = new ArrayList<Apartment>();
 	}
