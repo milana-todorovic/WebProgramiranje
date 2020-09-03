@@ -10,20 +10,19 @@ a {
 }
 
 #pretraga {
-  background-color:lightgray;
+  
   padding: 0.5%;
-  margin: 2%;
+  margin-top:1%;
+  margin-left:1%;
 }
-#pretrazi{
-  margin-left:2%;
-}
+
 #filtriranje{
-  border-style:solid;
-  border-color:lightgray;
-  width:17%;
   padding:3%;
+  margin-left:7%;
   
 }
-#filtrirajDugme{
-  text-align:  justify;
+#nazivApartmana{
+  font-size: 25px;
 }
+
+
