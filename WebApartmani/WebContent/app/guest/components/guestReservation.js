@@ -7,19 +7,22 @@ Vue.component("guest-reservations",{
                     imeApartmana:'Apartmani Ivana',
                     pocetniDatum:'25.5.2020',
                     krajnjiDatum:'28.10.2020',
-                    cenaApartmana:'400$'
+                    cenaApartmana:'400$',
+                    status:'kreirana'
                 },
                 {
                     imeApartmana:'Apartmani Ana',
                     pocetniDatum:'2.8.2020',
                     krajnjiDatum:'28.8.2020',
-                    cenaApartmana:'300$'
+                    cenaApartmana:'300$',
+                    status:'odbijena'
                 },
                 {
                     imeApartmana:'Sobe Slobodan Bajic',
                     pocetniDatum:'21.10.2020',
                     krajnjiDatum:'22.10.2020',
-                    cenaApartmana:'40$'
+                    cenaApartmana:'40$',
+                    status:'prihvacena'
                 }
             ]
 
@@ -35,13 +38,55 @@ Vue.component("guest-reservations",{
 
                     </h1>
 
-                    
-                    <div style="background-color:teal;width:20%;padding:2%;color:white;margin-top:5%">
-                        <i>Od</i> {{rezervacija.pocetniDatum}}
-                        <i>do</i>{{rezervacija.krajnjiDatum}}
+                    <b-container>
+                        <b-row>
+                            <b-col>
+                                <div style="background-color:teal;padding:5%;color:white;margin-top:5%;font-size:18px">
+                                    Od  <b>{{rezervacija.pocetniDatum}}</b>
+                                    <br>
+                                    Do  <b>{{rezervacija.krajnjiDatum}}</b>
+                                    <br>
+                                    Po ceni  <b>{{rezervacija.cenaApartmana}}</b>
+                                </div>
+                            </b-col>
+
+                            
+
+                            <b-col>
+                                <div style="margin-top:5%">
+                                    <h1 style="font-size:30px">
+                                        <b-badge variant="success" >{{rezervacija.status}}</b-badge>
+                                    </h1>
+                                </div>
+                                <br>
+                                <b-button variant="outline-danger">
+                                    Odustani
+                                </b-button>
+                            </b-col>
+                        </b-row>
                         <br>
-                        {{rezervacija.cenaApartmana}}
-                    </div>
+                        <hr class="solid" style=" border-top: 1px solid #bbb;">
+
+                        <b-row>
+                            <b-col>
+                                <br>
+                                Va&#x161; komentar:
+                                
+                                <b-form-textarea placeholder="Unesite komentar"></b-form-textarea>
+                                <br>
+                                Va&#x161;a ocena:
+                               
+                                <b-form-rating stars="10" show-value precision="1"></b-form-rating>
+                                <br>
+
+                                <b-button variant="outline-primary">
+                                    Ostavi komentar
+                                </b-button>
+                            </b-col>
+                        </b-row>
+                    </b-container>
+                    
+                  
 
                     
                 </b-card>

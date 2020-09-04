@@ -159,7 +159,7 @@ Vue.component("guest-apartments",{
                                             <b-card-body>
                                                 <b-card-text>
                                                     <h1 id="nazivApartmana">
-                                                    {{apartman.ime}}<b-badge variant="success">{{apartman.tip}}</b-badge>
+                                                    {{apartman.ime}} <b-badge variant="success">{{apartman.tip}}</b-badge>
                                                     </h1>
 
                                                     
