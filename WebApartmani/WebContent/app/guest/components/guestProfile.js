@@ -20,7 +20,7 @@ Vue.component("guest-profile",{
                     <b-col>
                         
                         
-                        </span>
+                      
                     </b-col>
                 </b-row>
            </b-card>

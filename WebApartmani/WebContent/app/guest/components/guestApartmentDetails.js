@@ -2,13 +2,29 @@ Vue.component("guest-apartmentDetails",{
     data: function(){
         return{
           name:"Detalji apartmana",
-          apartman:[
-              {
-                  ime:"Apartmani Ivana",
-                  tip:"ceo apartman",
-                  lokacija:"Pariz"
-              }
-          ],
+          apartman:{
+            ime:"Apartmani Ivana",
+            tip:"ceo apartman",
+            lokacija:"Pariz,Senska ulica broj 84",
+            brojGostiju:"4",
+            brojSoba:"2",
+            vremeZaPrijavu:"13:00h",
+            vremeZaOdjavu:"10:00h",
+            sadrzaj:[
+                {
+                    ime: "Krevet",
+                },
+                {
+                    ime: "Kada",
+                },
+                {
+                    ime: "Pegla",
+                },
+                {
+                    ime: "Ogledalo",
+                }
+            ]
+          },
           komentari:[
               {
                   koment:"Apartman je izvrstan. Sve je cisto i uredno. Ljubazni domacini",
@@ -30,11 +46,11 @@ Vue.component("guest-apartmentDetails",{
                 <b-row>
                     <b-col cols="8">
                         <h1 id="nazivApartmana">
-                        Apartman Ivana <b-badge variant="success">ceo apartman</b-badge>
+                        {{ apartman.ime }} <b-badge variant="success">{{apartman.tip}}</b-badge>
                         </h1>
                         <br>
                         <b-icon icon="geo-alt" style="width: 25px; height: 25px;"></b-icon>
-                        <span style="font-size:20px"> Pariz, Senska ulica broj 84</span>
+                        <span style="font-size:20px">{{apartman.lokacija}}</span>
                         <br><br>
                         <b-carousel
                             controls
@@ -49,22 +65,20 @@ Vue.component("guest-apartmentDetails",{
                             <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58"></b-carousel-slide>
                         </b-carousel>
                         <br>
-                        <i>2 soba/4 gosta</i>
+                        <i>{{apartman.brojSoba}} soba/{{apartman.brojGostiju}} gosta</i>
                         <br>
-                        <b>Vreme za prijavu:</b>11:00h 
+                        <b>Vreme za prijavu:</b> {{ apartman.vremeZaPrijavu}}
                         <br>
-                        <b>Vreme za odjavu:</b> 10:00h
+                        <b>Vreme za odjavu:</b> {{apartman.vremeZaOdjavu}}
                         <hr class="solid" style=" border-top: 1px solid #bbb;">
                         <b>Sadr\u017Eaji</b>
-                        <div class="wrapper">
+                        <div>
                             <ul style="list-style-type:circle;align:left;">
                             
-                                <li>Coffee</li>
-                                <li>Tea</li>
-                                <li>Milk</li>
-                                <li>Sapun</li>
-                                <li>Tus kabina</li>
-                                <li>Ves masina</li>
+                                <li v-for="jedanSadrzaj in apartman.sadrzaj" >
+                                    {{ jedanSadrzaj.ime }}
+                                </li>
+
                             </ul>  
                         </div>
                         
