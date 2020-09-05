@@ -36,7 +36,26 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 
 	@Override
 	protected Guest writeResolve(Guest entity) {
-		return entity;
+		Guest writingCopy = new Guest();
+		writingCopy.setID(entity.getID());
+		writingCopy.setUsername(entity.getUsername());
+		writingCopy.setPassword(entity.getPassword());
+		writingCopy.setName(entity.getName());
+		writingCopy.setSurname(entity.getSurname());
+		writingCopy.setGender(entity.getGender());
+		writingCopy.setRole(entity.getRole());
+		writingCopy.setReservations(null);
+		writeResolveRented(entity, writingCopy);
+		return writingCopy;
+	}
+
+	private void writeResolveRented(Guest entity, Guest writingCopy) {
+		List<Apartment> rentedApartments = new ArrayList<Apartment>();
+		for (Apartment apartment : entity.getRentedApartments()) {
+			if (apartment != null)
+				rentedApartments.add(apartmentRepository.stripToReference(apartment));
+		}
+		writingCopy.setRentedApartments(rentedApartments);
 	}
 
 	@Override
@@ -49,7 +68,7 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 	private void readResolveRented(Guest entity) {
 		List<Apartment> rentedApartments = new ArrayList<Apartment>();
 		for (Apartment apartmentID : entity.getRentedApartments()) {
-			Apartment rentedApartment = apartmentRepository.getByID(apartmentID.getID());
+			Apartment rentedApartment = apartmentRepository.simpleGetByID(apartmentID.getID());
 			if (rentedApartment != null)
 				rentedApartments.add(rentedApartment);
 		}
@@ -58,6 +77,23 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 
 	private void readResolveReservations(Guest entity) {
 		entity.setReservations(reservationRepository.getByGuestInternal(entity));
+	}
+
+	@Override
+	protected Guest stripToReference(Guest entity) {
+		if (entity == null)
+			return null;
+		Guest reference = new Guest();
+		reference.setID(entity.getID());
+		reference.setUsername(null);
+		reference.setPassword(null);
+		reference.setName(null);
+		reference.setSurname(null);
+		reference.setGender(null);
+		reference.setRole(null);
+		reference.setRentedApartments(null);
+		reference.setReservations(null);
+		return reference;
 	}
 
 }

@@ -27,7 +27,16 @@ public class HostFileRepository extends GenericFileRepository<Host, Integer> imp
 
 	@Override
 	protected Host writeResolve(Host entity) {
-		return entity;
+		Host writingCopy = new Host();
+		writingCopy.setID(entity.getID());
+		writingCopy.setUsername(entity.getUsername());
+		writingCopy.setPassword(entity.getPassword());
+		writingCopy.setName(entity.getName());
+		writingCopy.setSurname(entity.getSurname());
+		writingCopy.setGender(entity.getGender());
+		writingCopy.setRole(entity.getRole());
+		writingCopy.setApartments(null);
+		return writingCopy;
 	}
 
 	@Override
@@ -38,5 +47,21 @@ public class HostFileRepository extends GenericFileRepository<Host, Integer> imp
 
 	private void readResolveApartments(Host entity) {
 		entity.setApartments(apartmentRepository.getByHostInternal(entity));
+	}
+
+	@Override
+	protected Host stripToReference(Host entity) {
+		if (entity == null)
+			return null;
+		Host reference = new Host();
+		reference.setID(entity.getID());
+		reference.setUsername(null);
+		reference.setPassword(null);
+		reference.setName(null);
+		reference.setSurname(null);
+		reference.setGender(null);
+		reference.setRole(null);
+		reference.setApartments(null);
+		return reference;
 	}
 }

@@ -20,7 +20,7 @@ public class Apartment implements Entity<Integer> {
 	private Collection<LocalDate> availableDates;
 	private Collection<String> imageKeys;
 	private Double pricePerNight;
-	private LocalTime checkIntegerime;
+	private LocalTime checkInTime;
 	private LocalTime checkOutTime;
 	private ApartmentStatus status;
 	private Collection<Amenity> amenities;
@@ -114,12 +114,12 @@ public class Apartment implements Entity<Integer> {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public LocalTime getCheckIntegerime() {
-		return checkIntegerime;
+	public LocalTime getCheckInTime() {
+		return checkInTime;
 	}
 
-	public void setCheckIntegerime(LocalTime checkIntegerime) {
-		this.checkIntegerime = checkIntegerime;
+	public void setCheckInTime(LocalTime checkInTime) {
+		this.checkInTime = checkInTime;
 	}
 
 	public LocalTime getCheckOutTime() {

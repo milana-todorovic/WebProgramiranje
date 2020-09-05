@@ -3,7 +3,10 @@ package beans;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Host extends User {
+	@JsonIgnore
 	private Collection<Apartment> apartments;
 
 	public Host() {

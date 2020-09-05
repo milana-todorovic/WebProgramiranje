@@ -38,32 +38,42 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 
 	@Override
 	protected Reservation writeResolve(Reservation entity) {
-		return entity;
+		Reservation writingCopy = new Reservation();
+		writingCopy.setID(entity.getID());
+		writingCopy.setApartment(apartmentRepository.stripToReference(entity.getApartment()));
+		writingCopy.setGuest(guestRepository.stripToReference(entity.getGuest()));
+		writingCopy.setGuestCanComment(entity.getGuestCanComment());
+		writingCopy.setMessage(entity.getMessage());
+		writingCopy.setNumberOfNights(entity.getNumberOfNights());
+		writingCopy.setStartDate(entity.getStartDate());
+		writingCopy.setStatus(entity.getStatus());
+		writingCopy.setTotalPrice(entity.getTotalPrice());
+		return writingCopy;
 	}
 
 	@Override
 	protected Reservation readResolve(Reservation entity) {
-		if (entity.getApartment() != null)
-			readResolveApartment(entity);
-		if (entity.getGuest() != null)
-			readResolveGuest(entity);
+		readResolveApartment(entity);
+		readResolveGuest(entity);
 		return entity;
 	}
 
 	private void readResolveApartment(Reservation entity) {
-		Apartment apartment = apartmentRepository.getByID(entity.getApartment().getID());
+		if (entity.getApartment() == null)
+			return;
+		Apartment apartment = apartmentRepository.simpleGetByID(entity.getApartment().getID());
 		entity.setApartment(apartment);
 		if (apartment != null) {
-			apartment.getReservations().remove(entity);
 			apartment.getReservations().add(entity);
 		}
 	}
 
 	private void readResolveGuest(Reservation entity) {
-		Guest guest = guestRepository.getByID(entity.getGuest().getID());
+		if (entity.getGuest() == null)
+			return;
+		Guest guest = guestRepository.simpleGetByID(entity.getGuest().getID());
 		entity.setGuest(guest);
 		if (guest != null) {
-			guest.getReservations().remove(entity);
 			guest.getReservations().add(entity);
 		}
 	}
@@ -72,8 +82,6 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 		List<Reservation> retVal = new ArrayList<Reservation>();
 		for (Reservation entity : readFile()) {
 			if (entity.getApartment() != null && entity.getApartment().equals(apartment)) {
-				if (entity.getGuest() != null)
-					readResolveGuest(entity);
 				entity.setApartment(apartment);
 				retVal.add(entity);
 			}
@@ -85,13 +93,28 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 		List<Reservation> retVal = new ArrayList<Reservation>();
 		for (Reservation entity : readFile()) {
 			if (entity.getGuest() != null && entity.getGuest().equals(guest)) {
-				if (entity.getApartment() != null)
-					readResolveApartment(entity);
 				entity.setGuest(guest);
 				retVal.add(entity);
 			}
 		}
 		return retVal;
+	}
+
+	@Override
+	protected Reservation stripToReference(Reservation entity) {
+		if (entity == null)
+			return null;
+		Reservation reference = new Reservation();
+		reference.setID(entity.getID());
+		reference.setApartment(null);
+		reference.setGuest(null);
+		reference.setGuestCanComment(null);
+		reference.setMessage(null);
+		reference.setNumberOfNights(null);
+		reference.setStartDate(null);
+		reference.setStatus(null);
+		reference.setTotalPrice(null);
+		return reference;
 	}
 
 }

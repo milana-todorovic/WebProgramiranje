@@ -13,8 +13,8 @@ public class Reservation implements Entity<Integer> {
 	private String message;
 	private ReservationStatus status;
 	private Guest guest;
-	private Integer id;
 	private Boolean guestCanComment;
+	private Integer id;
 
 	public Reservation() {
 		super();

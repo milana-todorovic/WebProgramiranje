@@ -28,4 +28,14 @@ public class AmenityFileRepository extends GenericFileRepository<Amenity, Intege
 	protected Amenity readResolve(Amenity entity) {
 		return entity;
 	}
+
+	@Override
+	protected Amenity stripToReference(Amenity entity) {
+		if (entity == null)
+			return null;
+		Amenity reference = new Amenity();
+		reference.setID(entity.getID());
+		reference.setName(null);
+		return reference;
+	}
 }

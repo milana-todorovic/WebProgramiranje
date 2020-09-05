@@ -55,6 +55,7 @@ public class TestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void ignoreTestRead(Apartment apartment) {
 		System.out.println(apartment.getHost().getApartments().size());
+		System.out.println(apartment.getHost().getRole());
 	}
 
 }

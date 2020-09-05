@@ -16,7 +16,9 @@ public interface Repository<T extends Entity<ID>, ID> {
 	
 	Iterable<T> getMatching(Predicate<T> condition);
 
-	T getByID(ID id);
+	T fullGetByID(ID id);
+	
+	T simpleGetByID(ID id);
 
 	T create(T entity);
 

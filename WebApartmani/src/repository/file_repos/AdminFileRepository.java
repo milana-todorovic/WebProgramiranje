@@ -28,4 +28,20 @@ public class AdminFileRepository extends GenericFileRepository<User, Integer> im
 	protected User readResolve(User entity) {
 		return entity;
 	}
+
+	@Override
+	protected User stripToReference(User entity) {
+		if (entity == null)
+			return null;
+		User reference = new User();
+		reference.setID(entity.getID());
+		reference.setUsername(null);
+		reference.setPassword(null);
+		reference.setName(null);
+		reference.setSurname(null);
+		reference.setGender(null);
+		reference.setRole(null);
+		return reference;
+	}
+
 }

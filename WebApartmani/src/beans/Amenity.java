@@ -7,6 +7,10 @@ public class Amenity implements Entity<Integer> {
 	private Integer id;
 	private String name;
 
+	public Amenity() {
+		super();
+	}
+
 	@Override
 	public Integer getID() {
 		return id;

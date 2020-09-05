@@ -30,7 +30,9 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 
 	protected abstract T readResolve(T entity);
 
-	protected List<T> readFile() {
+	protected abstract T stripToReference(T entity);
+
+	protected synchronized List<T> readFile() {
 		ObjectMapper mapper = new ObjectMapper();
 		List<T> entities = null;
 		try {
@@ -42,7 +44,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		return entities;
 	}
 
-	protected void writeFile(List<T> entities) {
+	protected synchronized void writeFile(List<T> entities) {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_EMPTY);
 		try {
@@ -107,10 +109,19 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	}
 
 	@Override
-	public T getByID(ID id) {
+	public T fullGetByID(ID id) {
 		for (T entity : readFile()) {
 			if (entity.getID().equals(id))
 				return readResolve(entity);
+		}
+		return null;
+	}
+
+	@Override
+	public T simpleGetByID(ID id) {
+		for (T entity : readFile()) {
+			if (entity.getID().equals(id))
+				return entity;
 		}
 		return null;
 	}

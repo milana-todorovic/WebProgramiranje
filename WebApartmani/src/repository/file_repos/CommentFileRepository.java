@@ -37,28 +37,36 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 
 	@Override
 	protected Comment writeResolve(Comment entity) {
-		return entity;
+		Comment writingCopy = new Comment();
+		writingCopy.setID(entity.getID());
+		writingCopy.setRating(entity.getRating());
+		writingCopy.setShowing(entity.isShowing());
+		writingCopy.setText(entity.getText());
+		writingCopy.setApartment(apartmentRepository.stripToReference(entity.getApartment()));
+		writingCopy.setGuest(guestRepository.stripToReference(entity.getGuest()));
+		return writingCopy;
 	}
 
 	@Override
 	protected Comment readResolve(Comment entity) {
-		if (entity.getGuest() != null)
-			readResolveGuest(entity);
-		if (entity.getApartment() != null)
-			readResolveApartment(entity);
+		readResolveGuest(entity);
+		readResolveApartment(entity);
 		return entity;
 	}
 
 	private void readResolveGuest(Comment entity) {
-		Guest guest = guestRepository.getByID(entity.getGuest().getID());
+		if (entity.getGuest() == null)
+			return;
+		Guest guest = guestRepository.simpleGetByID(entity.getGuest().getID());
 		entity.setGuest(guest);
 	}
 
 	private void readResolveApartment(Comment entity) {
-		Apartment apartment = apartmentRepository.getByID(entity.getApartment().getID());
+		if (entity.getApartment() == null)
+			return;
+		Apartment apartment = apartmentRepository.simpleGetByID(entity.getApartment().getID());
 		entity.setApartment(apartment);
 		if (apartment != null) {
-			apartment.getComments().remove(entity);
 			apartment.getComments().add(entity);
 		}
 	}
@@ -67,13 +75,25 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 		List<Comment> retVal = new ArrayList<Comment>();
 		for (Comment entity : readFile()) {
 			if (entity.getApartment() != null && entity.getApartment().equals(apartment)) {
-				if (entity.getGuest() != null)
-					readResolveGuest(entity);
 				entity.setApartment(apartment);
 				retVal.add(entity);
 			}
 		}
 		return retVal;
+	}
+
+	@Override
+	protected Comment stripToReference(Comment entity) {
+		if (entity == null)
+			return null;
+		Comment reference = new Comment();
+		reference.setID(entity.getID());
+		reference.setApartment(null);
+		reference.setGuest(null);
+		reference.setRating(null);
+		reference.setShowing(null);
+		reference.setText(null);
+		return reference;
 	}
 
 }
