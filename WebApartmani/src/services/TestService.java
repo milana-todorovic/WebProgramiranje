@@ -1,15 +1,18 @@
 package services;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import beans.Apartment;
 import beans.Host;
 import beans.ReservationStatus;
+import repository.file_repos.FileRepositoryContainer;
 
 @Path("/test")
 public class TestService {
@@ -19,6 +22,13 @@ public class TestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String test() {
 		return "test";
+	}
+	
+	@GET
+	@Path("/pathTest")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String pathTest(@Context ServletContext context) {
+		return context.getRealPath("");
 	}
 
 	@GET
@@ -39,23 +49,24 @@ public class TestService {
 	@GET
 	@Path("/ignoreTest")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Apartment ignoreTestWrite() {
+	public Host ignoreTestWrite() {
 		Apartment apartment = new Apartment();
 		Host host = new Host();
 		host.setName("Ime");
 		host.setSurname("Prezime");
-		host.setID(5);
 		host.getApartments().add(apartment);
 		apartment.setHost(host);
-		return apartment;
+		return host;
 	}
 	
 	@POST
 	@Path("/ignoreTest")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void ignoreTestRead(Apartment apartment) {
-		System.out.println(apartment.getHost().getApartments().size());
-		System.out.println(apartment.getHost().getRole());
+	@Produces(MediaType.APPLICATION_JSON)
+	public Iterable<Host> ignoreTestRead(Host host, @Context ServletContext context) {
+		FileRepositoryContainer repo = (FileRepositoryContainer) context.getAttribute("repo");
+		repo.getHostRepository().create(host);
+		return repo.getHostRepository().getAll();	
 	}
 
 }

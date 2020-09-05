@@ -3,6 +3,8 @@ package repository.file_repos;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import beans.Amenity;
 import beans.Apartment;
 import beans.Host;
@@ -149,6 +151,12 @@ public class ApartmentFileRepository extends GenericFileRepository<Apartment, In
 		reference.setReservations(null);
 		reference.setStatus(null);
 		return reference;
+	}
+	
+	@Override
+	protected TypeReference<?> getListType() {
+		return new TypeReference<List<Apartment>>() {
+		};
 	}
 
 }

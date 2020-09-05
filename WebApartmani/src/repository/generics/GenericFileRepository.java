@@ -16,11 +16,14 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 
 	public GenericFileRepository(String filePath) {
 		this.filePath = filePath;
-		try {
-			File file = new File(filePath);
-			file.createNewFile();
-		} catch (Exception e) {
-
+		File file = new File(filePath);
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+				writeFile(new ArrayList<T>());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -32,16 +35,20 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 
 	protected abstract T stripToReference(T entity);
 
+	protected abstract TypeReference<?> getListType();
+
 	protected synchronized List<T> readFile() {
 		ObjectMapper mapper = new ObjectMapper();
 		List<T> entities = null;
 		try {
-			entities = mapper.readValue(Paths.get(filePath).toFile(), new TypeReference<List<T>>() {
-			});
+			entities = mapper.readValue(Paths.get(filePath).toFile(), getListType());
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
-		return entities;
+		if (entities == null)
+			return new ArrayList<T>();
+		else
+			return entities;
 	}
 
 	protected synchronized void writeFile(List<T> entities) {
@@ -50,7 +57,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		try {
 			mapper.writeValue(Paths.get(filePath).toFile(), entities);
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 

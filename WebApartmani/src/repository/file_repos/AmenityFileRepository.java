@@ -1,5 +1,9 @@
 package repository.file_repos;
 
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import beans.Amenity;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.AmenityRepository;
@@ -37,5 +41,11 @@ public class AmenityFileRepository extends GenericFileRepository<Amenity, Intege
 		reference.setID(entity.getID());
 		reference.setName(null);
 		return reference;
+	}
+	
+	@Override
+	protected TypeReference<?> getListType() {
+		return new TypeReference<List<Amenity>>() {
+		};
 	}
 }

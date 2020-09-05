@@ -1,5 +1,9 @@
 package repository.file_repos;
 
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import beans.Host;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.HostRepository;
@@ -63,5 +67,11 @@ public class HostFileRepository extends GenericFileRepository<Host, Integer> imp
 		reference.setRole(null);
 		reference.setApartments(null);
 		return reference;
+	}
+	
+	@Override
+	protected TypeReference<?> getListType() {
+		return new TypeReference<List<Host>>() {
+		};
 	}
 }

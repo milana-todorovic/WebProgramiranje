@@ -1,5 +1,9 @@
 package repository.file_repos;
 
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import beans.User;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.AdminRepository;
@@ -42,6 +46,12 @@ public class AdminFileRepository extends GenericFileRepository<User, Integer> im
 		reference.setGender(null);
 		reference.setRole(null);
 		return reference;
+	}
+
+	@Override
+	protected TypeReference<?> getListType() {
+		return new TypeReference<List<User>>() {
+		};
 	}
 
 }

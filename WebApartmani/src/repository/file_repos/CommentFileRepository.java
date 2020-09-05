@@ -3,6 +3,8 @@ package repository.file_repos;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import beans.Apartment;
 import beans.Comment;
 import beans.Guest;
@@ -94,6 +96,12 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 		reference.setShowing(null);
 		reference.setText(null);
 		return reference;
+	}
+	
+	@Override
+	protected TypeReference<?> getListType() {
+		return new TypeReference<List<Comment>>() {
+		};
 	}
 
 }
