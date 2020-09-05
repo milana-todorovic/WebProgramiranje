@@ -32,64 +32,62 @@ Vue.component("guest-reservations",{
         <div>
             <dl>
                 <dd v-for="rezervacija in rezervacije">
-                <b-card style="max-width: 840px;margin-left:10%;margin-top:5%">
-                    <h1 id="nazivApartmana">
-                    {{rezervacija.imeApartmana}}
+                    <b-card style="max-width: 840px;margin-left:10%;margin-top:5%">
+                        
 
-                    </h1>
-
-                    <b-container>
-                        <b-row>
-                            <b-col>
-                                <div style="background-color:teal;padding:5%;color:white;margin-top:5%;font-size:18px">
-                                    Od  <b>{{rezervacija.pocetniDatum}}</b>
-                                    <br>
-                                    Do  <b>{{rezervacija.krajnjiDatum}}</b>
-                                    <br>
-                                    Po ceni  <b>{{rezervacija.cenaApartmana}}</b>
-                                </div>
-                            </b-col>
-
-                            
-
-                            <b-col>
-                                <div style="margin-top:5%">
-                                    <h1 style="font-size:30px">
-                                        <b-badge variant="success" >{{rezervacija.status}}</b-badge>
+                        <b-container>
+                            <b-row>
+                                <b-col>
+                                    <h1 id="nazivApartmana">
+                                        {{rezervacija.imeApartmana}}
+        
                                     </h1>
-                                </div>
-                                <br>
-                                <b-button variant="outline-danger">
-                                    Odustani
-                                </b-button>
-                            </b-col>
-                        </b-row>
-                        <br>
-                        <hr class="solid" style=" border-top: 1px solid #bbb;">
-
-                        <b-row>
-                            <b-col>
-                                <br>
-                                Va&#x161; komentar:
+                                    <div style="background-color:teal;padding:5%;color:white;font-size:18px">
+                                        Od  <b>{{rezervacija.pocetniDatum}}</b>
+                                        <br>
+                                        Do  <b>{{rezervacija.krajnjiDatum}}</b>
+                                        <br>
+                                        Po ceni  <b>{{rezervacija.cenaApartmana}}</b>
+                                    </div>
+                                </b-col>
                                 
-                                <b-form-textarea placeholder="Unesite komentar"></b-form-textarea>
-                                <br>
-                                Va&#x161;a ocena:
-                               
-                                <b-form-rating stars="10" show-value precision="1"></b-form-rating>
-                                <br>
+                                <b-col>
+                                        <h1 style="font-size:30px;margin-top:9%">
+                                            <b-badge variant="success" >{{rezervacija.status}}</b-badge>
+                                        </h1>
+                                    
+                                    <br>
+                                    <b-button variant="outline-danger">
+                                        Odustani
+                                    </b-button>
+                                </b-col>
+                            </b-row>
+                            <br>
+                            <hr class="solid" style=" border-top: 1px solid #bbb;">
 
-                                <b-button variant="outline-primary">
-                                    Ostavi komentar
-                                </b-button>
-                            </b-col>
-                        </b-row>
-                    </b-container>
-                    
-                  
+                            <b-row>
+                                <b-col>
+                                    <br>
+                                    Va&#x161; komentar:
+                                    
+                                    <b-form-textarea placeholder="Unesite komentar"></b-form-textarea>
+                                    <br>
+                                    Va&#x161;a ocena:
+                                
+                                    <b-form-rating stars="10" show-value precision="1"></b-form-rating>
+                                    <br>
 
+                                    <b-button variant="outline-primary">
+                                        Ostavi komentar
+                                    </b-button>
+                                </b-col>
+                            </b-row>
+                        </b-container>
+                        
                     
-                </b-card>
+
+                        
+                    </b-card>
                 </dd>
             </dl>
             

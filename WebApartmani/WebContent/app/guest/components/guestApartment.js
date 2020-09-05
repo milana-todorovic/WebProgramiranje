@@ -52,28 +52,28 @@ Vue.component("guest-apartments",{
                 {text:'Lift',value:'lift'}
             ],
             options3:[
-                {text:'Rastuce',value:'rastuce'},
-                {text:'Opadajuce',value:'opadajuce'}
+                {text:'Rastu\u0107e',value:'rastuce'},
+                {text:'Opadaju\u0107e',value:'opadajuce'}
             ]
         }
     
     },
     template:`
-    <div>
+    <div style="margin-right:1%;">
            
             <b-card id="pretraga">
                 <b-card-text>
                     <b-form inline>
-                        <b-form-input  placeholder="Lokacija"></b-form-input>
+                        <b-form-input   placeholder="Lokacija"></b-form-input>
                         <b-form-input   placeholder="Broj osoba"></b-form-input>
                         <b-form-input   placeholder="Broj soba"></b-form-input>
-                        <b-form-input   placeholder="Cena po no&#x107;enju"></b-form-input>
-                        <b-form-datepicker  placeholder="Po&#269;etni datum"></b-form-datepicker>
+                        <b-form-input   placeholder="Cena po no\u0107enju"></b-form-input>
+                        <b-form-datepicker  placeholder="Po\u010Detni datum"></b-form-datepicker>
                         <b-form-datepicker  placeholder="Krajnji datum"></b-form-datepicker>
                         
-                        <b-button   variant="primary">
+                        <b-button   variant="primary" style="margin-left:2%;">
                             <b-icon icon="search"></b-icon>
-                            Pretrazi
+                            Pretra&#x17E;i
                         </b-button>
                     </b-form>
                 </b-card-text>
@@ -117,7 +117,7 @@ Vue.component("guest-apartments",{
 
                                 <br><br>
 
-                                <b><b-form-group label="Sadrzaji"></b>
+                                <b><b-form-group label="Sadr\u017Eaji"></b>
                                     <b-form-checkbox-group
                                         :options="options2"
                                         plain
