@@ -8,7 +8,11 @@
 </head>
 <body>
 	<div id="test">
-		<h1>{{ title }} INDEX.html</h1>
+		<form>
+		<input type="file" v-on:change="change"></input>
+		<button v-on:click="click" type='button'>Blah</button>
+		</form>
+		<img v-bind:src="src"/>
 	</div>
 
 	<script src="js/vue.js"></script>
