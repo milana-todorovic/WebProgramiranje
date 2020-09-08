@@ -57,7 +57,7 @@ Vue.component("guest-reservations",{
                                         </h1>
                                     
                                     <br>
-                                    <b-button variant="outline-danger">
+                                    <b-button variant="outline-danger" @click="rezervacija.status='odustanak' ">
                                         Odustani
                                     </b-button>
                                 </b-col>

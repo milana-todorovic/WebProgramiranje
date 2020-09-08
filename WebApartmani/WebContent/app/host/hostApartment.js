@@ -1,4 +1,4 @@
-Vue.component("guest-apartments",{
+Vue.component("guest-hostAp",{
     data: function(){
         return{
             name: 'Apartmani',
@@ -54,6 +54,10 @@ Vue.component("guest-apartments",{
             options3:[
                 {text:'Rastu\u0107e',value:'rastuce'},
                 {text:'Opadaju\u0107e',value:'opadajuce'}
+            ],
+            options4:[
+                {text:'Aktivan',value:'aktivan'},
+                {text:'Neaktivan',value:'neaktivan'}
             ]
         }
     
@@ -127,6 +131,16 @@ Vue.component("guest-apartments",{
                             
                                 <br><br>
 
+                                <b><b-form-group label="Status"></b>
+                                <b-form-checkbox-group
+                                    :options="options4"
+                                    plain
+                                    stacked
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                        
+                            <br><br>
+
                                 <b-button  variant="primary">
                                     <b-icon icon="funnel-fill"></b-icon>
                                         Filtriraj
@@ -183,6 +197,11 @@ Vue.component("guest-apartments",{
                                                     <b-button variant="primary" @click="prikaziDetaljeFun(apartman)">
                                                         Prika&#x17E;i detalje
                                                         <b-icon icon="arrow-right">
+                                                    </b-button>
+                                                    <br><br>
+                                                    <b-button variant="danger">
+                                                        <b-icon icon="x"></b-icon>
+                                                        Ukloni apartman
                                                     </b-button>
                                                    
                         
