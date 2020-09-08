@@ -5,6 +5,17 @@ public class Location {
 	private Double longitude;
 	private Address address;
 
+	public Location() {
+		super();
+	}
+
+	public Location(Double latitude, Double longitude, Address address) {
+		super();
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.address = address;
+	}
+
 	public Double getLatitude() {
 		return latitude;
 	}

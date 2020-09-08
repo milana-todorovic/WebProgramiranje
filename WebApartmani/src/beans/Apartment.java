@@ -1,10 +1,10 @@
 package beans;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import repository.generics.Entity;
@@ -20,8 +20,10 @@ public class Apartment implements Entity<Integer> {
 	private Collection<Date> availableDates;
 	private Collection<String> imageKeys;
 	private Double pricePerNight;
-	private LocalTime checkInTime;
-	private LocalTime checkOutTime;
+	@JsonFormat(pattern = "HH:mm:ss", shape = JsonFormat.Shape.STRING)
+	private Date checkInTime;
+	@JsonFormat(pattern = "HH:mm:ss", shape = JsonFormat.Shape.STRING)
+	private Date checkOutTime;
 	private ApartmentStatus status;
 	private Collection<Amenity> amenities;
 	@JsonIgnore
@@ -40,6 +42,28 @@ public class Apartment implements Entity<Integer> {
 		comments = new ArrayList<>();
 		reservations = new ArrayList<>();
 		status = ApartmentStatus.INACIVE;
+	}
+
+	public Apartment(String name, ApartmentType apartmentType, Integer numberOfRooms, Integer numberOfGuests,
+			Location location, Double pricePerNight, Date checkInTime, Date checkOutTime, ApartmentStatus status,
+			Host host) {
+		super();
+		this.name = name;
+		this.apartmentType = apartmentType;
+		this.numberOfRooms = numberOfRooms;
+		this.numberOfGuests = numberOfGuests;
+		this.location = location;
+		this.pricePerNight = pricePerNight;
+		this.checkInTime = checkInTime;
+		this.checkOutTime = checkOutTime;
+		this.status = status;
+		this.host = host;
+		datesForRenting = new ArrayList<>();
+		availableDates = new ArrayList<>();
+		imageKeys = new ArrayList<>();
+		amenities = new ArrayList<>();
+		comments = new ArrayList<>();
+		reservations = new ArrayList<>();
 	}
 
 	public String getName() {
@@ -114,19 +138,19 @@ public class Apartment implements Entity<Integer> {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public LocalTime getCheckInTime() {
+	public Date getCheckInTime() {
 		return checkInTime;
 	}
 
-	public void setCheckInTime(LocalTime checkInTime) {
+	public void setCheckInTime(Date checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
-	public LocalTime getCheckOutTime() {
+	public Date getCheckOutTime() {
 		return checkOutTime;
 	}
 
-	public void setCheckOutTime(LocalTime checkOutTime) {
+	public void setCheckOutTime(Date checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
 

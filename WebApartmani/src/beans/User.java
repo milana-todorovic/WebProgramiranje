@@ -17,6 +17,16 @@ public class User implements Entity<Integer> {
 		role = UserRole.ADMIN;
 	}
 
+	public User(String username, String password, String name, String surname, String gender) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.gender = gender;
+		role = UserRole.ADMIN;
+	}
+
 	public String getUsername() {
 		return username;
 	}

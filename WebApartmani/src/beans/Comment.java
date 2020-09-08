@@ -16,6 +16,15 @@ public class Comment implements Entity<Integer> {
 		showing = false;
 	}
 
+	public Comment(String text, Integer rating, Boolean showing, Guest guest, Apartment apartment) {
+		super();
+		this.text = text;
+		this.rating = rating;
+		this.showing = showing;
+		this.guest = guest;
+		this.apartment = apartment;
+	}
+
 	public String getText() {
 		return text;
 	}

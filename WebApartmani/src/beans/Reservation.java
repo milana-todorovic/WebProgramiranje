@@ -21,6 +21,19 @@ public class Reservation implements Entity<Integer> {
 		status = ReservationStatus.CREATED;
 	}
 
+	public Reservation(Apartment apartment, Date startDate, Integer numberOfNights, Double totalPrice, String message,
+			ReservationStatus status, Guest guest, Boolean guestCanComment) {
+		super();
+		this.apartment = apartment;
+		this.startDate = startDate;
+		this.numberOfNights = numberOfNights;
+		this.totalPrice = totalPrice;
+		this.message = message;
+		this.status = status;
+		this.guest = guest;
+		this.guestCanComment = guestCanComment;
+	}
+
 	public Apartment getApartment() {
 		return apartment;
 	}

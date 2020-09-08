@@ -1,5 +1,6 @@
 package repository.generics;
 
+import java.util.Collection;
 import java.util.function.Predicate;
 
 public interface Repository<T extends Entity<ID>, ID> extends SimpleRepository<T, ID> {
@@ -12,9 +13,9 @@ public interface Repository<T extends Entity<ID>, ID> extends SimpleRepository<T
 
 	Boolean existsByID(ID id);
 
-	Iterable<T> getAll();
+	Collection<T> getAll();
 
-	Iterable<T> getMatching(Predicate<T> condition);
+	Collection<T> getMatching(Predicate<T> condition);
 
 	T fullGetByID(ID id);
 

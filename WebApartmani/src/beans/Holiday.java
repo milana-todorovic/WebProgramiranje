@@ -9,6 +9,15 @@ public class Holiday implements Entity<Integer> {
 	private Integer id;
 	private Date date;
 
+	public Holiday() {
+		super();
+	}
+
+	public Holiday(Date date) {
+		super();
+		this.date = date;
+	}
+
 	public Integer getID() {
 		return id;
 	}

@@ -26,6 +26,15 @@ public class FileRepositoryContainer implements RepositoryContainer {
 	private ImageFileRepository imageRepository;
 
 	public FileRepositoryContainer(String root) {
+		File file = new File(root);
+		if (!file.exists()) {
+			try {
+				file.mkdir();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		adminRepository = new AdminFileRepository(root + File.separator + "admin.json");
 		amenityRepository = new AmenityFileRepository(root + File.separator + "amenity.json");
 		apartmentRepository = new ApartmentFileRepository(root + File.separator + "apartment.json");

@@ -17,6 +17,12 @@ public class Host extends User implements Entity<Integer> {
 		apartments = new ArrayList<Apartment>();
 	}
 
+	public Host(String username, String password, String name, String surname, String gender) {
+		super(username, password, name, surname, gender);
+		role = UserRole.HOST;
+		apartments = new ArrayList<Apartment>();
+	}
+
 	public Collection<Apartment> getApartments() {
 		return apartments;
 	}

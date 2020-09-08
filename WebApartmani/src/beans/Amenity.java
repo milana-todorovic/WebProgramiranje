@@ -11,6 +11,11 @@ public class Amenity implements Entity<Integer> {
 		super();
 	}
 
+	public Amenity(String name) {
+		super();
+		this.name = name;
+	}
+
 	@Override
 	public Integer getID() {
 		return id;

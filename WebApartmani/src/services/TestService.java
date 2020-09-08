@@ -1,6 +1,6 @@
 package services;
 
-import java.time.LocalTime;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -8,6 +8,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -71,20 +72,33 @@ public class TestService {
 	}
 
 	@GET
-	@Path("/imageTest")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/imageTest/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Base64Image getImage(String id, @Context ServletContext context) {
+	public Base64Image getImage(@PathParam("id") String id, @Context ServletContext context) {
 		FileRepositoryContainer repo = (FileRepositoryContainer) context.getAttribute("repo");
 		return repo.getImageRepository().simpleGetByID(id);
 	}
 
 	@DELETE
-	@Path("/imageTest")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteImage(String id, @Context ServletContext context) {
+	@Path("/imageTest/{id}")
+	public void deleteImage(@PathParam("id") String id, @Context ServletContext context) {
 		FileRepositoryContainer repo = (FileRepositoryContainer) context.getAttribute("repo");
 		repo.getImageRepository().deleteByID(id);
+	}
+	
+	@GET
+	@Path("/timeTest")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Apartment getTime() {
+		Apartment a = new Apartment();
+		a.setCheckInTime(new Date(14*60*60*1000));
+		return a;
+	}
+	
+	@POST
+	@Path("/timeTest")
+	public void postTime(Apartment a) {
+		System.out.println(a.getCheckInTime());
 	}
 
 }

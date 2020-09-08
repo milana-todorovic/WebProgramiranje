@@ -3,12 +3,14 @@ package repository.generics;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements Repository<T, ID> {
 
@@ -54,6 +56,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	protected synchronized void writeFile(List<T> entities) {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_EMPTY);
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 			mapper.writeValue(Paths.get(filePath).toFile(), entities);
 		} catch (Exception e) {
@@ -89,7 +92,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	}
 
 	@Override
-	public Iterable<T> getAll() {
+	public Collection<T> getAll() {
 		List<T> entities = new ArrayList<T>();
 		for (T entity : readFile()) {
 			entities.add(readResolve(entity));
@@ -97,7 +100,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		return entities;
 	}
 
-	public Iterable<ID> getAllIDs() {
+	public Collection<ID> getAllIDs() {
 		List<ID> allIDs = new ArrayList<ID>();
 		for (T entity : readFile()) {
 			allIDs.add(entity.getID());
@@ -106,7 +109,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	}
 
 	@Override
-	public Iterable<T> getMatching(Predicate<T> condition) {
+	public Collection<T> getMatching(Predicate<T> condition) {
 		List<T> entities = new ArrayList<T>();
 		for (T entity : readFile()) {
 			if (condition.test(entity))
