@@ -8,6 +8,8 @@ const HostApartmentDetailsComponent={template:'<guest-hostApDetails></guest-host
 const HostUsersComponent={template:'<guest-hostUsers></guest-hostUsers>'}
 const AdminApartmentComponent={template:'<guest-adminAp></guest-adminAp>'}
 const AdminApartmentDetailsComponent={template:'<guest-adminApDetails></guest-adminApDetails>'}
+const AdminUsersComponent={template:'<guest-adminUsers></guest-adminUsers>'}
+const AdminReservation={template:'<guest-admin></guest-admin>'}
 
 const router=new VueRouter({
     mode: 'hash',
@@ -21,7 +23,9 @@ const router=new VueRouter({
         {path:'/hostApDetails',component:HostApartmentDetailsComponent},
         {path:'/hostUsers',component:HostUsersComponent},
         {path:'/adminAp',component:AdminApartmentComponent},
-        {path:'/adminApDetails',component:AdminApartmentDetailsComponent}
+        {path:'/adminApDetails',component:AdminApartmentDetailsComponent},
+        {path:'/adminUsers',component:AdminUsersComponent},
+        {path:'/admin',component:AdminReservation}
     ]
 });
 
