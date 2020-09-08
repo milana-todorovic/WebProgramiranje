@@ -7,6 +7,7 @@ import repository.interfaces.AmenityRepository;
 import repository.interfaces.ApartmentRepository;
 import repository.interfaces.CommentRepository;
 import repository.interfaces.GuestRepository;
+import repository.interfaces.HolidayRepository;
 import repository.interfaces.HostRepository;
 import repository.interfaces.ImageRepository;
 import repository.interfaces.RepositoryContainer;
@@ -21,6 +22,7 @@ public class FileRepositoryContainer implements RepositoryContainer {
 	private GuestFileRepository guestRepository;
 	private HostFileRepository hostRepository;
 	private ReservationFileRepository reservationRepository;
+	private HolidayFileRepository holidayRepository;
 	private ImageFileRepository imageRepository;
 
 	public FileRepositoryContainer(String root) {
@@ -31,6 +33,7 @@ public class FileRepositoryContainer implements RepositoryContainer {
 		guestRepository = new GuestFileRepository(root + File.separator + "guest.json");
 		hostRepository = new HostFileRepository(root + File.separator + "host.json");
 		reservationRepository = new ReservationFileRepository(root + File.separator + "reservation.json");
+		holidayRepository = new HolidayFileRepository(root + File.separator + "holiday.json");
 		imageRepository = new ImageFileRepository(root + File.separator + "images");
 
 		apartmentRepository.setAmenityRepository(amenityRepository);
@@ -88,6 +91,11 @@ public class FileRepositoryContainer implements RepositoryContainer {
 	@Override
 	public ImageRepository getImageRepository() {
 		return imageRepository;
+	}
+
+	@Override
+	public HolidayRepository getHolidayRepository() {
+		return holidayRepository;
 	}
 
 }

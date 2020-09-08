@@ -1,9 +1,9 @@
 package beans;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,8 +16,8 @@ public class Apartment implements Entity<Integer> {
 	private Integer numberOfRooms;
 	private Integer numberOfGuests;
 	private Location location;
-	private Collection<LocalDate> datesForRenting;
-	private Collection<LocalDate> availableDates;
+	private Collection<Date> datesForRenting;
+	private Collection<Date> availableDates;
 	private Collection<String> imageKeys;
 	private Double pricePerNight;
 	private LocalTime checkInTime;
@@ -82,19 +82,19 @@ public class Apartment implements Entity<Integer> {
 		this.location = location;
 	}
 
-	public Collection<LocalDate> getDatesForRenting() {
+	public Collection<Date> getDatesForRenting() {
 		return datesForRenting;
 	}
 
-	public void setDatesForRenting(Collection<LocalDate> datesForRenting) {
+	public void setDatesForRenting(Collection<Date> datesForRenting) {
 		this.datesForRenting = datesForRenting;
 	}
 
-	public Collection<LocalDate> getAvailableDates() {
+	public Collection<Date> getAvailableDates() {
 		return availableDates;
 	}
 
-	public void setAvailableDates(Collection<LocalDate> availableDates) {
+	public void setAvailableDates(Collection<Date> availableDates) {
 		this.availableDates = availableDates;
 	}
 

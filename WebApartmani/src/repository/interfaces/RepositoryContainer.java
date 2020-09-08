@@ -16,6 +16,8 @@ public interface RepositoryContainer {
 
 	ReservationRepository getReservationRepository();
 	
+	HolidayRepository getHolidayRepository();
+	
 	ImageRepository getImageRepository();
 
 }

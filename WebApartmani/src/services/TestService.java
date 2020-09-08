@@ -1,7 +1,6 @@
 package services;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalTime;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -16,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import beans.Apartment;
 import beans.Base64Image;
 import beans.Host;
-import beans.Reservation;
 import beans.ReservationStatus;
 import repository.file_repos.FileRepositoryContainer;
 
@@ -50,20 +48,6 @@ public class TestService {
 	public void enumTestRead(ReservationStatus rs) {
 		System.out.println(rs);
 		System.out.println(rs.equals(ReservationStatus.FINISHED));
-	}
-
-	@GET
-	@Path("/ignoreTest")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Host ignoreTestWrite() {
-		Apartment apartment = new Apartment();
-		Host host = new Host();
-		host.setName("Ime");
-		host.setSurname("Prezime");
-		host.setID(1);
-		host.getApartments().add(apartment);
-		apartment.setHost(host);
-		return host;
 	}
 
 	@POST
