@@ -5,7 +5,9 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Host extends User {
+import repository.generics.Entity;
+
+public class Host extends User implements Entity<Integer> {
 	@JsonIgnore
 	private Collection<Apartment> apartments;
 

@@ -10,6 +10,7 @@ import beans.Apartment;
 import beans.Host;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.ApartmentRepository;
+import repository.util.CounterGenerator;
 import repository.util.IntegerIDGenerator;
 
 public class ApartmentFileRepository extends GenericFileRepository<Apartment, Integer> implements ApartmentRepository {
@@ -23,7 +24,7 @@ public class ApartmentFileRepository extends GenericFileRepository<Apartment, In
 
 	public ApartmentFileRepository(String filePath) {
 		super(filePath);
-		generator = new IntegerIDGenerator(getAllIDs());
+		generator = new CounterGenerator(getAllIDs());
 	}
 
 	void setAmenityRepository(AmenityFileRepository amenityRepository) {

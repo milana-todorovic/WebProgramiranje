@@ -2,7 +2,7 @@ package repository.generics;
 
 import java.util.function.Predicate;
 
-public interface Repository<T extends Entity<ID>, ID> {
+public interface Repository<T extends Entity<ID>, ID> extends SimpleRepository<T, ID> {
 
 	Integer count();
 
@@ -13,11 +13,11 @@ public interface Repository<T extends Entity<ID>, ID> {
 	Boolean existsByID(ID id);
 
 	Iterable<T> getAll();
-	
+
 	Iterable<T> getMatching(Predicate<T> condition);
 
 	T fullGetByID(ID id);
-	
+
 	T simpleGetByID(ID id);
 
 	T create(T entity);

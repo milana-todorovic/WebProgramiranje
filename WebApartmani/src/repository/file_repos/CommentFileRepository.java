@@ -10,6 +10,7 @@ import beans.Comment;
 import beans.Guest;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.CommentRepository;
+import repository.util.CounterGenerator;
 import repository.util.IntegerIDGenerator;
 
 public class CommentFileRepository extends GenericFileRepository<Comment, Integer> implements CommentRepository {
@@ -21,7 +22,7 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 
 	public CommentFileRepository(String filePath) {
 		super(filePath);
-		generator = new IntegerIDGenerator(getAllIDs());
+		generator = new CounterGenerator(getAllIDs());
 	}
 
 	void setGuestRepository(GuestFileRepository guestRepository) {

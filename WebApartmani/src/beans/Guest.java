@@ -5,7 +5,9 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Guest extends User {
+import repository.generics.Entity;
+
+public class Guest extends User implements Entity<Integer> {
 
 	@JsonIgnore
 	private Collection<Reservation> reservations;

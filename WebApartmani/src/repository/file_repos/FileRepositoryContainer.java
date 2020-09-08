@@ -2,7 +2,15 @@ package repository.file_repos;
 
 import java.io.File;
 
+import repository.interfaces.AdminRepository;
+import repository.interfaces.AmenityRepository;
+import repository.interfaces.ApartmentRepository;
+import repository.interfaces.CommentRepository;
+import repository.interfaces.GuestRepository;
+import repository.interfaces.HostRepository;
+import repository.interfaces.ImageRepository;
 import repository.interfaces.RepositoryContainer;
+import repository.interfaces.ReservationRepository;
 
 public class FileRepositoryContainer implements RepositoryContainer {
 
@@ -13,6 +21,7 @@ public class FileRepositoryContainer implements RepositoryContainer {
 	private GuestFileRepository guestRepository;
 	private HostFileRepository hostRepository;
 	private ReservationFileRepository reservationRepository;
+	private ImageFileRepository imageRepository;
 
 	public FileRepositoryContainer(String root) {
 		adminRepository = new AdminFileRepository(root + File.separator + "admin.json");
@@ -22,6 +31,7 @@ public class FileRepositoryContainer implements RepositoryContainer {
 		guestRepository = new GuestFileRepository(root + File.separator + "guest.json");
 		hostRepository = new HostFileRepository(root + File.separator + "host.json");
 		reservationRepository = new ReservationFileRepository(root + File.separator + "reservation.json");
+		imageRepository = new ImageFileRepository(root + File.separator + "images");
 
 		apartmentRepository.setAmenityRepository(amenityRepository);
 		apartmentRepository.setCommentRepository(commentRepository);
@@ -40,60 +50,44 @@ public class FileRepositoryContainer implements RepositoryContainer {
 		reservationRepository.setApartmentRepository(apartmentRepository);
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getAdminRepository()
-	 */
 	@Override
-	public AdminFileRepository getAdminRepository() {
+	public AdminRepository getAdminRepository() {
 		return adminRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getAmenityRepository()
-	 */
 	@Override
-	public AmenityFileRepository getAmenityRepository() {
+	public AmenityRepository getAmenityRepository() {
 		return amenityRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getApartmentRepository()
-	 */
 	@Override
-	public ApartmentFileRepository getApartmentRepository() {
+	public ApartmentRepository getApartmentRepository() {
 		return apartmentRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getCommentRepository()
-	 */
 	@Override
-	public CommentFileRepository getCommentRepository() {
+	public CommentRepository getCommentRepository() {
 		return commentRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getGuestRepository()
-	 */
 	@Override
-	public GuestFileRepository getGuestRepository() {
+	public GuestRepository getGuestRepository() {
 		return guestRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getHostRepository()
-	 */
 	@Override
-	public HostFileRepository getHostRepository() {
+	public HostRepository getHostRepository() {
 		return hostRepository;
 	}
 
-	/* (non-Javadoc)
-	 * @see repository.file_repos.RepositoryContainer#getReservationRepository()
-	 */
 	@Override
-	public ReservationFileRepository getReservationRepository() {
+	public ReservationRepository getReservationRepository() {
 		return reservationRepository;
+	}
+
+	@Override
+	public ImageRepository getImageRepository() {
+		return imageRepository;
 	}
 
 }

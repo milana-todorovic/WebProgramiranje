@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import beans.Host;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.HostRepository;
+import repository.util.CounterGenerator;
 import repository.util.IntegerIDGenerator;
 
 public class HostFileRepository extends GenericFileRepository<Host, Integer> implements HostRepository {
@@ -17,7 +18,7 @@ public class HostFileRepository extends GenericFileRepository<Host, Integer> imp
 
 	public HostFileRepository(String filePath) {
 		super(filePath);
-		generator = new IntegerIDGenerator(getAllIDs());
+		generator = new CounterGenerator(getAllIDs());
 	}
 
 	void setApartmentRepository(ApartmentFileRepository apartmentRepository) {

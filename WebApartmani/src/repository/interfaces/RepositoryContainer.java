@@ -1,27 +1,21 @@
 package repository.interfaces;
 
-import repository.file_repos.AdminFileRepository;
-import repository.file_repos.AmenityFileRepository;
-import repository.file_repos.ApartmentFileRepository;
-import repository.file_repos.CommentFileRepository;
-import repository.file_repos.GuestFileRepository;
-import repository.file_repos.HostFileRepository;
-import repository.file_repos.ReservationFileRepository;
-
 public interface RepositoryContainer {
 
-	AdminFileRepository getAdminRepository();
+	AdminRepository getAdminRepository();
 
-	AmenityFileRepository getAmenityRepository();
+	AmenityRepository getAmenityRepository();
 
-	ApartmentFileRepository getApartmentRepository();
+	ApartmentRepository getApartmentRepository();
 
-	CommentFileRepository getCommentRepository();
+	CommentRepository getCommentRepository();
 
-	GuestFileRepository getGuestRepository();
+	GuestRepository getGuestRepository();
 
-	HostFileRepository getHostRepository();
+	HostRepository getHostRepository();
 
-	ReservationFileRepository getReservationRepository();
+	ReservationRepository getReservationRepository();
+	
+	ImageRepository getImageRepository();
 
 }

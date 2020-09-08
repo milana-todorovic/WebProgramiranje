@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import beans.User;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.AdminRepository;
+import repository.util.CounterGenerator;
 import repository.util.IntegerIDGenerator;
 
 public class AdminFileRepository extends GenericFileRepository<User, Integer> implements AdminRepository {
@@ -15,7 +16,7 @@ public class AdminFileRepository extends GenericFileRepository<User, Integer> im
 
 	public AdminFileRepository(String filePath) {
 		super(filePath);
-		generator = new IntegerIDGenerator(getAllIDs());
+		generator = new CounterGenerator(getAllIDs());
 	}
 
 	@Override

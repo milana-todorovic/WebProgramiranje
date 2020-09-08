@@ -1,13 +1,13 @@
 package beans;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import repository.generics.Entity;
 
 public class Reservation implements Entity<Integer> {
 
 	private Apartment apartment;
-	private LocalDate startDate;
+	private Date startDate;
 	private Integer numberOfNights;
 	private Double totalPrice;
 	private String message;
@@ -29,11 +29,11 @@ public class Reservation implements Entity<Integer> {
 		this.apartment = apartment;
 	}
 
-	public LocalDate getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
