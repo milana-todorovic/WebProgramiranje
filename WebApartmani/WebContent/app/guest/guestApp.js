@@ -21,5 +21,5 @@ var appGuest = new Vue({
 	data : {
 		title : "Guest naslov"
     },
-	
+	components: {ApartmentComponent, ReservationComponent, ApartmentDetailsComponent, ProfileComponent}
 });

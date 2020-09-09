@@ -234,7 +234,7 @@ Vue.component("admin-apartments",{
         prikaziDetaljeFun: function(apartman){
             alert('radi' + apartman.ime);
 
-            window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
+            window.location.href = "http://localhost:8081/WebApartmani/admin.html#/apartmentDetails";
         }
     },
 

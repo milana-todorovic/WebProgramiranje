@@ -21,5 +21,5 @@ var appAdmin = new Vue({
 	data : {
 		title : "Admin naslov"
     },
-	
+	components: {ApartmentComponent, ApartmentDetailsComponent, UsersComponent, ReservationComponent}
 });

@@ -23,5 +23,6 @@ var appHost = new Vue({
 	data : {
 		title : "Host naslov"
     },
-	
+    components : { ApartmentComponent, ReservationComponent, 
+    	ApartmentDetailsComponent, UsersComponent, AddApartmentComponent },
 });

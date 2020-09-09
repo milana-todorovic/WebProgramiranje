@@ -5,8 +5,10 @@
 <title>Admin</title>
 
 <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->
-<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
-<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
+<link type="text/css" rel="stylesheet"
+	href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet"
+	href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 
 <!-- Custom CSS -->
 <link rel="stylesheet" href="css/styles.css">
@@ -14,28 +16,30 @@
 </head>
 <body>
 	<div id="adminApp">
-        <admin-navbar></admin-navbar>
+		<admin-navbar></admin-navbar>
 
 		<router-view></router-view>
 	</div>
 
 	<!-- <script src="js/vue.js"></script> -->
 	<script src="js/axios.js"></script>
-    
-    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
+
+	<!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
 	<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
-	<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
-	<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
-    <script src="js/vue-router.js"></script>
-	    
+	<script
+		src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+	<script
+		src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+	<script src="js/vue-router.js"></script>
 
-    <script src="app/admin/adminApp.js"></script>
-    <script src="app/admin/components/adminNavbar.js"></script>
-    <script src="app/admin/components/adminApartment.js"></script>
-    <script src="app/admin/components/adminApartmentDetails.js"></script>
-    <script src="app/admin/components/adminReservation.js"></script>
-    <script src="app/admin/components/adminUsers.js"></script>
 
+
+	<script src="app/admin/components/adminNavbar.js"></script>
+	<script src="app/admin/components/adminApartment.js"></script>
+	<script src="app/admin/components/adminApartmentDetails.js"></script>
+	<script src="app/admin/components/adminReservation.js"></script>
+	<script src="app/admin/components/adminUsers.js"></script>
+	<script src="app/admin/adminApp.js"></script>
 
 
 </body>
