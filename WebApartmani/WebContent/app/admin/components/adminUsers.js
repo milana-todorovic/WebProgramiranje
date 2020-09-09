@@ -1,4 +1,4 @@
-Vue.component("guest-adminUsers",{
+Vue.component("admin-users",{
     data: function(){
         return{
             flag:0,

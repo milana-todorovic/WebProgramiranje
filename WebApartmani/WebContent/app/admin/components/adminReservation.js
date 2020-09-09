@@ -1,4 +1,4 @@
-Vue.component("guest-admin",{
+Vue.component("admin-reservations",{
     data: function(){
         return{
             rezervacije:[
