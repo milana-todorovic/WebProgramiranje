@@ -1,4 +1,4 @@
-Vue.component("guest-hostAp",{
+Vue.component("host-apartments",{
     data: function(){
         return{
             name: 'Apartmani',

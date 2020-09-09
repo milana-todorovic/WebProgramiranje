@@ -1,4 +1,4 @@
-Vue.component("guest-hostUsers",{
+Vue.component("host-users",{
     data: function(){
         return{
             flag:0,

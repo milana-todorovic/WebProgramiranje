@@ -1,4 +1,4 @@
-Vue.component("guest-host",{
+Vue.component("host-reservations",{
     data: function(){
         return{
             rezervacije:[

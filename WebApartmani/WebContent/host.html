@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Guest</title>
+<title>Host</title>
 
 <!-- Add Bootstrap and Bootstrap-Vue CSS to the <head> section -->
 <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
@@ -10,14 +10,14 @@
 
 <!-- Custom CSS -->
 <link rel="stylesheet" href="css/styles.css">
-
 </head>
 <body>
-	<div id="guestApp">
-        <guest-navbar></guest-navbar>
+	<div id="hostApp">
+        <host-navbar></host-navbar>
 
 		<router-view></router-view>
-	</div>
+    </div>
+    
 
 	<!-- <script src="js/vue.js"></script> -->
 	<script src="js/axios.js"></script>
@@ -29,13 +29,12 @@
     <script src="js/vue-router.js"></script>
 	    
 
-    <script src="app/guest/guestApp.js"></script>
-	<script src="app/guest/components/guestNavbar.js"></script>
-	<script src="app/guest/components/guestApartment.js"></script>
-	<script src="app/guest/components/guestReservation.js"></script>
-	<script src="app/guest/components/guestProfile.js"></script>
-	<script src="app/guest/components/guestApartmentDetails.js"></script>
-
+    <script src="app/host/hostApp.js"></script>
+    <script src="app/host/components/hostNavbar.js"></script>
+    <script src="app/host/components/hostUsers.js"></script>
+    <script src="app/host/components/hostReservation.js"></script>
+    <script src="app/host/components/hostApartmentDetails.js"></script>
+    <script src="app/host/components/hostApartment.js"></script>
 
 
 
