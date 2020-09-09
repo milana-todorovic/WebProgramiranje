@@ -36,7 +36,23 @@ Vue.component("host-apartmentDetails",{
                 ocena:"10",
                 gost:"Jovo Jovic"
             }
-          ]
+          ],
+          options2:[
+            {text:'Tus kabina',value:'tus'},
+            {text:'Posudje',value:'posudje'},
+            {text:'Fen za kosu',value:'fen'},
+            {text: 'Pegla',value:'pegla'},
+            {text:'Ves masina',value:'ves'},
+            {text:'Parking',value:'parking'},
+            {text:'Bazen',value:'bazen'},
+            {text:'Klima',value:'klima'},
+            {text:'Wifi',value:'wifi'},
+            {text:'Smart tv',value:'tv'},
+            {text:'Grejanje',value:'grejanje'},
+            {text:'Peskiri',value:'peskiri'},
+            {text:'Frizider',value:'frizider'},
+            {text:'Lift',value:'lift'}
+        ]
          
         }
     },
@@ -146,8 +162,8 @@ Vue.component("host-apartmentDetails",{
                                         <b><label>Lokacija</label></b>
                                             <b-form-input placeholder="Unesite lokaciju"></b-form-input>
                                         <br>
-                                        <b><label>Cena po nocenju</label></b>
-                                            <b-form-input placeholder="Unesite cenu po nocenju"></b-form-input>
+                                        <b><label>Cena po no\u0107enju</label></b>
+                                            <b-form-input placeholder="Unesite cenu po no\u0107enju"></b-form-input>
                                         <br>
                                         <b><label>Vreme za prijavu</label></b>
                                             <b-form-input placeholder="Unesite vreme za prijavu"></b-form-input>
@@ -159,6 +175,19 @@ Vue.component("host-apartmentDetails",{
                                             <b-form-radio name="some-radios" value="aktivan">Aktivan</b-form-radio>
                                             <b-form-radio name="some-radios" value="neaktivan">Neaktivan</b-form-radio>
                                         <br>
+                                        <b><b-form-group label="Sadr\u017Eaji"></b>
+                                            <b-form-checkbox-group
+                                                :options="options2"
+                                                plain
+                                                stacked
+                                                ></b-form-checkbox-group>
+                                            </b-form-group>
+                                    
+                                        <br><br>
+                                        <b-button variant="primary">
+                                            <b-icon icon="pencil-square"></b-icon>
+                                            Izmeni
+                                        </b-button>
 
                                     </b-card>
                                 </b-row>

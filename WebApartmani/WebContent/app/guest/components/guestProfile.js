@@ -8,66 +8,66 @@ Vue.component("guest-profile", {
                 prezimeKorisnika: "Maksimovic",
                 password: "anamaksi12",
                 pol: "zenski",
+                uloga:"gost"
                 
-            },
-            passwordDisable: true,
-            nameDisable:true,
-            surnameDisable:true,
-            genderDisable:true
+            }
 
 
         }
     },
     template: `
+        
         <div>
             <b-container>
-                <b-card style="max-width: 740px;margin-top:5%;padding:10%;">
-                    
-                        <b-row>
-                            <b-col>
-                                <h1>Vas profil i licni podaci</h1>
-                            
+                <b-row>
+                    <b-col>
+                        <b-card style="max-width:680px;margin-top:5%;">
+                            <h1>Korisnikovi podaci</h1>
+
                             <br>
-                                <label>Ime:</label>
-                                <b-form-input :disabled=nameDisable v-model="osoba.imeKorisnika"></b-form-input>
-                                <b-buton>Uredi</b-button>
+                            <b><label>Ime korisnika</label></b>
+                            <b-form-input></b-form-input>
                             <br>
-                                <label>Prezime:</label>
-                                <b-form-input :disabled=surnameDisable v-model="osoba.prezimeKorisnika"></b-form-input>
-                            
+
+                            <b><label>Prezime korisnika</label></b>
+                                <b-form-input></b-form-input>
                             <br>
-                                <label>Pol: </label>
-                                <b-form-input :disabled=genderDisable v-model="osoba.pol"></b-form-input>
+
+                            <b><label>Uloga<label></b>
+                                <b-form-input></b-form-input>
                             <br>
-                          
-                               <label>Trenutna lozinka: </label> {{osoba.password}}
-                              
-                            <br>
-                                
-                                <label>Nova lozinka: </label>
-                                <b-form-input  :disabled=passwordDisable v-model="osoba.password"></b-form-input> 
-                            
-                            <br>
-                                <label>Ponovno ukucavanje nove lozinke:</label>
+
+                            <b><label>Pol</label></b>
                                 <b-form-input></b-form-input>
                             <br>
                             
-                                <b-button variant="primary" @click="promeni"> Uredi </b-button>
-                                
+                          
+                                     
+                            <b><label>Nova lozinka</label></b>
+                                <b-form-input></b-form-input>
+                            <br>
+                            <b><label>Ponovno ukucavanje nove lozinke</label></b>
+                                <b-form-input></b-form-input>
+                            <br>
+                                            
+                            
+
+                            <b-button variant="primary">
+                                <b-icon icon="pencil-square"></b-icon>
+                                Izmeni
+                            </b-button>
+                        </b-card>
+
                         
 
-                        </b-col>
-                    </b-row>
-                </b-card>
+                    <br>
+                    </b-col>
+                </b-row>
             </b-container>
-           
+     
         </div>
            
-    `,
-    methods: {
-        promeni: function(){
-            passwordDisable = !passwordDisable
-        }
-    },
-
+      
+           
+    `
 });

@@ -218,6 +218,7 @@ Vue.component("host-apartments",{
                         </dl>
                     </div>
                 </b-col>
+            
             </b-row>
 
 
