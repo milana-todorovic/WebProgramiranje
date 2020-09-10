@@ -1,5 +1,7 @@
 package app;
 
+import java.io.File;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -17,8 +19,8 @@ public class Initializer implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		//String root = arg0.getServletContext().getRealPath("") + File.separator + "WEB-INF" + File.separator + "data";
-		arg0.getServletContext().setAttribute("repo", new FileRepositoryContainer("C:\\Users\\Lana\\Desktop\\data"));
+		String root = arg0.getServletContext().getRealPath("") + File.separator + "WEB-INF" + File.separator + "data";
+		arg0.getServletContext().setAttribute("repo", new FileRepositoryContainer(root));
 	}
 
 }
