@@ -5,15 +5,24 @@ import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Guest extends User {
+import repository.generics.Entity;
+
+public class Guest extends User implements Entity<Integer> {
 
 	@JsonIgnore
 	private Collection<Reservation> reservations;
-	@JsonIgnore
-	public Collection<Apartment> rentedApartments;
+	private Collection<Apartment> rentedApartments;
 
 	public Guest() {
 		super();
+		role = UserRole.GUEST;
+		reservations = new ArrayList<Reservation>();
+		rentedApartments = new ArrayList<Apartment>();
+	}
+
+	public Guest(String username, String password, String name, String surname, String gender) {
+		super(username, password, name, surname, gender);
+		role = UserRole.GUEST;
 		reservations = new ArrayList<Reservation>();
 		rentedApartments = new ArrayList<Apartment>();
 	}

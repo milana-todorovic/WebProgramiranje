@@ -1,25 +1,29 @@
 package beans;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Apartment {
+import repository.generics.Entity;
 
+public class Apartment implements Entity<Integer> {
+
+	private String name;
 	private ApartmentType apartmentType;
-	private int numberOfRooms;
-	private int numberOfGuests;
+	private Integer numberOfRooms;
+	private Integer numberOfGuests;
 	private Location location;
-	private Collection<LocalDate> datesForRenting;
-	@JsonIgnore
-	private Collection<LocalDate> availableDates;
+	private Collection<Date> datesForRenting;
+	private Collection<Date> availableDates;
 	private Collection<String> imageKeys;
-	private double pricePerNight;
-	private LocalTime checkInTime;
-	private LocalTime checkOutTime;
+	private Double pricePerNight;
+	@JsonFormat(pattern = "HH:mm:ss", shape = JsonFormat.Shape.STRING)
+	private Date checkInTime;
+	@JsonFormat(pattern = "HH:mm:ss", shape = JsonFormat.Shape.STRING)
+	private Date checkOutTime;
 	private ApartmentStatus status;
 	private Collection<Amenity> amenities;
 	@JsonIgnore
@@ -27,7 +31,7 @@ public class Apartment {
 	@JsonIgnore
 	private Collection<Reservation> reservations;
 	private Host host;
-	private int id;
+	private Integer id;
 
 	public Apartment() {
 		super();
@@ -37,9 +41,37 @@ public class Apartment {
 		amenities = new ArrayList<>();
 		comments = new ArrayList<>();
 		reservations = new ArrayList<>();
-		checkInTime = LocalTime.of(14, 0);
-		checkOutTime = LocalTime.of(10, 0);
 		status = ApartmentStatus.INACIVE;
+	}
+
+	public Apartment(String name, ApartmentType apartmentType, Integer numberOfRooms, Integer numberOfGuests,
+			Location location, Double pricePerNight, Date checkInTime, Date checkOutTime, ApartmentStatus status,
+			Host host) {
+		super();
+		this.name = name;
+		this.apartmentType = apartmentType;
+		this.numberOfRooms = numberOfRooms;
+		this.numberOfGuests = numberOfGuests;
+		this.location = location;
+		this.pricePerNight = pricePerNight;
+		this.checkInTime = checkInTime;
+		this.checkOutTime = checkOutTime;
+		this.status = status;
+		this.host = host;
+		datesForRenting = new ArrayList<>();
+		availableDates = new ArrayList<>();
+		imageKeys = new ArrayList<>();
+		amenities = new ArrayList<>();
+		comments = new ArrayList<>();
+		reservations = new ArrayList<>();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public ApartmentType getApartmentType() {
@@ -50,19 +82,19 @@ public class Apartment {
 		this.apartmentType = apartmentType;
 	}
 
-	public int getNumberOfRooms() {
+	public Integer getNumberOfRooms() {
 		return numberOfRooms;
 	}
 
-	public void setNumberOfRooms(int numberOfRooms) {
+	public void setNumberOfRooms(Integer numberOfRooms) {
 		this.numberOfRooms = numberOfRooms;
 	}
 
-	public int getNumberOfGuests() {
+	public Integer getNumberOfGuests() {
 		return numberOfGuests;
 	}
 
-	public void setNumberOfGuests(int numberOfGuests) {
+	public void setNumberOfGuests(Integer numberOfGuests) {
 		this.numberOfGuests = numberOfGuests;
 	}
 
@@ -74,19 +106,19 @@ public class Apartment {
 		this.location = location;
 	}
 
-	public Collection<LocalDate> getDatesForRenting() {
+	public Collection<Date> getDatesForRenting() {
 		return datesForRenting;
 	}
 
-	public void setDatesForRenting(Collection<LocalDate> datesForRenting) {
+	public void setDatesForRenting(Collection<Date> datesForRenting) {
 		this.datesForRenting = datesForRenting;
 	}
 
-	public Collection<LocalDate> getAvailableDates() {
+	public Collection<Date> getAvailableDates() {
 		return availableDates;
 	}
 
-	public void setAvailableDates(Collection<LocalDate> availableDates) {
+	public void setAvailableDates(Collection<Date> availableDates) {
 		this.availableDates = availableDates;
 	}
 
@@ -98,27 +130,27 @@ public class Apartment {
 		this.imageKeys = imageKeys;
 	}
 
-	public double getPricePerNight() {
+	public Double getPricePerNight() {
 		return pricePerNight;
 	}
 
-	public void setPricePerNight(double pricePerNight) {
+	public void setPricePerNight(Double pricePerNight) {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public LocalTime getCheckInTime() {
+	public Date getCheckInTime() {
 		return checkInTime;
 	}
 
-	public void setCheckInTime(LocalTime checkInTime) {
+	public void setCheckInTime(Date checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
-	public LocalTime getCheckOutTime() {
+	public Date getCheckOutTime() {
 		return checkOutTime;
 	}
 
-	public void setCheckOutTime(LocalTime checkOutTime) {
+	public void setCheckOutTime(Date checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
 
@@ -162,12 +194,39 @@ public class Apartment {
 		this.host = host;
 	}
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Apartment other = (Apartment) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }

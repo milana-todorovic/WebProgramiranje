@@ -1,21 +1,37 @@
 package beans;
 
-import java.time.LocalDate;
+import java.util.Date;
 
-public class Reservation {
+import repository.generics.Entity;
+
+public class Reservation implements Entity<Integer> {
 
 	private Apartment apartment;
-	private LocalDate startDate;
-	private int numberOfNights;
-	private double totalPrice;
+	private Date startDate;
+	private Integer numberOfNights;
+	private Double totalPrice;
 	private String message;
 	private ReservationStatus status;
 	private Guest guest;
-	private int id;
-		
+	private Boolean guestCanComment;
+	private Integer id;
+
 	public Reservation() {
 		super();
 		status = ReservationStatus.CREATED;
+	}
+
+	public Reservation(Apartment apartment, Date startDate, Integer numberOfNights, Double totalPrice, String message,
+			ReservationStatus status, Guest guest, Boolean guestCanComment) {
+		super();
+		this.apartment = apartment;
+		this.startDate = startDate;
+		this.numberOfNights = numberOfNights;
+		this.totalPrice = totalPrice;
+		this.message = message;
+		this.status = status;
+		this.guest = guest;
+		this.guestCanComment = guestCanComment;
 	}
 
 	public Apartment getApartment() {
@@ -26,27 +42,27 @@ public class Reservation {
 		this.apartment = apartment;
 	}
 
-	public LocalDate getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public int getNumberOfNights() {
+	public Integer getNumberOfNights() {
 		return numberOfNights;
 	}
 
-	public void setNumberOfNights(int numberOfNights) {
+	public void setNumberOfNights(Integer numberOfNights) {
 		this.numberOfNights = numberOfNights;
 	}
 
-	public double getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(double totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -74,12 +90,47 @@ public class Reservation {
 		this.guest = guest;
 	}
 
-	public int getId() {
+	@Override
+	public Integer getID() {
 		return id;
 	}
 
-	public void setId(int id) {
+	@Override
+	public void setID(Integer id) {
 		this.id = id;
+	}
+
+	public Boolean getGuestCanComment() {
+		return guestCanComment;
+	}
+
+	public void setGuestCanComment(Boolean guestCanComment) {
+		this.guestCanComment = guestCanComment;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reservation other = (Reservation) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }
