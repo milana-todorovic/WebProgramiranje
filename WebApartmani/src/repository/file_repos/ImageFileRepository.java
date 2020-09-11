@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.Base64Image;
 import repository.interfaces.ImageRepository;
-import repository.util.CounterInFileGenerator;
+import repository.util.PersistentSequencer;
 import repository.util.IntegerIDGenerator;
 
 public class ImageFileRepository implements ImageRepository {
@@ -16,7 +16,7 @@ public class ImageFileRepository implements ImageRepository {
 	private String directoryPath;
 	private IntegerIDGenerator generator;
 
-	public ImageFileRepository(String directoryPath) {
+	protected ImageFileRepository(String directoryPath) {
 		this.directoryPath = directoryPath;
 		File file = new File(directoryPath);
 		if (!file.exists()) {
@@ -26,7 +26,7 @@ public class ImageFileRepository implements ImageRepository {
 				e.printStackTrace();
 			}
 		}
-		this.generator = new CounterInFileGenerator(makePath("id"));
+		this.generator = new PersistentSequencer(makePath("id"));
 	}
 
 	private String makePath(String id) {

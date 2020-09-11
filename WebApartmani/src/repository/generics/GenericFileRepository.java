@@ -29,7 +29,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		}
 	}
 
-	protected abstract ID generateID();
+	protected abstract ID generateID(T entity);
 
 	protected abstract T writeResolve(T entity);
 
@@ -138,7 +138,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 
 	@Override
 	public T create(T entity) {
-		entity.setID(generateID());
+		entity.setID(generateID(entity));
 		List<T> entities = readFile();
 		entities.add(writeResolve(entity));
 		writeFile(entities);

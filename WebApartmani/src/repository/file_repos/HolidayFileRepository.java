@@ -7,20 +7,20 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import beans.Holiday;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.HolidayRepository;
-import repository.util.CounterGenerator;
+import repository.util.Sequencer;
 import repository.util.IntegerIDGenerator;
 
 public class HolidayFileRepository extends GenericFileRepository<Holiday, Integer> implements HolidayRepository {
 
 	private IntegerIDGenerator generator;
 
-	public HolidayFileRepository(String filePath) {
+	protected HolidayFileRepository(String filePath) {
 		super(filePath);
-		generator = new CounterGenerator(getAllIDs());
+		generator = new Sequencer(getAllIDs());
 	}
 
 	@Override
-	protected Integer generateID() {
+	protected Integer generateID(Holiday entity) {
 		return generator.generateID();
 	}
 

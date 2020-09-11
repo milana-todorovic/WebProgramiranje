@@ -7,20 +7,20 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import beans.Amenity;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.AmenityRepository;
-import repository.util.CounterGenerator;
+import repository.util.Sequencer;
 import repository.util.IntegerIDGenerator;
 
 public class AmenityFileRepository extends GenericFileRepository<Amenity, Integer> implements AmenityRepository {
 
 	private IntegerIDGenerator generator;
 
-	public AmenityFileRepository(String filePath) {
+	protected AmenityFileRepository(String filePath) {
 		super(filePath);
-		generator = new CounterGenerator(getAllIDs());
+		generator = new Sequencer(getAllIDs());
 	}
 
 	@Override
-	protected Integer generateID() {
+	protected Integer generateID(Amenity entity) {
 		return generator.generateID();
 	}
 

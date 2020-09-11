@@ -10,7 +10,7 @@ import beans.Comment;
 import beans.Guest;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.CommentRepository;
-import repository.util.CounterGenerator;
+import repository.util.Sequencer;
 import repository.util.IntegerIDGenerator;
 
 public class CommentFileRepository extends GenericFileRepository<Comment, Integer> implements CommentRepository {
@@ -20,9 +20,9 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 	private GuestFileRepository guestRepository;
 	private ApartmentFileRepository apartmentRepository;
 
-	public CommentFileRepository(String filePath) {
+	protected CommentFileRepository(String filePath) {
 		super(filePath);
-		generator = new CounterGenerator(getAllIDs());
+		generator = new Sequencer(getAllIDs());
 	}
 
 	void setGuestRepository(GuestFileRepository guestRepository) {
@@ -34,7 +34,7 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 	}
 
 	@Override
-	protected Integer generateID() {
+	protected Integer generateID(Comment entity) {
 		return generator.generateID();
 	}
 
@@ -74,7 +74,7 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 		}
 	}
 
-	List<Comment> getByApartmentInternal(Apartment apartment) {
+	protected List<Comment> getByApartmentInternal(Apartment apartment) {
 		List<Comment> retVal = new ArrayList<Comment>();
 		for (Comment entity : readFile()) {
 			if (entity.getApartment() != null && entity.getApartment().equals(apartment)) {

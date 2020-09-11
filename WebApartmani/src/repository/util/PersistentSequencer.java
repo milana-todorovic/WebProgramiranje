@@ -6,11 +6,11 @@ import java.nio.file.Paths;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CounterInFileGenerator implements IntegerIDGenerator {
+public class PersistentSequencer implements IntegerIDGenerator {
 
 	private String filePath;
 
-	public CounterInFileGenerator(String filePath) {
+	public PersistentSequencer(String filePath) {
 		this.filePath = filePath;
 		File file = new File(filePath);
 		if (!file.exists()) {

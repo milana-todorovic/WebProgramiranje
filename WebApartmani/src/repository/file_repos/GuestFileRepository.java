@@ -9,19 +9,14 @@ import beans.Apartment;
 import beans.Guest;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.GuestRepository;
-import repository.util.CounterGenerator;
-import repository.util.IntegerIDGenerator;
 
 public class GuestFileRepository extends GenericFileRepository<Guest, Integer> implements GuestRepository {
-
-	private IntegerIDGenerator generator;
 
 	private ApartmentFileRepository apartmentRepository;
 	private ReservationFileRepository reservationRepository;
 
-	public GuestFileRepository(String filePath) {
+	protected GuestFileRepository(String filePath) {
 		super(filePath);
-		generator = new CounterGenerator(getAllIDs());
 	}
 
 	void setApartmentRepository(ApartmentFileRepository apartmentRepository) {
@@ -33,8 +28,8 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 	}
 
 	@Override
-	protected Integer generateID() {
-		return generator.generateID();
+	protected Integer generateID(Guest entity) {
+		return entity.getID();
 	}
 
 	@Override
@@ -98,7 +93,7 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 		reference.setReservations(null);
 		return reference;
 	}
-	
+
 	@Override
 	protected TypeReference<?> getListType() {
 		return new TypeReference<List<Guest>>() {

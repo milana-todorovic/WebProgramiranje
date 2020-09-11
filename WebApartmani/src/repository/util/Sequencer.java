@@ -2,21 +2,21 @@ package repository.util;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CounterGenerator implements IntegerIDGenerator {
+public class Sequencer implements IntegerIDGenerator {
 
 	private AtomicInteger currentID;
 
-	public CounterGenerator() {
+	public Sequencer() {
 		super();
 		this.currentID = new AtomicInteger(0);
 	}
 
-	public CounterGenerator(Integer startID) {
+	public Sequencer(Integer startID) {
 		super();
 		this.currentID = new AtomicInteger(startID);
 	}
 
-	public CounterGenerator(Iterable<Integer> existingIDs) {
+	public Sequencer(Iterable<Integer> existingIDs) {
 		super();
 		int currentID = -1;
 		for (Integer ID : existingIDs) {

@@ -10,7 +10,7 @@ import beans.Guest;
 import beans.Reservation;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.ReservationRepository;
-import repository.util.CounterGenerator;
+import repository.util.Sequencer;
 import repository.util.IntegerIDGenerator;
 
 public class ReservationFileRepository extends GenericFileRepository<Reservation, Integer>
@@ -21,9 +21,9 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 	private ApartmentFileRepository apartmentRepository;
 	private GuestFileRepository guestRepository;
 
-	public ReservationFileRepository(String filePath) {
+	protected ReservationFileRepository(String filePath) {
 		super(filePath);
-		generator = new CounterGenerator(getAllIDs());
+		generator = new Sequencer(getAllIDs());
 	}
 
 	void setApartmentRepository(ApartmentFileRepository apartmentRepository) {
@@ -35,7 +35,7 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 	}
 
 	@Override
-	protected Integer generateID() {
+	protected Integer generateID(Reservation entity) {
 		return generator.generateID();
 	}
 
@@ -81,7 +81,7 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 		}
 	}
 
-	List<Reservation> getByApartmentInternal(Apartment apartment) {
+	protected List<Reservation> getByApartmentInternal(Apartment apartment) {
 		List<Reservation> retVal = new ArrayList<Reservation>();
 		for (Reservation entity : readFile()) {
 			if (entity.getApartment() != null && entity.getApartment().equals(apartment)) {
@@ -92,7 +92,7 @@ public class ReservationFileRepository extends GenericFileRepository<Reservation
 		return retVal;
 	}
 
-	List<Reservation> getByGuestInternal(Guest guest) {
+	protected List<Reservation> getByGuestInternal(Guest guest) {
 		List<Reservation> retVal = new ArrayList<Reservation>();
 		for (Reservation entity : readFile()) {
 			if (entity.getGuest() != null && entity.getGuest().equals(guest)) {

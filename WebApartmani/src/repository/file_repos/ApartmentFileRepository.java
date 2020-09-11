@@ -10,7 +10,7 @@ import beans.Apartment;
 import beans.Host;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.ApartmentRepository;
-import repository.util.CounterGenerator;
+import repository.util.Sequencer;
 import repository.util.IntegerIDGenerator;
 
 public class ApartmentFileRepository extends GenericFileRepository<Apartment, Integer> implements ApartmentRepository {
@@ -22,9 +22,9 @@ public class ApartmentFileRepository extends GenericFileRepository<Apartment, In
 	private CommentFileRepository commentRepository;
 	private ReservationFileRepository reservationRepository;
 
-	public ApartmentFileRepository(String filePath) {
+	protected ApartmentFileRepository(String filePath) {
 		super(filePath);
-		generator = new CounterGenerator(getAllIDs());
+		generator = new Sequencer(getAllIDs());
 	}
 
 	void setAmenityRepository(AmenityFileRepository amenityRepository) {
@@ -44,7 +44,7 @@ public class ApartmentFileRepository extends GenericFileRepository<Apartment, In
 	}
 
 	@Override
-	protected Integer generateID() {
+	protected Integer generateID(Apartment entity) {
 		return generator.generateID();
 	}
 
@@ -118,7 +118,7 @@ public class ApartmentFileRepository extends GenericFileRepository<Apartment, In
 		entity.setReservations(reservationRepository.getByApartmentInternal(entity));
 	}
 
-	List<Apartment> getByHostInternal(Host host) {
+	protected List<Apartment> getByHostInternal(Host host) {
 		List<Apartment> retVal = new ArrayList<Apartment>();
 		for (Apartment entity : readFile()) {
 			if (entity.getHost() != null && entity.getHost().equals(host)) {
