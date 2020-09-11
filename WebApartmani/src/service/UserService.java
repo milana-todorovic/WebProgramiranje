@@ -63,7 +63,7 @@ public class UserService {
 		// validirati da nisu prazni parametri i da je stari pass tačan
 	}
 
-	public void block(Integer id) {
+	public void changeBlockStatus(Integer id, Boolean blocked) {
 		// TODO vratiti User ili ne? dodati blokiranje kao atribut
 	}
 
