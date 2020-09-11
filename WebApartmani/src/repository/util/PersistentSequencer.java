@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import custom_exception.RepositoryException;
+
 public class PersistentSequencer implements IntegerIDGenerator {
 
 	private String filePath;
@@ -18,7 +20,7 @@ public class PersistentSequencer implements IntegerIDGenerator {
 				file.createNewFile();
 				writeFile(0);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RepositoryException(e);
 			}
 		}
 	}
@@ -29,7 +31,7 @@ public class PersistentSequencer implements IntegerIDGenerator {
 		try {
 			id = mapper.readValue(Paths.get(filePath).toFile(), Integer.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RepositoryException(e);
 		}
 		if (id == null)
 			return 0;
@@ -43,7 +45,7 @@ public class PersistentSequencer implements IntegerIDGenerator {
 		try {
 			mapper.writeValue(Paths.get(filePath).toFile(), id);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RepositoryException(e);
 		}
 	}
 

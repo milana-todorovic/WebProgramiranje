@@ -12,6 +12,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import custom_exception.RepositoryException;
+
 public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements Repository<T, ID> {
 
 	private String filePath;
@@ -24,7 +26,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 				file.createNewFile();
 				writeFile(new ArrayList<T>());
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RepositoryException(e);
 			}
 		}
 	}
@@ -45,7 +47,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		try {
 			entities = mapper.readValue(Paths.get(filePath).toFile(), getListType());
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RepositoryException(e);
 		}
 		if (entities == null)
 			return new ArrayList<T>();
@@ -60,7 +62,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		try {
 			mapper.writeValue(Paths.get(filePath).toFile(), entities);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RepositoryException(e);
 		}
 	}
 

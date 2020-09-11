@@ -2,6 +2,7 @@ package repository.file_repos;
 
 import java.io.File;
 
+import custom_exception.RepositoryException;
 import repository.interfaces.AdminRepository;
 import repository.interfaces.AmenityRepository;
 import repository.interfaces.ApartmentRepository;
@@ -31,7 +32,7 @@ public class FileRepositoryContainer implements RepositoryContainer {
 			try {
 				file.mkdir();
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw new RepositoryException(e);
 			}
 		}
 
