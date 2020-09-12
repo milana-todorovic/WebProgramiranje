@@ -1,4 +1,4 @@
-Vue.component("guest-apartments",{
+Vue.component("admin-apartments",{
     data: function(){
         return{
             name: 'Apartmani',
@@ -50,6 +50,11 @@ Vue.component("guest-apartments",{
                 {text:'Peskiri',value:'peskiri'},
                 {text:'Frizider',value:'frizider'},
                 {text:'Lift',value:'lift'}
+            ],
+         
+            options4:[
+                {text:'Aktivan',value:'aktivan'},
+                {text:'Neaktivan',value:'neaktivan'}
             ]
         }
     
@@ -120,6 +125,16 @@ Vue.component("guest-apartments",{
                             
                                 <br><br>
 
+                                <b><b-form-group label="Status"></b>
+                                <b-form-checkbox-group
+                                    :options="options4"
+                                    plain
+                                    stacked
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                        
+                            <br><br>
+
                                 <b-button  variant="primary">
                                     <b-icon icon="funnel-fill"></b-icon>
                                         Filtriraj
@@ -177,6 +192,11 @@ Vue.component("guest-apartments",{
                                                         Prika&#x17E;i detalje
                                                         <b-icon icon="arrow-right">
                                                     </b-button>
+                                                    <br><br>
+                                                    <b-button variant="danger">
+                                                        <b-icon icon="x"></b-icon>
+                                                        Ukloni apartman
+                                                    </b-button>
                                                    
                         
                                     
@@ -208,7 +228,7 @@ Vue.component("guest-apartments",{
         prikaziDetaljeFun: function(apartman){
             alert('radi' + apartman.ime);
 
-            window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
+            window.location.href = "http://localhost:8081/WebApartmani/admin.html#/apartmentDetails";
         }
     },
 

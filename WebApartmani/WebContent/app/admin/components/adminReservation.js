@@ -1,44 +1,85 @@
-Vue.component("guest-reservations",{
+Vue.component("admin-reservations",{
     data: function(){
         return{
-            name:'Rezervacije',
             rezervacije:[
                 {
                     imeApartmana:'Apartmani Ivana',
                     pocetniDatum:'25.5.2020',
                     krajnjiDatum:'28.10.2020',
                     cenaApartmana:'400$',
-                    status:'kreirana'
+                    status:'kreirana',
+                    gost:
+                    {
+                        imeGosta:'Pera',
+                        prezimeGosta:'Peric',
+                        korisnickoIme:'perica12@',
+                        pol:'muski'
+                    },
+                    poruka:'Parking obezbedjen.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+                
                 },
                 {
                     imeApartmana:'Apartmani Ana',
                     pocetniDatum:'2.8.2020',
                     krajnjiDatum:'28.8.2020',
                     cenaApartmana:'300$',
-                    status:'odbijena'
+                    status:'odbijena',
+                    gost:
+                    {
+                        imeGosta:'Pera',
+                        prezimeGosta:'Peric',
+                        korisnickoIme:'perica12@',
+                        pol:'muski'
+                    },
+                    poruka:'Hocu da mi voda bude ugrijana. Ne zelim buku i zelim fen za kosu.Hvala na razumijevanju.'
+                
                 },
                 {
                     imeApartmana:'Sobe Slobodan Bajic',
                     pocetniDatum:'21.10.2020',
                     krajnjiDatum:'22.10.2020',
                     cenaApartmana:'40$',
-                    status:'prihvacena'
+                    status:'prihvacena',
+                    gost:
+                    {
+                        imeGosta:'Pera',
+                        prezimeGosta:'Peric',
+                        korisnickoIme:'perica12@',
+                        pol:'muski'
+                    },
+                    poruka:'Zelim da apartman bude rashladjen.Hvala unapred.'
+                
                 }
-            ],
-            options3:[
-                {text:'Rastu\u0107e',value:'rastuce'},
-                {text:'Opadaju\u0107e',value:'opadajuce'}
             ]
            
-
+            
         }
-    }
-    ,
+    },
     template:`
+       
         <div>
             <b-container style="margin-left:1%;">
                 <b-row>
-                    <b-col sm="2" style="margin-left:1%;margin-top:5%;">
+                    <b-col>
+                        <b-card style=" padding: 0.5%;margin-left:1%;margin-top:1%;margin-right:6%;">
+                            <b-card-text>
+                                <b-form inline>
+                                    <b-form-input   placeholder="Korisni\u010Dko ime gosta"></b-form-input>
+                                    
+                                    
+                                    <b-button   variant="primary" style="margin-left:2%;">
+                                        <b-icon icon="search"></b-icon>
+                                        Pretra&#x17E;i
+                                    </b-button>
+                                </b-form>
+                            </b-card-text>
+                        </b-card>
+                    </b-col>
+                </b-row>
+                <br><br>
+                
+                <b-row>
+                    <b-col sm="2" style="margin-left:1%;">
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
@@ -53,25 +94,48 @@ Vue.component("guest-reservations",{
                             </b-card>
                                 
                         </div>
+                    
+                        <br>
+            
+                        <div>
+                            <b-card>
+                                <b-card-text>
+                                    <b>Filtriranje po statusu rezervacije</b>
+                                    <br><br>
+                                        <b-button  variant="primary">
+                                            <b-icon icon="funnel-fill"></b-icon>
+                                                Filtriraj
+                                        </b-button>
+                                        
+                                 </b-card-text>
+                            </b-card>
+                        
+                            
+                        </div>
                     </b-col>
+                        
+                    
 
                     <b-col>
                         <div>
                             <dl>
                                 <dd v-for="rezervacija in rezervacije">
-                                    <b-card style="max-width: 840px;margin-top:6%;">
+                                    <b-card style="max-width: 840px;">
                                         
 
                                         <b-container>
                                             <b-row>
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
-                                                        <a href= "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails" style="color:black;">
+                                                        <a href= "http://localhost:8081/WebApartmani/admin.html#/apartmentDetails" style="color:black;">
                                                         {{rezervacija.imeApartmana}}
                                                         </a>
-                        
                                                     </h1>
+                                                
+                                                
                                                     <div style="background-color:teal;padding:5%;color:white;font-size:18px">
+                                                        Gost <b>{{rezervacija.gost.imeGosta}} {{rezervacija.gost.prezimeGosta}}</b>
+                                                        <br>
                                                         Od  <b>{{rezervacija.pocetniDatum}}</b>
                                                         <br>
                                                         Do  <b>{{rezervacija.krajnjiDatum}}</b>
@@ -85,10 +149,8 @@ Vue.component("guest-reservations",{
                                                             <b-badge variant="success" >{{rezervacija.status}}</b-badge>
                                                         </h1>
                                                     
-                                                    <br>
-                                                    <b-button variant="outline-danger" @click="rezervacija.status='odustanak' ">
-                                                        Odustani
-                                                    </b-button>
+                                                    
+                                                   
                                                 </b-col>
                                             </b-row>
                                             <br>
@@ -96,19 +158,13 @@ Vue.component("guest-reservations",{
 
                                             <b-row>
                                                 <b-col>
-                                                    <br>
-                                                    Va&#x161; komentar:
-                                                    
-                                                    <b-form-textarea placeholder="Unesite komentar"></b-form-textarea>
-                                                    <br>
-                                                    Va&#x161;a ocena:
                                                 
-                                                    <b-form-rating stars="10" show-value precision="1"></b-form-rating>
-                                                    <br>
+                                                <b>Poruka koju je ostavio gost</b>
+                                                <br>
+                                                <div style="font-size:18px;">
+                                                        {{rezervacija.poruka}}
+                                                </div>
 
-                                                    <b-button variant="outline-primary">
-                                                        Ostavi komentar
-                                                    </b-button>
                                                 </b-col>
                                             </b-row>
                                         </b-container>
@@ -120,10 +176,15 @@ Vue.component("guest-reservations",{
                                 </dd>
                             </dl>
                         </div>
-                    </b-col>
-                </b-row>
+
+                    </b-col>                 
+                </b-row>           
+
             </b-container>
-            
+                
+        
         </div>
+      
     `
+
 });

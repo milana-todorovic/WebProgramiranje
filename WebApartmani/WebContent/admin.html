@@ -2,7 +2,8 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Guest</title>
+<title>Admin</title>
+
 
 <link type="text/css" rel="stylesheet"
 	href="css/bootstrap.min.css" />
@@ -13,8 +14,8 @@
 
 </head>
 <body>
-	<div id="guestApp">
-		<guest-navbar></guest-navbar>
+	<div id="adminApp">
+		<admin-navbar></admin-navbar>
 
 		<router-view></router-view>
 	</div>
@@ -30,13 +31,12 @@
 
 
 
-	<script src="app/guest/components/guestNavbar.js"></script>
-	<script src="app/guest/components/guestApartment.js"></script>
-	<script src="app/guest/components/guestReservation.js"></script>
-	<script src="app/guest/components/guestProfile.js"></script>
-	<script src="app/guest/components/guestApartmentDetails.js"></script>
-	<script src="app/guest/guestApp.js"></script>
-
+	<script src="app/admin/components/adminNavbar.js"></script>
+	<script src="app/admin/components/adminApartment.js"></script>
+	<script src="app/admin/components/adminApartmentDetails.js"></script>
+	<script src="app/admin/components/adminReservation.js"></script>
+	<script src="app/admin/components/adminUsers.js"></script>
+	<script src="app/admin/adminApp.js"></script>
 
 
 </body>
