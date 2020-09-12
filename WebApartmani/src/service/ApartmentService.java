@@ -38,7 +38,7 @@ public class ApartmentService {
 		return null;
 	}
 
-	public Apartment getByID() {
+	public Apartment getByID(Integer id) {
 		// TODO isprazniti password domaćinu
 		// učitati slike ili ne?
 		// popraviti datume kad je dostupan

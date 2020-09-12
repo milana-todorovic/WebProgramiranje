@@ -21,6 +21,11 @@ public class CommentService {
 		this.apartmentRepository = apartmentRepository;
 	}
 
+	public Collection<Comment> getAll() {
+		// TODO isprazniti password gosta
+		return null;
+	}
+
 	public Collection<Comment> getByApartmentID(Integer apartmentID) {
 		// TODO isprazniti password gosta
 		return null;

@@ -16,12 +16,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import beans.User;
-import dto.PasswordChangeDTO;
+import beans.Apartment;
+import beans.Base64Image;
 import service.ServiceContainer;
 
-@Path("/users")
-public class UserController {
+@Path("/apartments")
+public class ApartmentController {
 
 	@Context
 	ServletContext context;
@@ -31,17 +31,17 @@ public class UserController {
 	public Response getAll() {
 		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Collection<User> entities = service.getUserService().getAll();
+		Collection<Apartment> entities = service.getApartmentService().getAll();
 		return Response.ok(entities).build();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(User user) {
+	public Response create(Apartment apartment) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User entity = service.getUserService().create(user);
-		return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/users/" + entity.getID()))
+		Apartment entity = service.getApartmentService().create(apartment);
+		return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/apartments/" + entity.getID()))
 				.entity(entity).build();
 	}
 
@@ -50,7 +50,7 @@ public class UserController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getByID(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User entity = service.getUserService().getByID(id);
+		Apartment entity = service.getApartmentService().getByID(id);
 		return Response.ok(entity).build();
 	}
 
@@ -58,9 +58,9 @@ public class UserController {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") Integer id, User user) {
+	public Response update(@PathParam("id") Integer id, Apartment apartment) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User entity = service.getUserService().update(id, user);
+		Apartment entity = service.getApartmentService().update(id, apartment);
 		return Response.ok(entity).build();
 	}
 
@@ -68,25 +68,36 @@ public class UserController {
 	@DELETE
 	public Response delete(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		service.getUserService().delete(id);
+		service.getApartmentService().delete(id);
 		return Response.noContent().build();
 	}
 
-	@Path("/{id}/blocked")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response blockUser(@PathParam("id") Integer id, Boolean blocked) {
+	@Path("/{id}/images")
+	@GET
+	public Response getImages(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		service.getUserService().changeBlockStatus(id, blocked);
-		return Response.noContent().build();
+		Collection<Base64Image> entities = service.getApartmentService().getImagesByApartmentID(id);
+		return Response.ok(entities).build();
 	}
 
-	@Path("/{id}/password")
-	@PUT
+	@Path("/{id}/images")
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response changePassword(@PathParam("id") Integer id, PasswordChangeDTO info) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addImage(@PathParam("id") Integer id, String imageData) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		service.getUserService().changePassword(id, info.getOldPassword(), info.getNewPassword());
+		Base64Image entity = service.getApartmentService().addImage(id, new Base64Image(imageData));
+		return Response
+				.created(URI.create(
+						"http://localhost:8081/WebApartmani/rest/apartments/" + id + "/images/" + entity.getID()))
+				.entity(entity).build();
+	}
+
+	@Path("/{id}/images/{image-id}")
+	@DELETE
+	public Response deleteImage(@PathParam("id") Integer apartmentID, @PathParam("image-id") String imageID) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		service.getApartmentService().deleteImage(apartmentID, imageID);
 		return Response.noContent().build();
 	}
 
