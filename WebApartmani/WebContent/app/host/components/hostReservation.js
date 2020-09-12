@@ -50,10 +50,6 @@ Vue.component("host-reservations",{
                     poruka:'Zelim da apartman bude rashladjen.Hvala unapred.'
                 
                 }
-            ],
-            options3:[
-                {text:'Rastu\u0107e',value:'rastuce'},
-                {text:'Opadaju\u0107e',value:'opadajuce'}
             ]
            
             
@@ -87,11 +83,8 @@ Vue.component("host-reservations",{
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
-                                    <b-form-checkbox-group
-                                        :options="options3"
-                                        plain
-                                        stacked
-                                        ></b-form-checkbox-group>
+                                        <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
+                                        <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
                                     </b-form-group>
                                     <br><br>
                                     <b-button   variant="primary"> 
@@ -134,7 +127,9 @@ Vue.component("host-reservations",{
                                             <b-row>
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
+                                                        <a href= "http://localhost:8081/WebApartmani/host.html#/apartmentDetails" style="color:black;">
                                                         {{rezervacija.imeApartmana}}
+                                                        </a>
                         
                                                     </h1>
                                                 

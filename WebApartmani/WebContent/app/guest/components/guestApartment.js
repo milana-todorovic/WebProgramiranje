@@ -50,10 +50,6 @@ Vue.component("guest-apartments",{
                 {text:'Peskiri',value:'peskiri'},
                 {text:'Frizider',value:'frizider'},
                 {text:'Lift',value:'lift'}
-            ],
-            options3:[
-                {text:'Rastu\u0107e',value:'rastuce'},
-                {text:'Opadaju\u0107e',value:'opadajuce'}
             ]
         }
     
@@ -88,12 +84,9 @@ Vue.component("guest-apartments",{
                     <div>
                         <b-card id="filtriranje">
                             <b><b-form-group label="Sortiranje po ceni"></b>
-                            <b-form-checkbox-group
-                                :options="options3"
-                                plain
-                                stacked
-                                ></b-form-checkbox-group>
-                            </b-form-group>
+                                    <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
+                                    <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
+                                </b-form-group>
                             <br><br>
                             <b-button   variant="primary"> 
                                 <b-icon icon="arrow-down-up"></b-icon>

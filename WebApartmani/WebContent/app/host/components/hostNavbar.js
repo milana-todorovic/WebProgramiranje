@@ -15,7 +15,7 @@ Vue.component("host-navbar",{
                 <b-navbar-nav>
                     <b-nav-item href="#">
                         <router-link to="/apartments" exact>
-                            Apartmani
+                            Moji apartmani
                         </router-link>
                     </b-nav-item>
                     <b-nav-item href="#">
@@ -25,7 +25,12 @@ Vue.component("host-navbar",{
                     </b-nav-item>
                     <b-nav-item href="#">
                          <router-link to="/users" exact>
-                            Korisnici
+                            Moji gosti
+                        </router-link>
+                    </b-nav-item>
+                    <b-nav-item href="#">
+                         <router-link to="/addApartment" exact>
+                            Dodaj apartman
                         </router-link>
                     </b-nav-item>
                 </b-navbar-nav>

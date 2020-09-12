@@ -32,7 +32,8 @@ Vue.component("guest-reservations",{
            
 
         }
-    },
+    }
+    ,
     template:`
         <div>
             <b-container style="margin-left:1%;">
@@ -41,11 +42,8 @@ Vue.component("guest-reservations",{
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
-                                    <b-form-checkbox-group
-                                        :options="options3"
-                                        plain
-                                        stacked
-                                        ></b-form-checkbox-group>
+                                        <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
+                                        <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
                                     </b-form-group>
                                     <br><br>
                                     <b-button   variant="primary"> 
@@ -68,7 +66,9 @@ Vue.component("guest-reservations",{
                                             <b-row>
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
+                                                        <a href= "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails" style="color:black;">
                                                         {{rezervacija.imeApartmana}}
+                                                        </a>
                         
                                                     </h1>
                                                     <div style="background-color:teal;padding:5%;color:white;font-size:18px">
