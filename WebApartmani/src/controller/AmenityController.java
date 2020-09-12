@@ -15,8 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import beans.Amenity;
+import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
 @Path("/amenities")
@@ -30,8 +32,12 @@ public class AmenityController {
 	public Response getAll() {
 		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Collection<Amenity> entities = service.getAmenityService().getAll();
-		return Response.ok(entities).build();
+		try {
+			Collection<Amenity> entities = service.getAmenityService().getAll();
+			return Response.ok(entities).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
@@ -39,9 +45,13 @@ public class AmenityController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(Amenity amenity) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Amenity entity = service.getAmenityService().create(amenity);
-		return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/amenities/" + entity.getID()))
-				.entity(entity).build();
+		try {
+			Amenity entity = service.getAmenityService().create(amenity);
+			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/amenities/" + entity.getID()))
+					.entity(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
@@ -49,8 +59,12 @@ public class AmenityController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getByID(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Amenity entity = service.getAmenityService().getByID(id);
-		return Response.ok(entity).build();
+		try {
+			Amenity entity = service.getAmenityService().getByID(id);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
@@ -59,16 +73,24 @@ public class AmenityController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") Integer id, Amenity amenity) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Amenity entity = service.getAmenityService().update(id, amenity);
-		return Response.ok(entity).build();
+		try {
+			Amenity entity = service.getAmenityService().update(id, amenity);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
 	@DELETE
 	public Response delete(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		service.getAmenityService().delete(id);
-		return Response.noContent().build();
+		try {
+			service.getAmenityService().delete(id);
+			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 }

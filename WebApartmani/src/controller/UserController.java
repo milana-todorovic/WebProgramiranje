@@ -14,8 +14,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import beans.User;
+import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
 @Path("/users")
@@ -29,8 +31,12 @@ public class UserController {
 	public Response getAll() {
 		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Collection<User> entities = service.getUserService().getAll();
-		return Response.ok(entities).build();
+		try {
+			Collection<User> entities = service.getUserService().getAll();
+			return Response.ok(entities).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
@@ -38,9 +44,13 @@ public class UserController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(User user) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User entity = service.getUserService().create(user);
-		return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/users/" + entity.getID()))
-				.entity(entity).build();
+		try {
+			User entity = service.getUserService().create(user);
+			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/users/" + entity.getID()))
+					.entity(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
@@ -48,8 +58,12 @@ public class UserController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getByID(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User entity = service.getUserService().getByID(id);
-		return Response.ok(entity).build();
+		try {
+			User entity = service.getUserService().getByID(id);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}/blocked")
@@ -57,8 +71,12 @@ public class UserController {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response blockUser(@PathParam("id") Integer id, Boolean blocked) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		service.getUserService().changeBlockStatus(id, blocked);
-		return Response.noContent().build();
+		try {
+			service.getUserService().changeBlockStatus(id, blocked);
+			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 }

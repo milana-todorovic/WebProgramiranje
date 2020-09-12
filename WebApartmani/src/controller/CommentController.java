@@ -15,8 +15,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import beans.Comment;
+import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
 @Path("/comments")
@@ -30,8 +32,12 @@ public class CommentController {
 	public Response getAll() {
 		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Collection<Comment> entities = service.getCommentService().getAll();
-		return Response.ok(entities).build();
+		try {
+			Collection<Comment> entities = service.getCommentService().getAll();
+			return Response.ok(entities).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
@@ -39,9 +45,13 @@ public class CommentController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(Comment comment) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Comment entity = service.getCommentService().create(comment);
-		return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/amenities/" + entity.getID()))
-				.entity(entity).build();
+		try {
+			Comment entity = service.getCommentService().create(comment);
+			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/amenities/" + entity.getID()))
+					.entity(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
@@ -49,8 +59,12 @@ public class CommentController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getByID(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Comment entity = service.getCommentService().getByID(id);
-		return Response.ok(entity).build();
+		try {
+			Comment entity = service.getCommentService().getByID(id);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
@@ -59,16 +73,24 @@ public class CommentController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") Integer id, Comment comment) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Comment entity = service.getCommentService().update(id, comment);
-		return Response.ok(entity).build();
+		try {
+			Comment entity = service.getCommentService().update(id, comment);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}")
 	@DELETE
 	public Response delete(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		service.getCommentService().delete(id);
-		return Response.noContent().build();
+		try {
+			service.getCommentService().delete(id);
+			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 }

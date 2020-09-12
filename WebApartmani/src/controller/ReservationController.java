@@ -14,9 +14,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import beans.Reservation;
 import beans.ReservationStatus;
+import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
 @Path("/reservations")
@@ -30,8 +32,12 @@ public class ReservationController {
 	public Response getAll() {
 		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Collection<Reservation> entities = service.getReservationService().getAll();
-		return Response.ok(entities).build();
+		try {
+			Collection<Reservation> entities = service.getReservationService().getAll();
+			return Response.ok(entities).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@POST
@@ -39,18 +45,27 @@ public class ReservationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(Reservation reservation) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Reservation entity = service.getReservationService().create(reservation);
-		return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/reservations/" + entity.getID()))
-				.entity(entity).build();
+		try {
+			Reservation entity = service.getReservationService().create(reservation);
+			return Response
+					.created(URI.create("http://localhost:8081/WebApartmani/rest/reservations/" + entity.getID()))
+					.entity(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
-	
+
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getByID(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Reservation entity = service.getReservationService().getByID(id);
-		return Response.ok(entity).build();
+		try {
+			Reservation entity = service.getReservationService().getByID(id);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/{id}/status")
@@ -59,8 +74,12 @@ public class ReservationController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changePassword(@PathParam("id") Integer id, ReservationStatus status) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Reservation reservation = service.getReservationService().changeStatus(id, status);
-		return Response.ok(reservation).build();
+		try {
+			Reservation reservation = service.getReservationService().changeStatus(id, status);
+			return Response.ok(reservation).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 }

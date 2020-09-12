@@ -10,8 +10,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import beans.User;
+import custom_exception.BadRequestException;
 import dto.PasswordChangeDTO;
 import service.ServiceContainer;
 
@@ -26,8 +28,12 @@ public class ProfileController {
 	public Response getByID() {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		Integer id = 0; // id ulogovanog korisnika
-		User entity = service.getUserService().getByID(id);
-		return Response.ok(entity).build();
+		try {
+			User entity = service.getUserService().getByID(id);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@PUT
@@ -36,16 +42,24 @@ public class ProfileController {
 	public Response update(User user) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		Integer id = 0; // id ulogovanog korisnika
-		User entity = service.getUserService().update(id, user);
-		return Response.ok(entity).build();
+		try {
+			User entity = service.getUserService().update(id, user);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@DELETE
 	public Response delete() {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		Integer id = 0; // id ulogovanog korisnika
-		service.getUserService().delete(id);
-		return Response.noContent().build();
+		try {
+			service.getUserService().delete(id);
+			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 	@Path("/password")
@@ -54,8 +68,12 @@ public class ProfileController {
 	public Response changePassword(PasswordChangeDTO info) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		Integer id = 0; // id ulogovanog korisnika
-		service.getUserService().changePassword(id, info.getOldPassword(), info.getNewPassword());
-		return Response.noContent().build();
+		try {
+			service.getUserService().changePassword(id, info.getOldPassword(), info.getNewPassword());
+			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 }
