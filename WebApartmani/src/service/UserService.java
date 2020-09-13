@@ -108,7 +108,6 @@ public class UserService {
 	}
 
 	public void changeBlockStatus(Integer id, Boolean blocked) {
-		System.out.println(blocked);
 		if (id == null)
 			throw new BadRequestException("Mora biti zadat ključ.");
 		if (blocked == null)
