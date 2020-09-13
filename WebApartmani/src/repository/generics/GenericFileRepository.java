@@ -80,7 +80,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	@Override
 	public void deleteByID(ID id) {
 		List<T> entities = readFile();
-		entities.removeIf(current -> current.getID().equals(id));
+		//entities.removeIf(current -> current.getID().equals(id));
 		writeFile(entities);
 	}
 
@@ -150,7 +150,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	@Override
 	public T update(T entity) {
 		List<T> entities = readFile();
-		entities.removeIf(current -> current.getID().equals(entity.getID()));
+		//entities.removeIf(current -> current.getID().equals(entity.getID()));
 		entities.add(writeResolve(entity));
 		writeFile(entities);
 		return entity;

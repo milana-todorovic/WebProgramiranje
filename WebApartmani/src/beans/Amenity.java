@@ -6,6 +6,7 @@ public class Amenity implements Entity<Integer> {
 
 	private Integer id;
 	private String name;
+	private Boolean isDeleted;
 
 	public Amenity() {
 		super();
@@ -32,6 +33,14 @@ public class Amenity implements Entity<Integer> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+	
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted=isDeleted;
 	}
 
 	@Override

@@ -1,8 +1,11 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import beans.Amenity;
+import beans.Apartment;
+import custom_exception.BadRequestException;
 import repository.interfaces.AmenityRepository;
 import repository.interfaces.ApartmentRepository;
 
@@ -18,33 +21,61 @@ public class AmenityService {
 	}
 
 	public Collection<Amenity> getAll() {
-		// TODO vratiti sve osim koji su logički obrisani?
-		return null;
+
+		Collection<Amenity> amenities = new ArrayList<Amenity>();
+
+		for (Amenity amenity : amenityRepository.getAll()) {
+			if (!amenity.getIsDeleted()) {
+				amenities.add(amenity);
+			}
+		}
+
+		return amenities;
 	}
 
 	public Amenity getByID(Integer id) {
-		// TODO ako je logički obrisan ne vraćati?
+
+		if (!amenityRepository.simpleGetByID(id).getIsDeleted()) {
+			return amenityRepository.simpleGetByID(id);
+		}
 		return null;
 	}
 
 	public Amenity create(Amenity amenity) {
-		// TODO validirati i sacuvati
-		return null;
+		// TODO validirati
+
+		return amenityRepository.create(amenity);
 	}
 
 	public Amenity update(Integer id, Amenity amenity) {
-		// TODO validirati i sacuvati
-		// prima id da rest kontroler samo proslijedi id i tijelo puta, ako se ne
-		// poklapa id u putanji i u tijelu bacati ovde exception
-		return null;
+		// TODO validirati
+		if (!amenity.getID().equals(id))
+			throw new BadRequestException();
+
+		return amenityRepository.update(amenity);
 	}
 
 	public void delete(Integer id) {
-		// TODO logicko brisanje, ukloniti i iz apartmana
+
+		amenityRepository.simpleGetByID(id).setIsDeleted(true);
+
+		for (Apartment apartment : apartmentRepository.getAll()) {
+			for (Amenity amenity : apartment.getAmenities()) {
+				if (amenity.getID().equals(id)) {
+					apartment.getAmenities().remove(amenity);
+					break;
+				}
+			}
+		}
+
+		amenityRepository.deleteByID(id);
+
 	}
 
 	private void validate(Amenity amenity) {
-		// TODO samo provjeriti da naziv nije prazan ili još nešto?
+
+		if (amenity.getName().isEmpty())
+			throw new BadRequestException();
 	}
 
 }
