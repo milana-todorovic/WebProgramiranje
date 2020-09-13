@@ -11,6 +11,7 @@ public class Guest extends User implements Entity<Integer> {
 
 	@JsonIgnore
 	private Collection<Reservation> reservations;
+	@JsonIgnore
 	private Collection<Apartment> rentedApartments;
 
 	public Guest() {

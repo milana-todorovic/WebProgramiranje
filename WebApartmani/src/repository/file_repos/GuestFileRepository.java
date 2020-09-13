@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import beans.Apartment;
 import beans.Guest;
+import beans.Reservation;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.GuestRepository;
 
@@ -43,31 +44,24 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 		writingCopy.setGender(entity.getGender());
 		writingCopy.setRole(entity.getRole());
 		writingCopy.setReservations(null);
-		writeResolveRented(entity, writingCopy);
+		writingCopy.setRentedApartments(null);
+		writingCopy.setBlocked(entity.getBlocked());
+		writingCopy.setDeleted(entity.getDeleted());
 		return writingCopy;
-	}
-
-	private void writeResolveRented(Guest entity, Guest writingCopy) {
-		List<Apartment> rentedApartments = new ArrayList<Apartment>();
-		for (Apartment apartment : entity.getRentedApartments()) {
-			if (apartment != null)
-				rentedApartments.add(apartmentRepository.stripToReference(apartment));
-		}
-		writingCopy.setRentedApartments(rentedApartments);
 	}
 
 	@Override
 	protected Guest readResolve(Guest entity) {
-		readResolveRented(entity);
 		readResolveReservations(entity);
+		readResolveRented(entity);
 		return entity;
 	}
 
 	private void readResolveRented(Guest entity) {
 		List<Apartment> rentedApartments = new ArrayList<Apartment>();
-		for (Apartment apartmentID : entity.getRentedApartments()) {
-			Apartment rentedApartment = apartmentRepository.simpleGetByID(apartmentID.getID());
-			if (rentedApartment != null)
+		for (Reservation reservation : entity.getReservations()) {
+			Apartment rentedApartment = apartmentRepository.simpleGetByID(reservation.getApartment().getID());
+			if (rentedApartment != null && !rentedApartments.contains(rentedApartment))
 				rentedApartments.add(rentedApartment);
 		}
 		entity.setRentedApartments(rentedApartments);

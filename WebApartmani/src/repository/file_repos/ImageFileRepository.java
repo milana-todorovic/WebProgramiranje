@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import beans.Base64Image;
-import custom_exception.RepositoryException;
+import custom_exception.InternalException;
 import repository.interfaces.ImageRepository;
 import repository.util.PersistentSequencer;
 import repository.util.IntegerIDGenerator;
@@ -24,7 +24,7 @@ public class ImageFileRepository implements ImageRepository {
 			try {
 				file.mkdir();
 			} catch (Exception e) {
-				throw new RepositoryException(e);
+				throw new InternalException(e);
 			}
 		}
 		this.generator = new PersistentSequencer(makePath("id"));
@@ -58,7 +58,7 @@ public class ImageFileRepository implements ImageRepository {
 		try {
 			image = mapper.readValue(Paths.get(makePath(id)).toFile(), Base64Image.class);
 		} catch (Exception e) {
-			throw new RepositoryException(e);
+			throw new InternalException(e);
 		}
 		return image;
 	}
@@ -72,7 +72,7 @@ public class ImageFileRepository implements ImageRepository {
 			try {
 				mapper.writeValue(Paths.get(makePath(entity.getID())).toFile(), entity);
 			} catch (Exception e) {
-				throw new RepositoryException(e);
+				throw new InternalException(e);
 			}
 		}
 		return entity;
