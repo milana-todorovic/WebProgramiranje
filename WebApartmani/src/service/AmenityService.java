@@ -42,7 +42,7 @@ public class AmenityService {
 	}
 
 	public Amenity create(Amenity amenity) {
-		// TODO validirati
+		// TODO validirati,naziv prazan
 
 		return amenityRepository.create(amenity);
 	}
