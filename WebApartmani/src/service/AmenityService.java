@@ -8,6 +8,7 @@ import beans.Apartment;
 import custom_exception.BadRequestException;
 import repository.interfaces.AmenityRepository;
 import repository.interfaces.ApartmentRepository;
+import util.StringValidator;
 
 public class AmenityService {
 
@@ -42,7 +43,10 @@ public class AmenityService {
 	}
 
 	public Amenity create(Amenity amenity) {
-		// TODO validirati,naziv prazan
+		if(StringValidator.isNullOrEmpty(amenity.getName()))
+			throw new BadRequestException("Obavezno je uneti ime sadržaja.");
+		
+		
 
 		return amenityRepository.create(amenity);
 	}
