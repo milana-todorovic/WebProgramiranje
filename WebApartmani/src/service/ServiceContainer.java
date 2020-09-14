@@ -18,8 +18,8 @@ public class ServiceContainer {
 		repo = new FileRepositoryContainer(root);
 
 		amenityService = new AmenityService(repo.getAmenityRepository(), repo.getApartmentRepository());
-		apartmentService = new ApartmentService(repo.getHostRepository(), repo.getImageRepository(),
-				repo.getAmenityRepository());
+		apartmentService = new ApartmentService(repo.getApartmentRepository(), repo.getHostRepository(),
+				repo.getImageRepository(), repo.getAmenityRepository());
 		commentService = new CommentService(repo.getReservationRepository(), repo.getGuestRepository(),
 				repo.getApartmentRepository());
 		holidayService = new HolidayService(repo.getHolidayRepository());

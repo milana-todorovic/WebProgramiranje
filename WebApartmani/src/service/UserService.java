@@ -59,6 +59,7 @@ public class UserService {
 	}
 
 	public User create(User user) {
+		user.setID(null);
 		validate(user);
 		if (user.getDeleted() || user.getBlocked())
 			throw new BadRequestException("Ne može se kreirati nalog koji je obrisan ili blokiran.");
@@ -146,6 +147,9 @@ public class UserService {
 	}
 
 	private void validate(User user) {
+		if (user == null)
+			throw new BadRequestException("Mora biti zadat korisnik.");
+
 		Boolean valid = true;
 		StringBuilder error = new StringBuilder();
 

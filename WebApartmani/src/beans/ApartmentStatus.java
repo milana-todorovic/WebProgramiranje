@@ -3,7 +3,7 @@ package beans;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ApartmentStatus {
-	ACTIVE("Aktivan"), INACIVE("Neaktivan");
+	ACTIVE("Aktivan"), INACIVE("Neaktivan"), DELETED("Obrisan");
 
 	private String keyword;
 

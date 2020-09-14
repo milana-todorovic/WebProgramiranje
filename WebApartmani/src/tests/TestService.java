@@ -3,7 +3,10 @@ package tests;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -22,9 +25,22 @@ import beans.Base64Image;
 import beans.Host;
 import beans.ReservationStatus;
 import repository.file_repos.FileRepositoryContainer;
+import util.DateUtil;
 
 @Path("/test")
 public class TestService {
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Collection<Date> dateTest(){
+		Date date1 = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
+		Date date2 = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
+		System.out.println(date1.equals(date2));
+		System.out.println(date2.equals(date1));
+		System.out.println(Long.valueOf(date1.getTime()).equals(Long.valueOf(date2.getTime())));
+		Date startDate = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
+		return DateUtil.makeList(startDate, 5);
+	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
