@@ -36,6 +36,8 @@ public class HostFileRepository extends GenericFileRepository<Host, Integer> imp
 		writingCopy.setGender(entity.getGender());
 		writingCopy.setRole(entity.getRole());
 		writingCopy.setApartments(null);
+		writingCopy.setBlocked(entity.getBlocked());
+		writingCopy.setDeleted(entity.getDeleted());
 		return writingCopy;
 	}
 
