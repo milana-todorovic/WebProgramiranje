@@ -11,10 +11,14 @@ public class User implements Entity<Integer> {
 	protected String gender;
 	protected UserRole role;
 	protected Integer id;
+	protected Boolean deleted;
+	protected Boolean blocked;
 
 	public User() {
 		super();
 		role = UserRole.ADMIN;
+		blocked = false;
+		deleted = false;
 	}
 
 	public User(String username, String password, String name, String surname, String gender) {
@@ -25,6 +29,8 @@ public class User implements Entity<Integer> {
 		this.surname = surname;
 		this.gender = gender;
 		role = UserRole.ADMIN;
+		blocked = false;
+		deleted = false;
 	}
 
 	public String getUsername() {
@@ -83,6 +89,22 @@ public class User implements Entity<Integer> {
 	@Override
 	public void setID(Integer id) {
 		this.id = id;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public Boolean getBlocked() {
+		return blocked;
+	}
+
+	public void setBlocked(Boolean blocked) {
+		this.blocked = blocked;
 	}
 
 	@Override

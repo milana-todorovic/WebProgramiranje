@@ -1,6 +1,7 @@
 package controller;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import beans.User;
 import custom_exception.BadRequestException;
 import dto.PasswordChangeDTO;
+import dto.PersonalInformationDTO;
 import service.ServiceContainer;
 
 @Path("/profile")
@@ -25,9 +27,12 @@ public class ProfileController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getByID() {
+	public Response get(@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Integer id = 0; // id ulogovanog korisnika
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null)
+			return Response.status(Status.UNAUTHORIZED).build();
+		Integer id = user.getID();
 		try {
 			User entity = service.getUserService().getByID(id);
 			return Response.ok(entity).build();
@@ -36,24 +41,13 @@ public class ProfileController {
 		}
 	}
 
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(User user) {
-		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Integer id = 0; // id ulogovanog korisnika
-		try {
-			User entity = service.getUserService().update(id, user);
-			return Response.ok(entity).build();
-		} catch (BadRequestException e) {
-			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
-	}
-
 	@DELETE
-	public Response delete() {
+	public Response delete(@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Integer id = 0; // id ulogovanog korisnika
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null)
+			return Response.status(Status.UNAUTHORIZED).build();
+		Integer id = user.getID();
 		try {
 			service.getUserService().delete(id);
 			return Response.noContent().build();
@@ -62,12 +56,33 @@ public class ProfileController {
 		}
 	}
 
+	@Path("/personal-info")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(PersonalInformationDTO info, @Context HttpServletRequest request) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null)
+			return Response.status(Status.UNAUTHORIZED).build();
+		Integer id = user.getID();
+		try {
+			User entity = service.getUserService().updatePersonalInfo(id, info);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
+
 	@Path("/password")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response changePassword(PasswordChangeDTO info) {
+	public Response changePassword(PasswordChangeDTO info, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		Integer id = 0; // id ulogovanog korisnika
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null)
+			return Response.status(Status.UNAUTHORIZED).build();
+		Integer id = user.getID();
 		try {
 			service.getUserService().changePassword(id, info.getOldPassword(), info.getNewPassword());
 			return Response.noContent().build();
