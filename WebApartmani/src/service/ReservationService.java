@@ -77,7 +77,7 @@ public class ReservationService {
 	public Reservation create(Reservation reservation) {
 		if (reservation == null)
 			throw new BadRequestException("Mora biti zadata rezervacija koja se dodaje.");
-		validate(reservation);
+		validateAndFixReferences(reservation);
 		reservation.setTotalPrice(calculatePrice(reservation));
 		reservation.setStatus(ReservationStatus.CREATED);
 		reservation.setGuestCanComment(false);
@@ -170,6 +170,10 @@ public class ReservationService {
 	private Reservation transitionToFinished(Reservation reservation) {
 		if (reservation.getStatus().equals(ReservationStatus.FINISHED))
 			return reservation;
+		if (reservation.getStatus().equals(ReservationStatus.REJECTED))
+			throw new BadRequestException("Nije moguće završiti rezervaciju jer je već odbijena.");
+		if (reservation.getStatus().equals(ReservationStatus.CANCELLED))
+			throw new BadRequestException("Nije moguće završiti rezervaciju jer je već otkazana.");
 		Date endDate = DateUtil.addDays(reservation.getStartDate(), reservation.getNumberOfNights() - 1);
 		if (reservation.getStatus().equals(ReservationStatus.ACCEPTED) && DateUtil.isBeforeToday(endDate)) {
 			reservation.setStatus(ReservationStatus.FINISHED);
@@ -214,12 +218,12 @@ public class ReservationService {
 				priceForDate = priceForDate * holidayMultiplier;
 			if (DateUtil.isWeekend(date))
 				priceForDate = priceForDate * weekendMultiplier;
-			total = total + dailyBase;
+			total = total + priceForDate;
 		}
 		return total;
 	}
 
-	private void validate(Reservation reservation) {
+	private void validateAndFixReferences(Reservation reservation) {
 		Boolean valid = true;
 		StringBuilder error = new StringBuilder();
 
@@ -228,6 +232,7 @@ public class ReservationService {
 			error.append("Gost je obavezan.");
 		} else {
 			Guest guest = guestRepository.simpleGetByID(reservation.getGuest().getID());
+			reservation.setGuest(guest);
 			if (guest == null || guest.getDeleted()) {
 				valid = false;
 				error.append("Ne postoji zadati gost.");
@@ -257,11 +262,12 @@ public class ReservationService {
 			valid = false;
 			error.append("Apartman je obavezan.");
 		} else {
-			Apartment apartment = apartmentService.getByID(reservation.getID());
+			Apartment apartment = apartmentService.getByID(reservation.getApartment().getID());
+			reservation.setApartment(apartment);
 			if (apartment == null) {
 				valid = false;
 				error.append("Ne postoji zadati apartman.");
-			} else if (apartment.getStatus().equals(ApartmentStatus.ACTIVE)) {
+			} else if (!apartment.getStatus().equals(ApartmentStatus.ACTIVE)) {
 				valid = false;
 				error.append("Apartman mora biti aktivan.");
 			} else {

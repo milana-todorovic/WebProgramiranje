@@ -3,7 +3,7 @@ package beans;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ReservationStatus {
-	CREATED("Kreirana"), REJECTED("Odbijena"), CANCELLED("Odustanak"), ACCEPTED("Prihvaćena"), FINISHED("Završena");
+	CREATED("Kreirana"), REJECTED("Odbijena"), CANCELLED("Otkazana"), ACCEPTED("Prihvaćena"), FINISHED("Završena");
 
 	private String keyword;
 
