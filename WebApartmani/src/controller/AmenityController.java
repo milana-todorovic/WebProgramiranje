@@ -30,7 +30,7 @@ public class AmenityController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
-		// TODO dodati parametre za pretragu
+
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Amenity> entities = service.getAmenityService().getAll();

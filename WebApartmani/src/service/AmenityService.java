@@ -36,6 +36,9 @@ public class AmenityService {
 
 	public Amenity getByID(Integer id) {
 
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat kljuè.");
+
 		if (!amenityRepository.simpleGetByID(id).getIsDeleted()) {
 			return amenityRepository.simpleGetByID(id);
 		}
@@ -43,16 +46,18 @@ public class AmenityService {
 	}
 
 	public Amenity create(Amenity amenity) {
-		if(StringValidator.isNullOrEmpty(amenity.getName()))
-			throw new BadRequestException("Obavezno je uneti ime sadržaja.");
-		
-		
+		validate(amenity);
 
 		return amenityRepository.create(amenity);
 	}
 
 	public Amenity update(Integer id, Amenity amenity) {
-		// TODO validirati
+
+		validate(amenity);
+
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat kljuè.");
+
 		if (!amenity.getID().equals(id))
 			throw new BadRequestException();
 
@@ -60,8 +65,12 @@ public class AmenityService {
 	}
 
 	public void delete(Integer id) {
+		
+		if(id==null)
+			throw new BadRequestException("Mora biti zadat kljuè.");
 
 		amenityRepository.simpleGetByID(id).setIsDeleted(true);
+		
 
 		for (Apartment apartment : apartmentRepository.getAll()) {
 			for (Amenity amenity : apartment.getAmenities()) {
@@ -72,14 +81,23 @@ public class AmenityService {
 			}
 		}
 
-		amenityRepository.deleteByID(id);
-
 	}
 
 	private void validate(Amenity amenity) {
 
-		if (amenity.getName().isEmpty())
-			throw new BadRequestException();
+		Boolean valid = true;
+		StringBuilder error = new StringBuilder();
+
+		if (StringValidator.isNullOrEmpty(amenity.getName())) {
+			valid = false;
+			error.append("Naziv sadržaja je obavezan.");
+		} else if (!StringValidator.isAlphaWithSpaceDash(amenity.getName())) {
+			valid = false;
+			error.append("Naziv sadržaja sme sadržati samo slova,razmake i crtice.");
+		}
+
+		if (!valid)
+			throw new BadRequestException(error.toString());
 	}
 
 }
