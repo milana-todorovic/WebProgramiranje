@@ -85,6 +85,7 @@ public class GuestFileRepository extends GenericFileRepository<Guest, Integer> i
 		reference.setRole(null);
 		reference.setRentedApartments(null);
 		reference.setReservations(null);
+		reference.setDeleted(null);
 		return reference;
 	}
 

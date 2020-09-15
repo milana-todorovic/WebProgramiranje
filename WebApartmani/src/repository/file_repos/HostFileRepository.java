@@ -64,6 +64,7 @@ public class HostFileRepository extends GenericFileRepository<Host, Integer> imp
 		reference.setGender(null);
 		reference.setRole(null);
 		reference.setApartments(null);
+		reference.setDeleted(null);
 		return reference;
 	}
 
