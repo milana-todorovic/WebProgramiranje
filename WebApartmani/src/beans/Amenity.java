@@ -6,15 +6,17 @@ public class Amenity implements Entity<Integer> {
 
 	private Integer id;
 	private String name;
-	private Boolean isDeleted;
+	private Boolean deleted;
 
 	public Amenity() {
 		super();
+		this.deleted = false;
 	}
 
 	public Amenity(String name) {
 		super();
 		this.name = name;
+		this.deleted = false;
 	}
 
 	@Override
@@ -35,12 +37,12 @@ public class Amenity implements Entity<Integer> {
 		this.name = name;
 	}
 	
-	public Boolean getIsDeleted() {
-		return isDeleted;
+	public Boolean getDeleted() {
+		return deleted;
 	}
 	
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted=isDeleted;
+	public void setDeleted(Boolean deleted) {
+		this.deleted=deleted;
 	}
 
 	@Override

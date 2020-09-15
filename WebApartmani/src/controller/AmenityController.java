@@ -30,7 +30,6 @@ public class AmenityController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
-
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Amenity> entities = service.getAmenityService().getAll();
