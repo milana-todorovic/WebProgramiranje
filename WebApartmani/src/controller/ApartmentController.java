@@ -67,9 +67,10 @@ public class ApartmentController {
 	public Response create(Apartment apartment, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
-		if (apartment != null && apartment.getHost() == null) {
+		if (apartment != null && (apartment.getHost() == null || apartment.getHost().getID() == null)) {
 			Host host = new Host();
 			host.setID(user.getID());
+			apartment.setHost(host);
 		}
 		if (apartment != null && !user.getID().equals(apartment.getHost().getID()))
 			return Response.status(Status.FORBIDDEN).build();

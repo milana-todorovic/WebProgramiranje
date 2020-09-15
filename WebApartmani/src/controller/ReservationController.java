@@ -70,7 +70,7 @@ public class ReservationController {
 	public Response create(Reservation reservation, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
-		if (reservation != null && reservation.getGuest() == null) {
+		if (reservation != null && (reservation.getGuest() == null || reservation.getGuest().getID() == null)) {
 			Guest guest = new Guest();
 			guest.setID(user.getID());
 			reservation.setGuest(guest);

@@ -29,7 +29,6 @@ public class AmenityController {
 	@Context
 	private ServletContext context;
 
-	@Secured
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
@@ -57,7 +56,6 @@ public class AmenityController {
 		}
 	}
 
-	@Secured
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

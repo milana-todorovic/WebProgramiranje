@@ -49,7 +49,7 @@ public class UserService {
 		if (hostID == null)
 			throw new BadRequestException("Mora biti zadat ključ domaćina.");
 		Collection<Guest> guests = guestRepository.getAll();
-		guests.removeIf(guest -> !guest.getDeleted());
+		guests.removeIf(guest -> guest.getDeleted());
 		Collection<Guest> filtered = CollectionUtil.findAll(guests, guest -> hasGuestVisitedHost(guest, hostID));
 		filtered.forEach(guest -> guest.setPassword(""));
 		return new ArrayList<User>(filtered);
