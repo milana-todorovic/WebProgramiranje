@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import beans.Amenity;
 import beans.Apartment;
@@ -44,8 +45,10 @@ public class ApartmentService {
 		this.amenityRepository = amenityRepository;
 		// TODO namjesti da se default check in i check out čita iz nekog config fajla
 		try {
-			this.defaultCheckIn = new SimpleDateFormat("HH:mm:ss").parse("14:00:00");
-			this.defaultCheckOut = new SimpleDateFormat("HH:mm:ss").parse("10:00:00");
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			format.setTimeZone(TimeZone.getTimeZone("GMT"));
+			this.defaultCheckIn = format.parse("14:00:00");
+			this.defaultCheckOut = format.parse("10:00:00");
 		} catch (ParseException e) {
 			this.defaultCheckIn = new Date();
 			this.defaultCheckOut = new Date();

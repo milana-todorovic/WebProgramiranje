@@ -19,6 +19,8 @@ import javax.ws.rs.core.Response.Status;
 import beans.Reservation;
 import beans.ReservationStatus;
 import custom_exception.BadRequestException;
+import dto.ReservationSearchDTO;
+import dto.SortType;
 import service.ServiceContainer;
 
 @Path("/reservations")
@@ -30,7 +32,6 @@ public class ReservationController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
-		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Reservation> entities = service.getReservationService().getAll();
@@ -77,6 +78,28 @@ public class ReservationController {
 		try {
 			Reservation reservation = service.getReservationService().changeStatus(id, status);
 			return Response.ok(reservation).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
+
+	@POST
+	@Path("/search")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response search(ReservationSearchDTO searchParameters) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		try {
+			Collection<Reservation> entities = service.getReservationService().getAll();
+			entities = service.getReservationService().filterByGuestUsername(entities,
+					searchParameters.getGuestUsername());
+			entities = service.getReservationService().filterByStatus(entities, searchParameters.getStatus());
+			if (searchParameters.getSort() != null)
+				if (searchParameters.getSort().equals(SortType.ASCENDING))
+					entities = service.getReservationService().sortByPriceAscending(entities);
+				else
+					entities = service.getReservationService().sortByPriceDescending(entities);
+			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}

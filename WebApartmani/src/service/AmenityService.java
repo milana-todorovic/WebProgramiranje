@@ -45,6 +45,7 @@ public class AmenityService {
 		if (amenity == null)
 			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se dodaje.");
 		validate(amenity);
+		amenity.setDeleted(false);
 		return amenityRepository.create(amenity);
 	}
 

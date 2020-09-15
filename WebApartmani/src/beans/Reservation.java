@@ -19,6 +19,7 @@ public class Reservation implements Entity<Integer> {
 	public Reservation() {
 		super();
 		status = ReservationStatus.CREATED;
+		guestCanComment = false;
 	}
 
 	public Reservation(Apartment apartment, Date startDate, Integer numberOfNights, Double totalPrice, String message,

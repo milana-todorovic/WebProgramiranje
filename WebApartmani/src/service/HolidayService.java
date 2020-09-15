@@ -1,6 +1,7 @@
 package service;
 
 import java.util.Collection;
+import java.util.Date;
 
 import beans.Holiday;
 import repository.interfaces.HolidayRepository;
@@ -27,6 +28,11 @@ public class HolidayService {
 	
 	public void delete(Integer id) {
 		// TODO
+	}
+	
+	public Boolean isHoldiay(Date date) {
+		// TODO
+		return false;
 	}
 
 }

@@ -45,6 +45,21 @@ public class UserService {
 		return users;
 	}
 
+	public Collection<User> getGuestsByHostID(Integer hostID) {
+		if (hostID == null)
+			throw new BadRequestException("Mora biti zadat ključ domaćina.");
+		Collection<Guest> guests = guestRepository.getAll();
+		guests.removeIf(guest -> !guest.getDeleted());
+		Collection<Guest> filtered = CollectionUtil.findAll(guests, guest -> hasGuestVisitedHost(guest, hostID));
+		filtered.forEach(guest -> guest.setPassword(""));
+		return new ArrayList<User>(filtered);
+	}
+
+	private Boolean hasGuestVisitedHost(Guest guest, Integer hostID) {
+		return CollectionUtil.contains(guest.getRentedApartments(),
+				apartment -> hostID.equals(apartment.getHost().getID()));
+	}
+
 	public User getByID(Integer id) {
 		if (id == null)
 			throw new BadRequestException("Mora biti zadat ključ.");
@@ -65,12 +80,12 @@ public class UserService {
 			throw new BadRequestException("Mora biti zadat korisnik koji se dodaje.");
 		user.setID(null);
 		validate(user);
-		if (user.getDeleted() || user.getBlocked())
-			throw new BadRequestException("Ne može se kreirati nalog koji je obrisan ili blokiran.");
 		if (user.getRole().equals(UserRole.ADMIN))
 			throw new BadRequestException("Ne može se kreirati administratorski nalog.");
 		user.setID(sequencer.generateID());
 		user.setPassword(hashPassword(user.getPassword()));
+		user.setBlocked(false);
+		user.setDeleted(false);
 		if (user.getRole().equals(UserRole.GUEST))
 			return clearPassword(guestRepository.create(toGuest(user)));
 		else
