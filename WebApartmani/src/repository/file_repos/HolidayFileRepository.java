@@ -4,49 +4,44 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import beans.Holiday;
+import beans.Holidays;
 import repository.generics.GenericFileRepository;
 import repository.interfaces.HolidayRepository;
-import repository.util.Sequencer;
-import repository.util.IntegerIDGenerator;
 
-public class HolidayFileRepository extends GenericFileRepository<Holiday, Integer> implements HolidayRepository {
-
-	private IntegerIDGenerator generator;
+public class HolidayFileRepository extends GenericFileRepository<Holidays, Integer> implements HolidayRepository {
 
 	protected HolidayFileRepository(String filePath) {
 		super(filePath);
-		generator = new Sequencer(getAllIDs());
 	}
 
 	@Override
-	protected Integer generateID(Holiday entity) {
-		return generator.generateID();
+	protected Integer generateID(Holidays entity) {
+		return entity.getID();
 	}
 
 	@Override
-	protected Holiday writeResolve(Holiday entity) {
+	protected Holidays writeResolve(Holidays entity) {
 		return entity;
 	}
 
 	@Override
-	protected Holiday readResolve(Holiday entity) {
+	protected Holidays readResolve(Holidays entity) {
 		return entity;
 	}
 
 	@Override
-	protected Holiday stripToReference(Holiday entity) {
+	protected Holidays stripToReference(Holidays entity) {
 		if (entity == null)
 			return null;
-		Holiday reference = new Holiday();
+		Holidays reference = new Holidays();
 		reference.setID(entity.getID());
-		reference.setDate(null);
+		reference.setDates(null);
 		return reference;
 	}
 
 	@Override
 	protected TypeReference<?> getListType() {
-		return new TypeReference<List<Holiday>>() {
+		return new TypeReference<List<Holidays>>() {
 		};
 	}
 

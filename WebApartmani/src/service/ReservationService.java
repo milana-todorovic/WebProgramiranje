@@ -214,7 +214,7 @@ public class ReservationService {
 		Double dailyBase = reservation.getApartment().getPricePerNight();
 		for (Date date : DateUtil.makeList(reservation.getStartDate(), reservation.getNumberOfNights())) {
 			Double priceForDate = dailyBase;
-			if (holidayService.isHoldiay(date))
+			if (holidayService.isHoliday(date))
 				priceForDate = priceForDate * holidayMultiplier;
 			if (DateUtil.isWeekend(date))
 				priceForDate = priceForDate * weekendMultiplier;
