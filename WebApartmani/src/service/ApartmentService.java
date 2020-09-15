@@ -16,6 +16,7 @@ import beans.Apartment;
 import beans.ApartmentStatus;
 import beans.ApartmentType;
 import beans.Base64Image;
+import beans.Host;
 import beans.Reservation;
 import custom_exception.BadRequestException;
 import repository.interfaces.AmenityRepository;
@@ -79,8 +80,15 @@ public class ApartmentService {
 	}
 
 	public Apartment create(Apartment apartment) {
+		if (apartment == null)
+			throw new BadRequestException("Mora biti zadat apartman koji se dodaje.");
 		prepareDatesForWrite(apartment);
 		validate(apartment);
+		Host host = hostRepository.simpleGetByID(apartment.getHost().getID());
+		if (host == null || host.getDeleted())
+			throw new BadRequestException("Domaćin apartmana mora postojati.");
+		else if (host.getBlocked())
+			throw new BadRequestException("Ne može se kreirati apartman čiji je domaćin blokiran.");
 		if (!apartment.getStatus().equals(ApartmentStatus.INACIVE))
 			throw new BadRequestException("Novokreirani apartman mora imati status Neaktivan.");
 		if (!apartment.getImageKeys().isEmpty())
@@ -89,22 +97,44 @@ public class ApartmentService {
 	}
 
 	public Apartment update(Integer id, Apartment apartment) {
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		if (apartment == null)
+			throw new BadRequestException("Moraju biti zadate nove vrednosti polja apartmana.");
+		if (!id.equals(apartment.getID()))
+			throw new BadRequestException("Ključ se ne može menjati.");
+		Apartment current = apartmentRepository.fullGetByID(id);
+		if (current == null || current.getStatus().equals(ApartmentStatus.DELETED))
+			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
+		if (current.getHost().getDeleted())
+			throw new BadRequestException("Ne može se menjati apartman čiji je vlasnik obrisao nalog.");
+		if (!current.getHost().equals(apartment.getHost()))
+			throw new BadRequestException("Vlasnik apartmana se ne može menjati.");
+
 		prepareDatesForWrite(apartment);
 		validate(apartment);
-		// TODO validirati i sačuvati
-		// polje sa slikama ostaviti staro ovde
-		return null;
+		if (apartment.getStatus().equals(ApartmentStatus.DELETED))
+			throw new BadRequestException("Izmena apartmana se ne može koristiti za brisanje.");
+
+		apartment.setImageKeys(current.getImageKeys());
+		return apartmentRepository.update(apartment);
 	}
 
 	public void delete(Integer id) {
-		// TODO logičko brisanje
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		Apartment apartment = apartmentRepository.simpleGetByID(id);
+		if (apartment == null || apartment.getStatus().equals(ApartmentStatus.DELETED))
+			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
+		apartment.setStatus(ApartmentStatus.DELETED);
+		apartmentRepository.update(apartment);
 	}
 
 	public Collection<Base64Image> getImagesByApartmentID(Integer apartmentID) {
 		if (apartmentID == null)
 			throw new BadRequestException("Mora biti zadat ključ apartmana.");
 		Apartment apartment = apartmentRepository.simpleGetByID(apartmentID);
-		if (apartment == null)
+		if (apartment == null || apartment.getStatus().equals(ApartmentStatus.DELETED))
 			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
 
 		Collection<Base64Image> images = new ArrayList<Base64Image>();
@@ -124,7 +154,7 @@ public class ApartmentService {
 		// TODO provjeri format sadržaja slike
 
 		Apartment apartment = apartmentRepository.simpleGetByID(apartmentID);
-		if (apartment == null)
+		if (apartment == null || apartment.getStatus().equals(ApartmentStatus.DELETED))
 			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
 
 		Base64Image saved = imageRepository.create(image);
@@ -139,7 +169,7 @@ public class ApartmentService {
 		if (StringValidator.isNullOrEmpty(imageID))
 			throw new BadRequestException("Mora biti zadat ključ slike.");
 		Apartment apartment = apartmentRepository.simpleGetByID(apartmentID);
-		if (apartment == null)
+		if (apartment == null || apartment.getStatus().equals(ApartmentStatus.DELETED))
 			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
 		if (!apartment.getImageKeys().contains(imageID))
 			throw new BadRequestException("Ne postoji slika apartmana sa zadatim ključem.");
@@ -227,13 +257,83 @@ public class ApartmentService {
 	}
 
 	private void validate(Apartment apartment) {
-		// TODO
-		// host postoji i nije obrisan / blokiran
-		// broj soba, broj gostiju, cena > 0
-		// amenities postoje
-		// vrijeme za prijavu veće od vremena za odjavu?
-		// za lokaciju da je uneseno sve
-		// imaju li koordinate neka ograničenja?
+		Boolean valid = true;
+		StringBuilder error = new StringBuilder();
+
+		if (StringValidator.isNullOrEmpty(apartment.getName())) {
+			valid = false;
+			error.append("Naziv apartmana je obavezan.");
+		} else if (!StringValidator.isAlphanumericWithSpaceDash(apartment.getName())) {
+			valid = false;
+			error.append("Naziv apartmana smije sadržati samo slova, brojeve, razmake, i crtice.");
+		}
+
+		if (apartment.getApartmentType() == null) {
+			valid = false;
+			error.append("Tip apartmana je obavezan.");
+		}
+
+		if (apartment.getNumberOfRooms() == null) {
+			valid = false;
+			error.append("Broj soba je obavezan.");
+		} else if (apartment.getNumberOfRooms() <= 0) {
+			valid = false;
+			error.append("Broj soba mora biti pozitivan.");
+		}
+
+		if (apartment.getNumberOfGuests() == null) {
+			valid = false;
+			error.append("Broj gostiju je obavezan.");
+		} else if (apartment.getNumberOfGuests() <= 0) {
+			valid = false;
+			error.append("Broj gostiju mora biti pozitivan.");
+		}
+
+		if (apartment.getPricePerNight() == null) {
+			valid = false;
+			error.append("Cena je obavezna.");
+		} else if (apartment.getPricePerNight() <= 0) {
+			valid = false;
+			error.append("Cena mora biti pozitivna.");
+		}
+
+		if (apartment.getCheckInTime() == null) {
+			valid = false;
+			error.append("Vreme za prijavu je obavezno.");
+		}
+
+		if (apartment.getCheckOutTime() == null) {
+			valid = false;
+			error.append("Vreme za odjavu je obavezno.");
+		}
+
+		if (apartment.getStatus() == null) {
+			valid = false;
+			error.append("Status apartmana je obavezan.");
+		}
+
+		for (Amenity amenity : apartment.getAmenities()) {
+			Amenity found = amenityRepository.simpleGetByID(amenity.getID());
+			if (found == null || found.getDeleted()) {
+				valid = false;
+				error.append("Apartman ne može sadržati nepostojeći sadržaj apartmana.");
+				break;
+			}
+		}
+
+		if (apartment.getHost() == null || apartment.getHost().getID() == null) {
+			valid = false;
+			error.append("Mora biti zadat domaćin apartmana.");
+		} else {
+			Host host = hostRepository.simpleGetByID(apartment.getHost().getID());
+			if (host == null) {
+				valid = false;
+				error.append("Domaćin apartmana mora postojati.");
+			}
+		}
+
+		if (!valid)
+			throw new BadRequestException(error.toString());
 	}
 
 	private Apartment restoreAvailableDates(Apartment apartment) {
