@@ -17,7 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.Secured;
 import beans.Comment;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
@@ -25,7 +27,7 @@ import service.ServiceContainer;
 public class CommentController {
 
 	@Context
-	ServletContext context;
+	private ServletContext context;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -40,6 +42,7 @@ public class CommentController {
 		}
 	}
 
+	@Secured(UserRole.GUEST)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -67,6 +70,7 @@ public class CommentController {
 		}
 	}
 
+	@Secured(UserRole.GUEST)
 	@Path("/{id}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -81,6 +85,7 @@ public class CommentController {
 		}
 	}
 
+	@Secured(UserRole.GUEST)
 	@Path("/{id}")
 	@DELETE
 	public Response delete(@PathParam("id") Integer id) {
@@ -88,6 +93,21 @@ public class CommentController {
 		try {
 			service.getCommentService().delete(id);
 			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
+
+	@Secured(UserRole.HOST)
+	@Path("/{id}/showing")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("id") Integer id, Boolean showing) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		try {
+			Comment entity = service.getCommentService().changeStatus(id, showing);
+			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}

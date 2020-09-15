@@ -17,7 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.Secured;
 import beans.Amenity;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
@@ -25,8 +27,9 @@ import service.ServiceContainer;
 public class AmenityController {
 
 	@Context
-	ServletContext context;
+	private ServletContext context;
 
+	@Secured
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
@@ -39,6 +42,7 @@ public class AmenityController {
 		}
 	}
 
+	@Secured(UserRole.ADMIN)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +57,7 @@ public class AmenityController {
 		}
 	}
 
+	@Secured
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -66,6 +71,7 @@ public class AmenityController {
 		}
 	}
 
+	@Secured(UserRole.ADMIN)
 	@Path("/{id}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -80,6 +86,7 @@ public class AmenityController {
 		}
 	}
 
+	@Secured(UserRole.ADMIN)
 	@Path("/{id}")
 	@DELETE
 	public Response delete(@PathParam("id") Integer id) {

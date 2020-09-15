@@ -1,9 +1,11 @@
 package controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,8 +19,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.AuthenticatedUser;
+import auth.Secured;
 import beans.Apartment;
+import beans.ApartmentStatus;
 import beans.Base64Image;
+import beans.Host;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import dto.ApartmentSearchDTO;
 import dto.SortType;
@@ -28,25 +35,44 @@ import service.ServiceContainer;
 public class ApartmentController {
 
 	@Context
-	ServletContext context;
+	private ServletContext context;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll() {
+	public Response getAll(@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Collection<Apartment> entities = service.getApartmentService().getAll();
+			Collection<Apartment> entities = null;
+			if (user == null)
+				entities = service.getApartmentService().getActive();
+			else if (user.getRole().equals(UserRole.GUEST))
+				entities = service.getApartmentService().getActive();
+			else if (user.getRole().equals(UserRole.ADMIN))
+				entities = service.getApartmentService().getAll();
+			else if (user.getRole().equals(UserRole.HOST))
+				entities = service.getApartmentService().getActive();
+			else
+				entities = new ArrayList<Apartment>();
 			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured(UserRole.HOST)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(Apartment apartment) {
+	public Response create(Apartment apartment, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
+		if (apartment != null && apartment.getHost() == null) {
+			Host host = new Host();
+			host.setID(user.getID());
+		}
+		if (apartment != null && !user.getID().equals(apartment.getHost().getID()))
+			return Response.status(Status.FORBIDDEN).build();
 		try {
 			Apartment entity = service.getApartmentService().create(apartment);
 			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/apartments/" + entity.getID()))
@@ -59,23 +85,39 @@ public class ApartmentController {
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getByID(@PathParam("id") Integer id) {
+	public Response getByID(@PathParam("id") Integer id, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
 			Apartment entity = service.getApartmentService().getByID(id);
+			if (entity != null) {
+				if (user != null && user.getRole().equals(UserRole.HOST)
+						&& !user.getID().equals(entity.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+				else if ((user == null || user.getRole().equals(UserRole.GUEST))
+						&& !entity.getStatus().equals(ApartmentStatus.ACTIVE))
+					return Response.status(Status.FORBIDDEN).build();
+			}
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured({ UserRole.ADMIN, UserRole.HOST })
 	@Path("/{id}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") Integer id, Apartment apartment) {
+	public Response update(@PathParam("id") Integer id, Apartment apartment, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			if (user.getRole().equals(UserRole.HOST)) {
+				Apartment entity = service.getApartmentService().getByID(id);
+				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+			}
 			Apartment entity = service.getApartmentService().update(id, apartment);
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
@@ -83,11 +125,18 @@ public class ApartmentController {
 		}
 	}
 
+	@Secured({ UserRole.ADMIN, UserRole.HOST })
 	@Path("/{id}")
 	@DELETE
-	public Response delete(@PathParam("id") Integer id) {
+	public Response delete(@PathParam("id") Integer id, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			if (user.getRole().equals(UserRole.HOST)) {
+				Apartment entity = service.getApartmentService().getByID(id);
+				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+			}
 			service.getApartmentService().delete(id);
 			return Response.noContent().build();
 		} catch (BadRequestException e) {
@@ -98,9 +147,19 @@ public class ApartmentController {
 	@Path("/{id}/images")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getImages(@PathParam("id") Integer id) {
+	public Response getImages(@PathParam("id") Integer id, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			Apartment entity = service.getApartmentService().getByID(id);
+			if (entity != null) {
+				if (user != null && user.getRole().equals(UserRole.HOST)
+						&& !user.getID().equals(entity.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+				else if ((user == null || user.getRole().equals(UserRole.GUEST))
+						&& !entity.getStatus().equals(ApartmentStatus.ACTIVE))
+					return Response.status(Status.FORBIDDEN).build();
+			}
 			Collection<Base64Image> entities = service.getApartmentService().getImagesByApartmentID(id);
 			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
@@ -108,13 +167,20 @@ public class ApartmentController {
 		}
 	}
 
+	@Secured({ UserRole.ADMIN, UserRole.HOST })
 	@Path("/{id}/images")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addImage(@PathParam("id") Integer id, String imageData) {
+	public Response addImage(@PathParam("id") Integer id, String imageData, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			if (user.getRole().equals(UserRole.HOST)) {
+				Apartment entity = service.getApartmentService().getByID(id);
+				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+			}
 			Base64Image entity = service.getApartmentService().addImage(id, new Base64Image(imageData));
 			return Response
 					.created(URI.create(
@@ -125,11 +191,19 @@ public class ApartmentController {
 		}
 	}
 
+	@Secured({ UserRole.ADMIN, UserRole.HOST })
 	@Path("/{id}/images/{image-id}")
 	@DELETE
-	public Response deleteImage(@PathParam("id") Integer apartmentID, @PathParam("image-id") String imageID) {
+	public Response deleteImage(@PathParam("id") Integer apartmentID, @PathParam("image-id") String imageID,
+			@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			if (user.getRole().equals(UserRole.HOST)) {
+				Apartment entity = service.getApartmentService().getByID(apartmentID);
+				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+			}
 			service.getApartmentService().deleteImage(apartmentID, imageID);
 			return Response.noContent().build();
 		} catch (BadRequestException e) {
@@ -141,10 +215,21 @@ public class ApartmentController {
 	@Path("/search")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response search(ApartmentSearchDTO searchParameters) {
+	public Response search(ApartmentSearchDTO searchParameters, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Collection<Apartment> entities = service.getApartmentService().getAll();
+			Collection<Apartment> entities = null;
+			if (user == null)
+				entities = service.getApartmentService().getActive();
+			else if (user.getRole().equals(UserRole.GUEST))
+				entities = service.getApartmentService().getActive();
+			else if (user.getRole().equals(UserRole.ADMIN))
+				entities = service.getApartmentService().getAll();
+			else if (user.getRole().equals(UserRole.HOST))
+				entities = service.getApartmentService().getActive();
+			else
+				entities = new ArrayList<Apartment>();
 			entities = service.getApartmentService().filterByAvailableDates(entities, searchParameters.getStartDate(),
 					searchParameters.getEndDate());
 			entities = service.getApartmentService().filterByCity(entities, searchParameters.getCity());

@@ -63,6 +63,13 @@ public class ApartmentService {
 		return apartments;
 	}
 
+	public Collection<Apartment> getActive() {
+		Collection<Apartment> apartments = apartmentRepository
+				.getMatching(apartment -> apartment.getStatus().equals(ApartmentStatus.ACTIVE));
+		apartments.forEach(apartment -> apartment.getHost().setPassword(""));
+		return apartments;
+	}
+
 	public Collection<Apartment> getByHostID(Integer hostID) {
 		if (hostID == null)
 			throw new BadRequestException("Mora biti zadat ključ domaćina.");

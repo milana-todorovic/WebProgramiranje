@@ -66,6 +66,12 @@ public class UserService {
 		return CollectionUtil.findFirst(getAll(), user -> id.equals(user.getID()));
 	}
 
+	public User getByIDforHost(Integer id, Integer hostID) {
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		return CollectionUtil.findFirst(getGuestsByHostID(hostID), user -> id.equals(user.getID()));
+	}
+
 	public User getByUsernameAndPassword(String username, String password) {
 		if (StringValidator.isNullOrEmpty(username) || StringValidator.isNullOrEmpty(password))
 			throw new BadRequestException("Obavezno je uneti korisničko ime i lozinku.");

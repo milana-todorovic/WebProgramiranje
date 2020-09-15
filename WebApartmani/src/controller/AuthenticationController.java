@@ -1,5 +1,7 @@
 package controller;
 
+import java.net.URI;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -11,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.AuthenticatedUser;
+import auth.Secured;
 import beans.User;
 import custom_exception.BadRequestException;
 import dto.LoginDTO;
@@ -20,32 +24,47 @@ import service.ServiceContainer;
 public class AuthenticationController {
 
 	@Context
-	ServletContext context;
+	private ServletContext context;
 
 	@Path("/login")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(LoginDTO info, @Context HttpServletRequest request) {
-		// TODO stvarno implementiraj logovanje
-		// za sad je samo da bi se testirao /profile resurs
+		// TODO preci na JWT ili ne?
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			User user = service.getUserService().getByUsernameAndPassword(info.getUsername(), info.getPassword());
 			if (user == null || user.getBlocked())
 				return Response.status(Status.UNAUTHORIZED).build();
-			request.getSession().setAttribute("user", user);
+			request.getSession().setAttribute("user", new AuthenticatedUser(user.getID(), user.getRole()));
 			return Response.ok().build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
-	
+
+	@Secured
 	@Path("/logout")
 	@POST
 	public Response logout(@Context HttpServletRequest request) {
 		request.getSession().removeAttribute("user");
 		return Response.ok().build();
+	}
+
+	@Path("/register")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response register(User user) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		try {
+			User entity = service.getUserService().create(user);
+			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/users/" + entity.getID()))
+					.entity(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
 	}
 
 }

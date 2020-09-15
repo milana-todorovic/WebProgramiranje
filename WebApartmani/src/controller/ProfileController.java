@@ -13,7 +13,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.AuthenticatedUser;
+import auth.Secured;
 import beans.User;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import dto.PasswordChangeDTO;
 import dto.PersonalInformationDTO;
@@ -23,68 +26,60 @@ import service.ServiceContainer;
 public class ProfileController {
 
 	@Context
-	ServletContext context;
+	private ServletContext context;
 
+	@Secured
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User user = (User) request.getSession().getAttribute("user");
-		if (user == null)
-			return Response.status(Status.UNAUTHORIZED).build();
-		Integer id = user.getID();
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			User entity = service.getUserService().getByID(id);
+			User entity = service.getUserService().getByID(user.getID());
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured({ UserRole.GUEST, UserRole.HOST })
 	@DELETE
 	public Response delete(@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User user = (User) request.getSession().getAttribute("user");
-		if (user == null)
-			return Response.status(Status.UNAUTHORIZED).build();
-		Integer id = user.getID();
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			service.getUserService().delete(id);
+			service.getUserService().delete(user.getID());
 			return Response.noContent().build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured
 	@Path("/personal-info")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(PersonalInformationDTO info, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User user = (User) request.getSession().getAttribute("user");
-		if (user == null)
-			return Response.status(Status.UNAUTHORIZED).build();
-		Integer id = user.getID();
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			User entity = service.getUserService().updatePersonalInfo(id, info);
+			User entity = service.getUserService().updatePersonalInfo(user.getID(), info);
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured
 	@Path("/password")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response changePassword(PasswordChangeDTO info, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		User user = (User) request.getSession().getAttribute("user");
-		if (user == null)
-			return Response.status(Status.UNAUTHORIZED).build();
-		Integer id = user.getID();
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			service.getUserService().changePassword(id, info.getOldPassword(), info.getNewPassword());
+			service.getUserService().changePassword(user.getID(), info.getOldPassword(), info.getNewPassword());
 			return Response.noContent().build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

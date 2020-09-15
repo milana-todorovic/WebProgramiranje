@@ -14,17 +14,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.Secured;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
 @Path("/holidays")
 public class HolidayController {
-	
-	@Context ServletContext context;
 
+	@Context
+	private ServletContext context;
+
+	@Secured(UserRole.ADMIN)
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll(){
+	public Response getAll() {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Date> holidays = service.getHolidayService().getAll();
@@ -33,11 +37,12 @@ public class HolidayController {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
-	
+
+	@Secured(UserRole.ADMIN)
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response update(Collection<Date> newHolidays){
+	public Response update(Collection<Date> newHolidays) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Date> holidays = service.getHolidayService().update(newHolidays);
