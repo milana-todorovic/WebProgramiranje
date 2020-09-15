@@ -52,12 +52,12 @@ public class AmenityService {
 		if (id == null)
 			throw new BadRequestException("Mora biti zadat ključ.");
 		if (amenity == null)
-			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se menja.");
-		if (!id.equals(amenity.getID()))
-			throw new BadRequestException("Ključ se ne može menjati.");
+			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se menja.");		
 		Amenity current = amenityRepository.simpleGetByID(id);
 		if (current == null || current.getDeleted())
 			throw new BadRequestException("Ne postoji sadržaj apartmana sa zadatim ključem.");
+		if (!id.equals(amenity.getID()))
+			throw new BadRequestException("Ključ se ne može menjati.");
 		validate(amenity);
 		current.setName(amenity.getName());
 		return amenityRepository.update(current);

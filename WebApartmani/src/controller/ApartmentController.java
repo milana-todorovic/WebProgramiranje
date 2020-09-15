@@ -96,6 +96,7 @@ public class ApartmentController {
 
 	@Path("/{id}/images")
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getImages(@PathParam("id") Integer id) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {

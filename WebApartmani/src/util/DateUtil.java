@@ -5,8 +5,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Set;
 
 public class DateUtil {
 
@@ -39,9 +37,10 @@ public class DateUtil {
 	}
 
 	public static Collection<Date> removeDuplicateDates(Collection<Date> dates) {
-		Set<Date> dateSet = new HashSet<Date>();
+		Collection<Date> dateSet = new ArrayList<Date>();
 		for (Date date : dates) {
-			dates.add(stripDate(date));
+			if (!dateSet.contains(DateUtil.stripDate(date)))
+				dateSet.add(DateUtil.stripDate(date));
 		}
 		return dateSet;
 	}
@@ -60,7 +59,7 @@ public class DateUtil {
 	public static Collection<Date> makeList(Date startDate, Date endDate) {
 		Collection<Date> dates = new ArrayList<Date>();
 		Date currentDate = (Date) startDate.clone();
-		while (currentDate.compareTo(endDate) <= 0)	{
+		while (currentDate.compareTo(endDate) <= 0) {
 			dates.add(currentDate);
 		}
 		return dates;

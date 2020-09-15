@@ -144,7 +144,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		List<T> entities = readFile();
 		entities.add(writeResolve(entity));
 		writeFile(entities);
-		return entity;
+		return fullGetByID(entity.getID());
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 		entities.removeIf(current -> current.getID().equals(entity.getID()));
 		entities.add(writeResolve(entity));
 		writeFile(entities);
-		return entity;
+		return fullGetByID(entity.getID());
 	}
 
 }

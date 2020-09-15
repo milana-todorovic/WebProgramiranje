@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -21,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import beans.Amenity;
 import beans.Apartment;
 import beans.Base64Image;
 import beans.Host;
@@ -133,5 +133,14 @@ public class TestService {
 	public void postTime(Apartment a) {
 		System.out.println(a.getCheckInTime());
 	}
-
+	
+	@GET
+	@Path("/emptyApartment")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Apartment blah() {
+		Apartment apt = new Apartment();
+		apt.getAmenities().add(new Amenity());
+		apt.setHost(new Host());
+		return apt;
+	}
 }

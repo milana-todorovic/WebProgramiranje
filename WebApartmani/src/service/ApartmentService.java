@@ -7,9 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import beans.Amenity;
 import beans.Apartment;
@@ -93,7 +91,9 @@ public class ApartmentService {
 			throw new BadRequestException("Novokreirani apartman mora imati status Neaktivan.");
 		if (!apartment.getImageKeys().isEmpty())
 			throw new BadRequestException("Novokreirani apartman ne može imati dodate slike.");
-		return apartmentRepository.create(apartment);
+		Apartment created = apartmentRepository.create(apartment);
+		created.getHost().setPassword("");
+		return restoreAvailableDates(created);
 	}
 
 	public Apartment update(Integer id, Apartment apartment) {
@@ -101,8 +101,6 @@ public class ApartmentService {
 			throw new BadRequestException("Mora biti zadat ključ.");
 		if (apartment == null)
 			throw new BadRequestException("Moraju biti zadate nove vrednosti polja apartmana.");
-		if (!id.equals(apartment.getID()))
-			throw new BadRequestException("Ključ se ne može menjati.");
 		Apartment current = apartmentRepository.fullGetByID(id);
 		if (current == null || current.getStatus().equals(ApartmentStatus.DELETED))
 			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
@@ -110,6 +108,8 @@ public class ApartmentService {
 			throw new BadRequestException("Ne može se menjati apartman čiji je vlasnik obrisao nalog.");
 		if (!current.getHost().equals(apartment.getHost()))
 			throw new BadRequestException("Vlasnik apartmana se ne može menjati.");
+		if (!id.equals(apartment.getID()))
+			throw new BadRequestException("Ključ se ne može menjati.");
 
 		prepareDatesForWrite(apartment);
 		validate(apartment);
@@ -117,7 +117,9 @@ public class ApartmentService {
 			throw new BadRequestException("Izmena apartmana se ne može koristiti za brisanje.");
 
 		apartment.setImageKeys(current.getImageKeys());
-		return apartmentRepository.update(apartment);
+		Apartment updated = apartmentRepository.update(apartment);
+		updated.getHost().setPassword("");
+		return restoreAvailableDates(updated);
 	}
 
 	public void delete(Integer id) {
@@ -273,6 +275,49 @@ public class ApartmentService {
 			error.append("Tip apartmana je obavezan.");
 		}
 
+		if (apartment.getLocation() == null) {
+			valid = false;
+			error.append("Lokacija apartmana je obavezna.");
+		} else if (apartment.getLocation().getAddress() == null) {
+			valid = false;
+			error.append("Adresa apartmana je obavezna.");
+		} else {
+			if (apartment.getLocation().getLatitude() == null || apartment.getLocation().getLongitude() == null) {
+				valid = false;
+				error.append("Koordinate lokacije su obavezne.");
+			}
+
+			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getCity())
+					&& !StringValidator.isAlphaWithSpaceDash(apartment.getLocation().getAddress().getCity())) {
+				valid = false;
+				error.append("Naziv grada smije sadržati samo slova, razmake, i crtice.");
+			}
+
+			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getCountry())
+					&& !StringValidator.isAlphaWithSpaceDash(apartment.getLocation().getAddress().getCountry())) {
+				valid = false;
+				error.append("Naziv države smije sadržati samo slova, razmake, i crtice.");
+			}
+
+			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getStreet())
+					&& !StringValidator.isAlphanumericWithSpaceDash(apartment.getLocation().getAddress().getStreet())) {
+				valid = false;
+				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice.");
+			}
+
+			if (apartment.getLocation().getAddress().getNumber() != null
+					&& apartment.getLocation().getAddress().getNumber() <= 0) {
+				valid = false;
+				error.append("Broj u ulici mora biti pozitivan.");
+			}
+			
+			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getPostalCode())
+					&& !StringValidator.isAlphanumericWithSpaceDash(apartment.getLocation().getAddress().getPostalCode())) {
+				valid = false;
+				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice.");
+			}
+		}
+
 		if (apartment.getNumberOfRooms() == null) {
 			valid = false;
 			error.append("Broj soba je obavezan.");
@@ -339,7 +384,7 @@ public class ApartmentService {
 	private Apartment restoreAvailableDates(Apartment apartment) {
 		if (apartment == null)
 			return null;
-		Set<Date> availableDates = new HashSet<Date>(apartment.getDatesForRenting());
+		Collection<Date> availableDates = new ArrayList<Date>(apartment.getDatesForRenting());
 		for (Reservation reservation : apartment.getReservations()) {
 			for (Date date : DateUtil.makeList(DateUtil.stripDate(reservation.getStartDate()),
 					reservation.getNumberOfNights())) {
@@ -352,14 +397,14 @@ public class ApartmentService {
 
 	private void prepareDatesForWrite(Apartment apartment) {
 		if (apartment.getCheckInTime() == null)
-			apartment.setCheckInTime(defaultCheckIn);
+			apartment.setCheckInTime(DateUtil.stripTime(defaultCheckIn));
 		else
 			apartment.setCheckInTime(DateUtil.stripTime(apartment.getCheckInTime()));
 
 		if (apartment.getCheckOutTime() == null)
-			apartment.setCheckOutTime(defaultCheckOut);
+			apartment.setCheckOutTime(DateUtil.stripTime(defaultCheckOut));
 		else
-			apartment.setCheckOutTime(apartment.getCheckOutTime());
+			apartment.setCheckOutTime(DateUtil.stripTime(apartment.getCheckOutTime()));
 
 		apartment.setDatesForRenting(DateUtil.removeDuplicateDates(apartment.getDatesForRenting()));
 	}

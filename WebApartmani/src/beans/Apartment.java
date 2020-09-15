@@ -41,6 +41,7 @@ public class Apartment implements Entity<Integer> {
 		amenities = new ArrayList<>();
 		comments = new ArrayList<>();
 		reservations = new ArrayList<>();
+		location = new Location();
 		status = ApartmentStatus.INACIVE;
 	}
 
