@@ -10,19 +10,22 @@ public class Comment implements Entity<Integer> {
 	private Guest guest;
 	private Apartment apartment;
 	private Integer id;
+	private Boolean deleted;
 
 	public Comment() {
 		super();
 		showing = false;
+		deleted = false;
 	}
 
-	public Comment(String text, Integer rating, Boolean showing, Guest guest, Apartment apartment) {
+	public Comment(String text, Integer rating, Boolean showing, Guest guest, Apartment apartment, Boolean deleted) {
 		super();
 		this.text = text;
 		this.rating = rating;
 		this.showing = showing;
 		this.guest = guest;
 		this.apartment = apartment;
+		this.deleted = deleted;
 	}
 
 	public String getText() {
@@ -63,6 +66,14 @@ public class Comment implements Entity<Integer> {
 
 	public void setApartment(Apartment apartment) {
 		this.apartment = apartment;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

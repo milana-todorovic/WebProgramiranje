@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import beans.Amenity;
+import beans.Apartment;
 import beans.Comment;
 import custom_exception.BadRequestException;
 import repository.interfaces.ApartmentRepository;
@@ -90,11 +91,31 @@ public class CommentService {
 	}
 
 	public Comment changeStatus(Integer id, Boolean showing) {
-		return null;
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+
+		Comment current = commentRepository.simpleGetByID(id);
+		if (current == null)
+			throw new BadRequestException("Ne postoji  sa zadatim ključem.");
+		current.setShowing(showing);
+
+		return commentRepository.update(current);
 	}
 
 	public void delete(Integer id) {
-		// TODO logičko brisanje
+
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		Comment comment = commentRepository.simpleGetByID(id);
+		if (comment == null || comment.getDeleted())
+			throw new BadRequestException("Ne postoji sadržaj apartmana sa zadatim ključem.");
+		comment.setDeleted(true);
+		commentRepository.update(comment);
+		for (Apartment apartment : apartmentRepository.getAll()) {
+			apartment.getComments().remove(comment);
+			apartmentRepository.update(apartment);
+		}
+
 	}
 
 	private void validate(Comment comment) {
