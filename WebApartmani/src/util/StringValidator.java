@@ -3,7 +3,7 @@ package util;
 public class StringValidator {
 
 	public static Boolean isNullOrEmpty(String string) {
-		return string == null || string.isEmpty();
+		return string == null || string.isEmpty() || string.matches("\\s+");
 	}
 	
 	public static Boolean isAlphaWithSpaceDash(String string) {

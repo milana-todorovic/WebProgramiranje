@@ -1,10 +1,14 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import beans.Amenity;
+import beans.Apartment;
+import custom_exception.BadRequestException;
 import repository.interfaces.AmenityRepository;
 import repository.interfaces.ApartmentRepository;
+import util.StringValidator;
 
 public class AmenityService {
 
@@ -18,33 +22,75 @@ public class AmenityService {
 	}
 
 	public Collection<Amenity> getAll() {
-		// TODO vratiti sve osim koji su logički obrisani?
-		return null;
+		Collection<Amenity> amenities = new ArrayList<Amenity>();
+		for (Amenity amenity : amenityRepository.getAll()) {
+			if (!amenity.getDeleted()) {
+				amenities.add(amenity);
+			}
+		}
+		return amenities;
 	}
 
 	public Amenity getByID(Integer id) {
-		// TODO ako je logički obrisan ne vraćati?
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		Amenity amenity = amenityRepository.simpleGetByID(id);
+		if (amenity != null && !amenity.getDeleted()) {
+			return amenity;
+		}
 		return null;
 	}
 
 	public Amenity create(Amenity amenity) {
-		// TODO validirati i sacuvati
-		return null;
+		if (amenity == null)
+			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se dodaje.");
+		validate(amenity);
+		return amenityRepository.create(amenity);
 	}
 
 	public Amenity update(Integer id, Amenity amenity) {
-		// TODO validirati i sacuvati
-		// prima id da rest kontroler samo proslijedi id i tijelo puta, ako se ne
-		// poklapa id u putanji i u tijelu bacati ovde exception
-		return null;
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		if (amenity == null)
+			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se menja.");
+		if (!id.equals(amenity.getID()))
+			throw new BadRequestException("Ključ se ne može menjati.");
+		Amenity current = amenityRepository.simpleGetByID(id);
+		if (current == null || current.getDeleted())
+			throw new BadRequestException("Ne postoji sadržaj apartmana sa zadatim ključem.");
+		validate(amenity);
+		current.setName(amenity.getName());
+		return amenityRepository.update(current);
 	}
 
 	public void delete(Integer id) {
-		// TODO logicko brisanje, ukloniti i iz apartmana
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		Amenity amenity = amenityRepository.simpleGetByID(id);
+		if (amenity == null || amenity.getDeleted())
+			throw new BadRequestException("Ne postoji sadržaj apartmana sa zadatim ključem.");
+		amenity.setDeleted(true);
+		amenityRepository.update(amenity);
+		for (Apartment apartment : apartmentRepository.getAll()) {
+			apartment.getAmenities().remove(amenity);
+			apartmentRepository.update(apartment);
+		}
 	}
 
 	private void validate(Amenity amenity) {
-		// TODO samo provjeriti da naziv nije prazan ili još nešto?
+		Boolean valid = true;
+		StringBuilder error = new StringBuilder();
+
+		if (StringValidator.isNullOrEmpty(amenity.getName())) {
+			valid = false;
+			error.append("Naziv sadržaja je obavezan.");
+		} else if (!StringValidator.isAlphaWithSpaceDash(amenity.getName())) {
+			valid = false;
+			error.append("Naziv sadržaja sme sadržati samo slova, razmake i crtice.");
+		}
+
+		if (!valid)
+			throw new BadRequestException(error.toString());
 	}
 
 }

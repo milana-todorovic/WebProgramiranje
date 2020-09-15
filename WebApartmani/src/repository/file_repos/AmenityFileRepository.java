@@ -41,6 +41,7 @@ public class AmenityFileRepository extends GenericFileRepository<Amenity, Intege
 		Amenity reference = new Amenity();
 		reference.setID(entity.getID());
 		reference.setName(null);
+		reference.setDeleted(null);
 		return reference;
 	}
 	

@@ -41,6 +41,7 @@ public class AdminFileRepository extends GenericFileRepository<User, Integer> im
 		reference.setSurname(null);
 		reference.setGender(null);
 		reference.setRole(null);
+		reference.setDeleted(null);
 		return reference;
 	}
 

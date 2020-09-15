@@ -61,6 +61,8 @@ public class UserService {
 	}
 
 	public User create(User user) {
+		if (user == null)
+			throw new BadRequestException("Mora biti zadat korisnik koji se dodaje.");
 		user.setID(null);
 		validate(user);
 		if (user.getDeleted() || user.getBlocked())
