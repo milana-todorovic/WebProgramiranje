@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import beans.Amenity;
 import beans.Apartment;
 import beans.ApartmentStatus;
 import beans.ApartmentType;
@@ -23,6 +24,7 @@ import repository.interfaces.HostRepository;
 import repository.interfaces.ImageRepository;
 import util.CollectionUtil;
 import util.DateUtil;
+import util.StringValidator;
 
 public class ApartmentService {
 
@@ -87,6 +89,8 @@ public class ApartmentService {
 	}
 
 	public Apartment update(Integer id, Apartment apartment) {
+		prepareDatesForWrite(apartment);
+		validate(apartment);
 		// TODO validirati i sačuvati
 		// polje sa slikama ostaviti staro ovde
 		return null;
@@ -97,18 +101,51 @@ public class ApartmentService {
 	}
 
 	public Collection<Base64Image> getImagesByApartmentID(Integer apartmentID) {
-		Apartment apartment = getByID(apartmentID);
-		return null;
+		if (apartmentID == null)
+			throw new BadRequestException("Mora biti zadat ključ apartmana.");
+		Apartment apartment = apartmentRepository.simpleGetByID(apartmentID);
+		if (apartment == null)
+			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
+
+		Collection<Base64Image> images = new ArrayList<Base64Image>();
+		for (String imageID : apartment.getImageKeys()) {
+			Base64Image image = imageRepository.simpleGetByID(imageID);
+			if (image != null)
+				images.add(image);
+		}
+		return images;
 	}
 
 	public Base64Image addImage(Integer apartmentID, Base64Image image) {
-		// TODO sačuvati sliku
-		// vraćati sliku ili apartman?
-		return null;
+		if (apartmentID == null)
+			throw new BadRequestException("Mora biti zadat ključ apartmana.");
+		if (image == null || StringValidator.isNullOrEmpty(image.getData()))
+			throw new BadRequestException("Sadržaj slike ne može biti prazan.");
+		// TODO provjeri format sadržaja slike
+
+		Apartment apartment = apartmentRepository.simpleGetByID(apartmentID);
+		if (apartment == null)
+			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
+
+		Base64Image saved = imageRepository.create(image);
+		apartment.getImageKeys().add(saved.getID());
+		apartmentRepository.update(apartment);
+		return saved;
 	}
 
 	public void deleteImage(Integer apartmentID, String imageID) {
-		// TODO
+		if (apartmentID == null)
+			throw new BadRequestException("Mora biti zadat ključ apartmana.");
+		if (StringValidator.isNullOrEmpty(imageID))
+			throw new BadRequestException("Mora biti zadat ključ slike.");
+		Apartment apartment = apartmentRepository.simpleGetByID(apartmentID);
+		if (apartment == null)
+			throw new BadRequestException("Ne postoji apartman sa zadatim ključem.");
+		if (!apartment.getImageKeys().contains(imageID))
+			throw new BadRequestException("Ne postoji slika apartmana sa zadatim ključem.");
+		apartment.getImageKeys().remove(imageID);
+		apartmentRepository.update(apartment);
+		imageRepository.deleteByID(imageID);
 	}
 
 	public Collection<Apartment> filterByAvailableDates(Collection<Apartment> apartments, Date startDate,
@@ -119,11 +156,15 @@ public class ApartmentService {
 	}
 
 	public Collection<Apartment> filterByCity(Collection<Apartment> apartments, String city) {
+		if (StringValidator.isNullOrEmpty(city))
+			return apartments;
 		return CollectionUtil.findAll(apartments,
 				apartment -> apartment.getLocation().getAddress().getCity().equals(city));
 	}
 
 	public Collection<Apartment> filterByCountry(Collection<Apartment> apartments, String country) {
+		if (StringValidator.isNullOrEmpty(country))
+			return apartments;
 		return CollectionUtil.findAll(apartments,
 				apartment -> apartment.getLocation().getAddress().getCountry().equals(country));
 	}
@@ -156,13 +197,21 @@ public class ApartmentService {
 	}
 
 	public Collection<Apartment> filterByAmenities(Collection<Apartment> apartments, Collection<Integer> include) {
-		// TODO
-		return null;
+		if (include == null || include.isEmpty())
+			return apartments;
+		final Collection<Amenity> amenities = new ArrayList<Amenity>();
+		for (Integer id : include) {
+			Amenity amenity = new Amenity();
+			amenity.setID(id);
+			amenities.add(amenity);
+		}
+		return CollectionUtil.findAll(apartments, apartment -> apartment.getAmenities().containsAll(amenities));
 	}
 
 	public Collection<Apartment> filterByType(Collection<Apartment> apartments, Collection<ApartmentType> include) {
-		// TODO
-		return null;
+		if (include == null || include.isEmpty())
+			return apartments;
+		return CollectionUtil.findAll(apartments, apartment -> include.contains(apartment.getApartmentType()));
 	}
 
 	public Collection<Apartment> sortByPriceAscending(Collection<Apartment> apartments) {

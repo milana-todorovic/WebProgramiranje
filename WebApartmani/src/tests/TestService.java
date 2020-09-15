@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -29,10 +30,10 @@ import util.DateUtil;
 
 @Path("/test")
 public class TestService {
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Date> dateTest(){
+	public Collection<Date> dateTest() {
 		Date date1 = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
 		Date date2 = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
 		System.out.println(date1.equals(date2));

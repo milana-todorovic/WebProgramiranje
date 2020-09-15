@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import beans.Apartment;
+import beans.ApartmentStatus;
 import beans.Guest;
 import beans.Host;
 import beans.User;
@@ -126,6 +128,13 @@ public class UserService {
 		User user = internalGetByID(id);
 		if (user.getRole().equals(UserRole.ADMIN))
 			throw new BadRequestException("Ne može se obrisati administratorski nalog.");
+		else if (user.getRole().equals(UserRole.HOST)) {
+			Host host = hostRepository.fullGetByID(id);
+			for (Apartment apartment : host.getApartments()) {
+				if (apartment.getStatus().equals(ApartmentStatus.ACTIVE))
+					throw new BadRequestException("Ne može se obrisati nalog domaćina dok ima aktivne apartmane.");
+			}
+		}
 		user.setDeleted(true);
 		dispatchUpdate(user);
 	}
