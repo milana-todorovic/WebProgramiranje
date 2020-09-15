@@ -182,6 +182,12 @@ public class ApartmentService {
 
 	public Collection<Apartment> filterByAvailableDates(Collection<Apartment> apartments, Date startDate,
 			Date endDate) {
+		if (startDate == null && endDate == null)
+			return apartments;
+		if (startDate != null && endDate == null)
+			throw new BadRequestException("Ukoliko je zadat datum početka, mora biti zadat i datum kraja.");
+		if (startDate == null && endDate != null)
+			throw new BadRequestException("Ukoliko je zadat datum kraja, mora biti zadat i datum početka.");
 		Collection<Date> dates = DateUtil.makeList(startDate, endDate);
 		return CollectionUtil.findAll(apartments,
 				apartment -> restoreAvailableDates(apartment).getAvailableDates().containsAll(dates));
@@ -310,9 +316,9 @@ public class ApartmentService {
 				valid = false;
 				error.append("Broj u ulici mora biti pozitivan.");
 			}
-			
-			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getPostalCode())
-					&& !StringValidator.isAlphanumericWithSpaceDash(apartment.getLocation().getAddress().getPostalCode())) {
+
+			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getPostalCode()) && !StringValidator
+					.isAlphanumericWithSpaceDash(apartment.getLocation().getAddress().getPostalCode())) {
 				valid = false;
 				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice.");
 			}

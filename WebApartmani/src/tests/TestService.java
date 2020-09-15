@@ -1,13 +1,6 @@
 package tests;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -20,47 +13,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import beans.Amenity;
 import beans.Apartment;
 import beans.Base64Image;
 import beans.Host;
 import beans.ReservationStatus;
 import repository.file_repos.FileRepositoryContainer;
-import util.DateUtil;
 
 @Path("/test")
 public class TestService {
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Collection<Date> dateTest() {
-		Date date1 = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
-		Date date2 = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
-		System.out.println(date1.equals(date2));
-		System.out.println(date2.equals(date1));
-		System.out.println(Long.valueOf(date1.getTime()).equals(Long.valueOf(date2.getTime())));
-		Date startDate = new GregorianCalendar(2020, Calendar.FEBRUARY, 27).getTime();
-		return DateUtil.makeList(startDate, 5);
-	}
-
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public List<String> test(String param) throws NoSuchAlgorithmException {
-		List<String> bleh = new ArrayList<String>();
-		for (int i = 0; i < 100; i++) {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			digest.reset();
-			byte[] digested = digest.digest(param.getBytes());
-			StringBuffer sb = new StringBuffer();
-			for (int j = 0; j < digested.length; j++) {
-				sb.append(Integer.toHexString(0xff & digested[j]));
-			}
-			bleh.add(sb.toString());
-		}
-
-		return bleh;
-	}
 
 	@GET
 	@Path("/pathTest")
@@ -133,14 +93,5 @@ public class TestService {
 	public void postTime(Apartment a) {
 		System.out.println(a.getCheckInTime());
 	}
-	
-	@GET
-	@Path("/emptyApartment")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Apartment blah() {
-		Apartment apt = new Apartment();
-		apt.getAmenities().add(new Amenity());
-		apt.setHost(new Host());
-		return apt;
-	}
+
 }

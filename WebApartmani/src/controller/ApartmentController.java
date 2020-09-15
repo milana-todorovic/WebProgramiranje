@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response.Status;
 import beans.Apartment;
 import beans.Base64Image;
 import custom_exception.BadRequestException;
+import dto.ApartmentSearchDTO;
+import dto.SortType;
 import service.ServiceContainer;
 
 @Path("/apartments")
@@ -31,7 +33,6 @@ public class ApartmentController {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAll() {
-		// TODO dodati parametre za pretragu
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Apartment> entities = service.getApartmentService().getAll();
@@ -131,6 +132,40 @@ public class ApartmentController {
 		try {
 			service.getApartmentService().deleteImage(apartmentID, imageID);
 			return Response.noContent().build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
+
+	@POST
+	@Path("/search")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response search(ApartmentSearchDTO searchParameters) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		try {
+			Collection<Apartment> entities = service.getApartmentService().getAll();
+			entities = service.getApartmentService().filterByAvailableDates(entities, searchParameters.getStartDate(),
+					searchParameters.getEndDate());
+			entities = service.getApartmentService().filterByCity(entities, searchParameters.getCity());
+			entities = service.getApartmentService().filterByCountry(entities, searchParameters.getCountry());
+			entities = service.getApartmentService().filterByNumberOfGuests(entities,
+					searchParameters.getMinimumNumberOfGuests(), searchParameters.getMaximumNumberOfGuests());
+			entities = service.getApartmentService().filterByNumberOfRooms(entities,
+					searchParameters.getMinimumNumberOfRooms(), searchParameters.getMaximumNumberOfRooms());
+			entities = service.getApartmentService().filterByPrice(entities, searchParameters.getMinimumPrice(),
+					searchParameters.getMaximumPrice());
+
+			entities = service.getApartmentService().filterByAmenities(entities, searchParameters.getAmenities());
+			entities = service.getApartmentService().filterByType(entities, searchParameters.getTypes());
+
+			if (searchParameters.getSort() != null)
+				if (searchParameters.getSort().equals(SortType.ASCENDING))
+					entities = service.getApartmentService().sortByPriceAscending(entities);
+				else
+					entities = service.getApartmentService().sortByPriceDescending(entities);
+
+			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}

@@ -142,10 +142,14 @@ public class UserService {
 	}
 
 	public Collection<User> filterByRole(Collection<User> users, UserRole role) {
+		if (role == null)
+			return users;
 		return CollectionUtil.findAll(users, user -> user.getRole().equals(role));
 	}
 
 	public Collection<User> filterByGenderInclude(Collection<User> users, String genderToInclude) {
+		if (StringValidator.isNullOrEmpty(genderToInclude))
+			return users;
 		return CollectionUtil.findAll(users, user -> user.getGender().equals(genderToInclude));
 	}
 
@@ -154,6 +158,8 @@ public class UserService {
 	}
 
 	public Collection<User> filterByUsername(Collection<User> users, String username) {
+		if (StringValidator.isNullOrEmpty(username))
+			return users;
 		return CollectionUtil.findAll(users, user -> user.getUsername().contains(username));
 	}
 
