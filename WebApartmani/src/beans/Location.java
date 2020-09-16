@@ -7,6 +7,7 @@ public class Location {
 
 	public Location() {
 		super();
+		this.address = new Address();
 	}
 
 	public Location(Double latitude, Double longitude, Address address) {

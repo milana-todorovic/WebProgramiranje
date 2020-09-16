@@ -1,13 +1,13 @@
-package beans;
+package dto;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum ApartmentStatus {
-	ACTIVE("Aktivan"), INACIVE("Neaktivan"), DELETED("Obrisan");
+public enum SortType {
+	ASCENDING("Rastuće"), DESCENDING("Opadajuće");
 
 	private String keyword;
 
-	private ApartmentStatus(String keyword) {
+	private SortType(String keyword) {
 		this.keyword = keyword;
 	}
 

@@ -1,8 +1,8 @@
 package repository.interfaces;
 
-import beans.Holiday;
+import beans.Holidays;
 import repository.generics.Repository;
 
-public interface HolidayRepository extends Repository<Holiday, Integer> {
+public interface HolidayRepository extends Repository<Holidays, Integer> {
 
 }

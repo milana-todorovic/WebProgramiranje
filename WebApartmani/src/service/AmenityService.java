@@ -45,6 +45,7 @@ public class AmenityService {
 		if (amenity == null)
 			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se dodaje.");
 		validate(amenity);
+		amenity.setDeleted(false);
 		return amenityRepository.create(amenity);
 	}
 
@@ -52,12 +53,12 @@ public class AmenityService {
 		if (id == null)
 			throw new BadRequestException("Mora biti zadat ključ.");
 		if (amenity == null)
-			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se menja.");
-		if (!id.equals(amenity.getID()))
-			throw new BadRequestException("Ključ se ne može menjati.");
+			throw new BadRequestException("Mora biti zadat sadržaj apartmana koji se menja.");		
 		Amenity current = amenityRepository.simpleGetByID(id);
 		if (current == null || current.getDeleted())
 			throw new BadRequestException("Ne postoji sadržaj apartmana sa zadatim ključem.");
+		if (!id.equals(amenity.getID()))
+			throw new BadRequestException("Ključ se ne može menjati.");
 		validate(amenity);
 		current.setName(amenity.getName());
 		return amenityRepository.update(current);
@@ -84,9 +85,9 @@ public class AmenityService {
 		if (StringValidator.isNullOrEmpty(amenity.getName())) {
 			valid = false;
 			error.append("Naziv sadržaja je obavezan.");
-		} else if (!StringValidator.isAlphaWithSpaceDash(amenity.getName())) {
+		} else if (!StringValidator.isAlphanumericWithSpaceDash(amenity.getName())) {
 			valid = false;
-			error.append("Naziv sadržaja sme sadržati samo slova, razmake i crtice.");
+			error.append("Naziv sadržaja sme sadržati samo slova, brojeve, razmake i crtice.");
 		}
 
 		if (!valid)

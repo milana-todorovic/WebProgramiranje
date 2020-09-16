@@ -22,6 +22,14 @@ public class CollectionUtil {
 		}
 		return null;
 	}
+	
+	public static <T> Boolean contains(Collection<T> collection, Predicate<T> predicate) {
+		for (T t : collection) {
+			if (predicate.test(t))
+				return true;
+		}
+		return false;
+	}
 
 	public static <T> Collection<T> findAll(Collection<T> collection, Predicate<T> predicate) {
 		return collection.stream().filter(predicate).collect(Collectors.toCollection(ArrayList::new));

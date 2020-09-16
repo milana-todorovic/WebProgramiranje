@@ -13,5 +13,9 @@ public class StringValidator {
 	public static Boolean isAlphanumeric(String string) {
 		return string.matches("[\\p{IsAlphabetic}0-9]*");
 	}
+	
+	public static Boolean isAlphanumericWithSpaceDash(String string) {
+		return string.matches("[\\p{IsAlphabetic}0-9 -]*");
+	}
 
 }

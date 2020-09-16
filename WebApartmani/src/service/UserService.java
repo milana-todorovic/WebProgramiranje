@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import beans.Apartment;
+import beans.ApartmentStatus;
 import beans.Guest;
 import beans.Host;
 import beans.User;
@@ -43,6 +45,21 @@ public class UserService {
 		return users;
 	}
 
+	public Collection<User> getGuestsByHostID(Integer hostID) {
+		if (hostID == null)
+			throw new BadRequestException("Mora biti zadat ključ domaćina.");
+		Collection<Guest> guests = guestRepository.getAll();
+		guests.removeIf(guest -> !guest.getDeleted());
+		Collection<Guest> filtered = CollectionUtil.findAll(guests, guest -> hasGuestVisitedHost(guest, hostID));
+		filtered.forEach(guest -> guest.setPassword(""));
+		return new ArrayList<User>(filtered);
+	}
+
+	private Boolean hasGuestVisitedHost(Guest guest, Integer hostID) {
+		return CollectionUtil.contains(guest.getRentedApartments(),
+				apartment -> hostID.equals(apartment.getHost().getID()));
+	}
+
 	public User getByID(Integer id) {
 		if (id == null)
 			throw new BadRequestException("Mora biti zadat ključ.");
@@ -61,13 +78,14 @@ public class UserService {
 	public User create(User user) {
 		if (user == null)
 			throw new BadRequestException("Mora biti zadat korisnik koji se dodaje.");
+		user.setID(null);
 		validate(user);
-		if (user.getDeleted() || user.getBlocked())
-			throw new BadRequestException("Ne može se kreirati nalog koji je obrisan ili blokiran.");
 		if (user.getRole().equals(UserRole.ADMIN))
 			throw new BadRequestException("Ne može se kreirati administratorski nalog.");
 		user.setID(sequencer.generateID());
 		user.setPassword(hashPassword(user.getPassword()));
+		user.setBlocked(false);
+		user.setDeleted(false);
 		if (user.getRole().equals(UserRole.GUEST))
 			return clearPassword(guestRepository.create(toGuest(user)));
 		else
@@ -127,15 +145,26 @@ public class UserService {
 		User user = internalGetByID(id);
 		if (user.getRole().equals(UserRole.ADMIN))
 			throw new BadRequestException("Ne može se obrisati administratorski nalog.");
+		else if (user.getRole().equals(UserRole.HOST)) {
+			Host host = hostRepository.fullGetByID(id);
+			for (Apartment apartment : host.getApartments()) {
+				if (apartment.getStatus().equals(ApartmentStatus.ACTIVE))
+					throw new BadRequestException("Ne može se obrisati nalog domaćina dok ima aktivne apartmane.");
+			}
+		}
 		user.setDeleted(true);
 		dispatchUpdate(user);
 	}
 
 	public Collection<User> filterByRole(Collection<User> users, UserRole role) {
+		if (role == null)
+			return users;
 		return CollectionUtil.findAll(users, user -> user.getRole().equals(role));
 	}
 
 	public Collection<User> filterByGenderInclude(Collection<User> users, String genderToInclude) {
+		if (StringValidator.isNullOrEmpty(genderToInclude))
+			return users;
 		return CollectionUtil.findAll(users, user -> user.getGender().equals(genderToInclude));
 	}
 
@@ -144,10 +173,15 @@ public class UserService {
 	}
 
 	public Collection<User> filterByUsername(Collection<User> users, String username) {
+		if (StringValidator.isNullOrEmpty(username))
+			return users;
 		return CollectionUtil.findAll(users, user -> user.getUsername().contains(username));
 	}
 
 	private void validate(User user) {
+		if (user == null)
+			throw new BadRequestException("Mora biti zadat korisnik.");
+
 		Boolean valid = true;
 		StringBuilder error = new StringBuilder();
 

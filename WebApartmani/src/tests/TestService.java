@@ -1,10 +1,9 @@
 package tests;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -26,30 +25,19 @@ import repository.file_repos.FileRepositoryContainer;
 @Path("/test")
 public class TestService {
 
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public List<String> test(String param) throws NoSuchAlgorithmException {
-		List<String> bleh = new ArrayList<String>();
-		for (int i = 0; i < 100; i++) {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			digest.reset();
-			byte[] digested = digest.digest(param.getBytes());
-			StringBuffer sb = new StringBuffer();
-			for (int j = 0; j < digested.length; j++) {
-				sb.append(Integer.toHexString(0xff & digested[j]));
-			}
-			bleh.add(sb.toString());
-		}
-
-		return bleh;
-	}
-
 	@GET
-	@Path("/pathTest")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String pathTest(@Context ServletContext context) {
-		return context.getRealPath("");
+	@Path("/dateTest")
+	public void pathTest() {
+		System.out.println(TimeZone.getDefault());
+		System.out.println();
+		
+		Calendar calendar = new GregorianCalendar();
+		System.out.println(calendar.getTime());
+		System.out.println();
+		
+		Calendar calendar2 = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+		System.out.println(calendar2.getTime());
+		System.out.println();
 	}
 
 	@GET
