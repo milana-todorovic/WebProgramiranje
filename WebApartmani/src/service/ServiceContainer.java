@@ -21,7 +21,7 @@ public class ServiceContainer {
 		apartmentService = new ApartmentService(repo.getApartmentRepository(), repo.getHostRepository(),
 				repo.getImageRepository(), repo.getAmenityRepository());
 		commentService = new CommentService(repo.getReservationRepository(), repo.getGuestRepository(),
-				repo.getApartmentRepository());
+				repo.getApartmentRepository(),repo.getCommentRepository());
 		holidayService = new HolidayService(repo.getHolidayRepository());
 		reservationService = new ReservationService(repo.getReservationRepository(), apartmentService,
 				repo.getGuestRepository(), holidayService);
