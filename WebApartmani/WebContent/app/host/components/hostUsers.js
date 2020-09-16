@@ -1,83 +1,77 @@
 Vue.component("host-users",{
     data: function(){
         return{
-            flag:0,
-            korisnici:[
-                {
-                    ime:'Pera',
-                    prezime:'Peric',
-                    uloga:'gost',
-                    korisnickoIme:'pericavrecica888',
-                    pol:'muski'
-                },
-                {
-                    ime:'Mika',
-                    prezime:'Mikic',
-                    uloga:'gost',
-                    korisnickoIme:'mikicacikica74',
-                    pol:'muski'
-                },
-                {
-                    ime:'Zoka',
-                    prezime:'Zokic',
-                    uloga:'gost',
-                    korisnickoIme:'zokicazekica45',
-                    pol:'zenski'
-                }
-
-            ],
-            polovi:['Mu\u0161ki','\u017Denski']
+            users:[],
+            roles: [
+                { value: null, text: 'Izaberite ulogu' },
+                { value: 'Administrator', text: 'Administrator' },
+                { value: 'Doma\u0107in', text: 'Doma\u0107in' },
+                { value: 'Gost', text: 'Gost' },
+              ],
+            genders: [
+                { value: null, text: 'Izaberite pol' },
+                { value: 'mu\u0161ki', text: 'Mu\u0161ki' },
+                { value: '\u017Eenski', text: '\u017Denski' },
+                { value: 'drugi', text: 'Ostalo' },
+              ],
+            searchParam: {username:null, gender:null, role:null}
+        }       
+    },
+    created() {
+    	this.fetchUsers();
+    },
+    watch: {
+        '$route': 'fetchUsers'
+    },
+    methods:{
+        fetchUsers(){
+        	this.searchParam.username = null;
+        	this.searchParam.gender = null;
+        	this.searchParam.role = null;
+        	axios.get("/WebApartmani/rest/users").then(
+        			response => this.users = response.data).catch(error => console.log(alert(error.response.data)));             
+        },
+        searchSubmit(event){
+        	event.preventDefault();
+        	axios.post("/WebApartmani/rest/users/search", this.searchParam).then(
+        			response => this.users = response.data).catch(error => console.log(alert(error.response.data)));
+        },
+        searchReset(event){
+        	event.preventDefault();
+        	this.fetchUsers();
         }
     },
     template:`
-        <div style="font-size:18px;">
-
-            <b-container>
-
+            <b-container class="w-75">
                 <b-row>
                     <b-col>
-                        <b-card style=" padding: 0.5%;margin-left:1%;margin-top:1%;margin-right:20%;">
-                            <b-card-text>
-                                <b-form inline>
-                                    <b-form-input   placeholder="Korisni\u010Dko ime gosta"></b-form-input>
-                                    <b-form-input list="my-list" placeholder="Pol"></b-form-input>
-                                        <datalist id="my-list">
-                                            <option v-for="pol in polovi">{{ pol }}</option>
-                                        </datalist>
-                                    <b-form-input   placeholder="Uloga"></b-form-input>
+                    	<b-form class="p-1" inline v-on:submit="searchSubmit" v-on:reset="searchReset">
+                          	<b-form-input class="m-1" placeholder="Korisni\u010Dko ime" v-model="searchParam.username"></b-form-input>
                                     
-                                    <b-button   variant="primary" style="margin-left:2%;">
-                                        <b-icon icon="search"></b-icon>
-                                        Pretra&#x17E;i
-                                    </b-button>
-                                </b-form>
-                            </b-card-text>
-                        </b-card>
+                            <b-form-select class="m-1" :options="genders" v-model="searchParam.gender"></b-form-select>
+                                    
+                            <b-form-select class="m-1" :options="roles" v-model="searchParam.role"></b-form-select>
+                                    
+                            <b-button class="m-1" type="submit" variant="primary">Pretra\u017Ei</b-button>
+    						<b-button class="m-1" type="reset" variant="secondary">Resetuj pretragu</b-button>
+                    	</b-form>
                     </b-col>
-
                 </b-row>
 
                 <b-row>
                     <b-col>
                         <dl>
-                            <dd v-for="korisnik in korisnici">
+                            <dd v-for="user in users">
                                 <b-card style="margin-left:1%;margin-top:5%;margin-right:20%;">
-                                    <h1 style="font-size:25px;">{{korisnik.ime}} {{korisnik.prezime}} <b-badge variant="primary">{{korisnik.uloga}}</b-badge></h1>
-                                    <label>Korisnicko ime </label><b> {{korisnik.korisnickoIme}}</b>
+                                    <h1 style="font-size:25px;">{{user.name}} {{user.surname}} <b-badge variant="primary">{{user.role}}</b-badge></h1>
+                                    <label>Korisnicko ime </label><b> {{user.username}}</b>
                                     <br>
-                                    <label>Pol</label><b> {{korisnik.pol}}</b>
-                                </b-card>
-
+                                    <label>gender</label><b> {{user.gender}}</b>
+    							</b-card>
                             </dd>
-
                         </dl>
-                    </b-col>
-                
+                    </b-col>                
                 </b-row>
-
             </b-container>
-        </div>
-    
     `
-
 });
