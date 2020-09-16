@@ -12,6 +12,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,11 +30,27 @@ public class CommentController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll() {
-		// TODO dodati parametre za pretragu
+	public Response get(@QueryParam("apartment") Integer apartmentID) {
+		if (apartmentID == null)
+			return getAll();
+		else
+			return getByApartmentID(apartmentID);
+	}
+
+	private Response getAll() {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Comment> entities = service.getCommentService().getAll();
+			return Response.ok(entities).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
+
+	private Response getByApartmentID(Integer apartmentID) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		try {
+			Collection<Comment> entities = service.getCommentService().getByApartmentID(apartmentID);
 			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();

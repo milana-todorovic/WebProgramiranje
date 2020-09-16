@@ -43,7 +43,7 @@ public class CommentFileRepository extends GenericFileRepository<Comment, Intege
 		Comment writingCopy = new Comment();
 		writingCopy.setID(entity.getID());
 		writingCopy.setRating(entity.getRating());
-		writingCopy.setShowing(entity.isShowing());
+		writingCopy.setShowing(entity.getShowing());
 		writingCopy.setText(entity.getText());
 		writingCopy.setApartment(apartmentRepository.stripToReference(entity.getApartment()));
 		writingCopy.setGuest(guestRepository.stripToReference(entity.getGuest()));

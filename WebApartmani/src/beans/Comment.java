@@ -44,7 +44,7 @@ public class Comment implements Entity<Integer> {
 		this.rating = rating;
 	}
 
-	public Boolean isShowing() {
+	public Boolean getShowing() {
 		return showing;
 	}
 
