@@ -61,10 +61,14 @@ Vue.component("guest-apartments",{
 		axios
 		.get("rest/apartments")
 		.then(response =>{
-			console.log(response.data);
-            this.apartments = response.data;
-        
+            console.log(response.data);
+            this.apartments=[];
 
+            response.data.forEach(apartment => {
+                if(apartment.status == 'Aktivan'){
+                    this.apartments.push(apartment);
+                }
+            });
 
         });
         
