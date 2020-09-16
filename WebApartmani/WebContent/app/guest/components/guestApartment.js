@@ -2,34 +2,24 @@ Vue.component("guest-apartments",{
     data: function(){
         return{
             name: 'Apartmani',
-            apartmani:[
-                {
-                ime:'Apartmani Ivana',
-                sadrzaj:'Jastuk,krevet,jastucnica,posudje',
-                brojSoba:5,
-                aktivan:false,
-                tip:'soba',
-                brojOsoba:2,
-                lokacija:'Pariz',
-                cena:'20$',
-                prijava:'14:00h',
-                odjava:'11:00h',
-                komentari:'Apartman za svaku preporuku.Doci cemo ponovo!'
-                },
-                {
-                ime:'Apartmani Mico',
-                sadrzaj:'Jastuk,krevet,jastucnica,posudje',
-                brojSoba:6,
-                aktivan:true,
-                tip:'ceo apartman',
-                brojOsoba:4,
-                lokacija:'Santorini',
-                cena:'40$',
-                prijava:'14:00h',
-                odjava:'12:00h',
-                komentari:'Udaljeno od centra,ali veoma cisto.'
-                }
+            apartments:[],
+            apartmentSearch:{
+                //TODO:srediti datume
+                startDate:'',
+                endDate:'',
+                minimumPrice:'',
+                maximumPrice:'',
+                minimumNumberOfRooms:'',
+                maximumNumberOfRooms:'',
+                minimumNumberOfGuests:'',
+                maximumNumberOfGuest:'',
+                city:'',
+                country:''
+            },
+            apartments:[
+              
             ],
+            
             options: [
                 { text: 'Ceo', value: 'ceo' },
                 { text: 'Soba', value: 'soba' },
@@ -54,20 +44,55 @@ Vue.component("guest-apartments",{
         }
     
     },
+    methods: {
+        prikaziDetaljeFun: function(apartman){
+            alert('radi' + apartman.ime);
+
+            window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
+        },
+        searchAp:function(){
+
+            axios.post('rest/apartments/search', {
+                "startDate":this.apartmentSearch.startDate,
+                "endDate":this.apartmentSearch.endDate,
+                "minimumPrice":this.apartmentSearch.minimumPrice,
+                "maximumPrice":this.apartmentSearch.maximumPrice,
+                "minimumNumberOfRooms":this.minimumNumberOfRooms,
+                "maixmumNumberOfRooms":this.maximumNumberOfRooms,
+                "minimumNumberOfGuests":this.minimumNumberOfGuests,
+                "maximumNumberOfGuests":this.maximumNumberOfGuest,
+                "city":this.city,
+                "country":this.country
+               
+              })
+              .then((response) => {
+                console.log(response);
+                this.apartments=[];
+				this.apartments=response.data;
+                }
+              )
+        }
+
+    },
+
     template:`
     <div style="margin-right:1%;">
            
             <b-card id="pretraga">
                 <b-card-text>
                     <b-form inline>
-                        <b-form-input   placeholder="Lokacija"></b-form-input>
-                        <b-form-input   placeholder="Broj osoba"></b-form-input>
-                        <b-form-input   placeholder="Broj soba"></b-form-input>
-                        <b-form-input   placeholder="Cena po no\u0107enju"></b-form-input>
-                        <b-form-datepicker  placeholder="Po\u010Detni datum"></b-form-datepicker>
-                        <b-form-datepicker  placeholder="Krajnji datum"></b-form-datepicker>
+                        <b-form-input   placeholder="Grad" v-model="apartmentSearch.city"></b-form-input>
+                        <b-form-input   placeholder="Dr\u017Eava" v-model="apartmentSearch.country"></b-form-input>
+                        <b-form-input   placeholder="Min osoba" v-model="apartmentSearch.minimumNumberOfGuests"></b-form-input>
+                        <b-form-input   placeholder="Max osoba" v-model="apartmentSearch.maximumNumberOfGuests"></b-form-input>
+                        <b-form-input   placeholder="Min soba" v-model="apartmentSearch.minimumNumberOfRooms"></b-form-input>
+                        <b-form-input   placeholder="Max soba" v-model="apartmentSearch.maximumNumberOfRooms"></b-form-input>
+                        <b-form-input   placeholder="Min cena" v-model="apartmentSearch.minimumPrice"></b-form-input>
+                        <b-form-input   placeholder="Max cena" v-model="apartmentSearch.maximumPrice"></b-form-input>
+                        <b-form-datepicker  placeholder="Po\u010Detni datum" v-model="apartmentSearch.startDate"></b-form-datepicker>
+                        <b-form-datepicker  placeholder="Krajnji datum" v-model="apartmentSearch.endDate"></b-form-datepicker>
                         
-                        <b-button   variant="primary" style="margin-left:2%;">
+                        <b-button  @click="searchAp()" variant="primary" style="margin-left:2%;">
                             <b-icon icon="search"></b-icon>
                             Pretra&#x17E;i
                         </b-button>
@@ -139,7 +164,7 @@ Vue.component("guest-apartments",{
                 <b-col>
                     <div>
                         <dl>
-                            <dd v-for="apartman in apartmani">
+                            <dd v-for="apartment in apartments">
                 
                                 <b-card style="max-width: 740px;margin-left:10%" no-body>
                     
@@ -152,7 +177,7 @@ Vue.component("guest-apartments",{
                                             <b-card-body>
                                                 <b-card-text>
                                                     <h1 id="nazivApartmana">
-                                                    {{apartman.ime}} <b-badge variant="success">{{apartman.tip}}</b-badge>
+                                                    {{apartment.name}} <b-badge variant="success">{{apartment.apartmentType}}</b-badge>
                                                     </h1>
 
                                                     
@@ -162,12 +187,12 @@ Vue.component("guest-apartments",{
                                                     </b-icon>
 
                                                     <span style="font-size:20px">
-                                                        {{apartman.lokacija}}
+                                                        {{apartment.location}}
                                                     </span>
                                                   
                                                     <br>
                                                     <span style="font-size:25px">
-                                                      <b>{{apartman.cena}}</b>
+                                                      <b>{{apartment.pricePerNight}}</b>
                                                     </span>
                                                     
                                                         <i>po no&#x107;enju</i>
@@ -203,13 +228,6 @@ Vue.component("guest-apartments",{
 
     </div>
 
-    `,
-    methods: {
-        prikaziDetaljeFun: function(apartman){
-            alert('radi' + apartman.ime);
-
-            window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
-        }
-    },
-
+    `
+    
 });
