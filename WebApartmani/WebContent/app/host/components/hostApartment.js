@@ -3,6 +3,7 @@ Vue.component("host-apartments",{
         return{
             name: 'Apartmani',
             apartments:[],
+            options2:[],
             apartmentSearch:{
                 //TODO:srediti datume
                 startDate:'',
@@ -21,22 +22,7 @@ Vue.component("host-apartments",{
                 { text: 'Soba', value: 'soba' },
                
               ],
-            options2:[
-                {text:'Tus kabina',value:'tus'},
-                {text:'Posudje',value:'posudje'},
-                {text:'Fen za kosu',value:'fen'},
-                {text: 'Pegla',value:'pegla'},
-                {text:'Ves masina',value:'ves'},
-                {text:'Parking',value:'parking'},
-                {text:'Bazen',value:'bazen'},
-                {text:'Klima',value:'klima'},
-                {text:'Wifi',value:'wifi'},
-                {text:'Smart tv',value:'tv'},
-                {text:'Grejanje',value:'grejanje'},
-                {text:'Peskiri',value:'peskiri'},
-                {text:'Frizider',value:'frizider'},
-                {text:'Lift',value:'lift'}
-            ],
+         
         
             options4:[
                 {text:'Aktivan',value:'aktivan'},
@@ -84,6 +70,26 @@ Vue.component("host-apartments",{
 
 
         });
+
+        axios
+        .get("rest/amenities")
+        .then(response=>{
+            console.log(response.data);
+            this.amenities=response.data;
+            this.options2=[];
+
+            for(let amenity of this.amenities){
+                this.options2.push(
+                    {
+                        text:amenity.name,
+                        value:amenity.name,
+
+                    }
+                );
+            }
+
+            
+        })
     },
     template:`
     <div style="margin-right:1%;">
@@ -215,7 +221,7 @@ Vue.component("host-apartments",{
                                                       <b>{{apartment.pricePerNight}}</b>
                                                     </span>
                                                     
-                                                        <i>po no&#x107;enju</i>
+                                                        <i>Cena po no&#x107;enju</i>
                                                    
                                                     <br><br><br><br><br>
                                                     <b-button variant="primary" @click="prikaziDetaljeFun(apartman)">
