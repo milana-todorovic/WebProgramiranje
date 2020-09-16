@@ -3,6 +3,8 @@ Vue.component("guest-apartments",{
         return{
             name: 'Apartmani',
             apartments:[],
+            amenities:[],
+            options2:[],
             apartmentSearch:{
                 //TODO:srediti datume
                 startDate:'',
@@ -20,22 +22,7 @@ Vue.component("guest-apartments",{
                 { text: 'Soba', value: 'soba' },
                
               ],
-            options2:[
-                {text:'Tus kabina',value:'tus'},
-                {text:'Posudje',value:'posudje'},
-                {text:'Fen za kosu',value:'fen'},
-                {text: 'Pegla',value:'pegla'},
-                {text:'Ves masina',value:'ves'},
-                {text:'Parking',value:'parking'},
-                {text:'Bazen',value:'bazen'},
-                {text:'Klima',value:'klima'},
-                {text:'Wifi',value:'wifi'},
-                {text:'Smart tv',value:'tv'},
-                {text:'Grejanje',value:'grejanje'},
-                {text:'Peskiri',value:'peskiri'},
-                {text:'Frizider',value:'frizider'},
-                {text:'Lift',value:'lift'}
-            ]
+           
         }
     
     },
@@ -75,11 +62,30 @@ Vue.component("guest-apartments",{
 		.get("rest/apartments")
 		.then(response =>{
 			console.log(response.data);
-			this.apartments = response.data;
+            this.apartments = response.data;
+        
 
 
-		});
-		
+        });
+        
+        axios
+        .get("rest/amenities")
+		.then(response=>{
+            console.log(response.data);
+            this.amenities=response.data;
+            this.options2=[];
+
+            for(let amenity of this.amenities){
+                this.options2.push(
+                    {
+                        text:amenity.name,
+                        value:amenity.name,
+
+                    }
+                );
+            }
+
+        })
 	},
 
     template:`
