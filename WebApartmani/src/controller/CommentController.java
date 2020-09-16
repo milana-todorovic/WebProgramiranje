@@ -1,9 +1,11 @@
 package controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -18,7 +20,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.AuthenticatedUser;
+import auth.Secured;
+import beans.Apartment;
+import beans.ApartmentStatus;
 import beans.Comment;
+import beans.Guest;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import service.ServiceContainer;
 
@@ -30,38 +38,74 @@ public class CommentController {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@QueryParam("apartment") Integer apartmentID) {
+	public Response get(@QueryParam("apartment") Integer apartmentID, @Context HttpServletRequest request) {
 		if (apartmentID == null)
-			return getAll();
+			return getAll(request);
 		else
-			return getByApartmentID(apartmentID);
+			return getByApartmentID(apartmentID, request);
 	}
 
-	private Response getAll() {
+	private Response getAll(HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Collection<Comment> entities = service.getCommentService().getAll();
+			Collection<Comment> entities = null;
+			if (user == null || user.getRole().equals(UserRole.GUEST))
+				entities = service.getCommentService().getAllShowingInActiveApartments();
+			else if (user.getRole().equals(UserRole.HOST))
+				entities = service.getCommentService().getByApartmentHostID(user.getID());
+			else if (user.getRole().equals(UserRole.ADMIN))
+				entities = service.getCommentService().getAll();
+			else
+				entities = new ArrayList<Comment>();
 			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
-	private Response getByApartmentID(Integer apartmentID) {
+	private Response getByApartmentID(Integer apartmentID, HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Collection<Comment> entities = service.getCommentService().getByApartmentID(apartmentID);
+			Apartment apartment = service.getApartmentService().getByID(apartmentID);
+			if (apartment != null) {
+				if (user != null && user.getRole().equals(UserRole.HOST)
+						&& !user.getID().equals(apartment.getHost().getID()))
+					return Response.status(Status.FORBIDDEN).build();
+				else if ((user == null || user.getRole().equals(UserRole.GUEST))
+						&& !apartment.getStatus().equals(ApartmentStatus.ACTIVE))
+					return Response.status(Status.FORBIDDEN).build();
+			}
+			Collection<Comment> entities = null;
+			if (user == null || user.getRole().equals(UserRole.GUEST))
+				entities = service.getCommentService().getShowingByApartmentID(apartmentID);
+			else if (user.getRole().equals(UserRole.HOST))
+				entities = service.getCommentService().getByApartmentID(apartmentID);
+			else if (user.getRole().equals(UserRole.ADMIN))
+				entities = service.getCommentService().getByApartmentID(apartmentID);
+			else
+				entities = new ArrayList<Comment>();
 			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured(UserRole.GUEST)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(Comment comment) {
+	public Response create(Comment comment, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
+		if (comment != null && (comment.getGuest() == null || comment.getGuest().getID() == null)) {
+			Guest guest = new Guest();
+			guest.setID(user.getID());
+			comment.setGuest(guest);
+		}
+		if (comment != null && !user.getID().equals(comment.getGuest().getID()))
+			return Response.status(Status.FORBIDDEN).build();
 		try {
 			Comment entity = service.getCommentService().create(comment);
 			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/comments/" + entity.getID()))
@@ -71,26 +115,18 @@ public class CommentController {
 		}
 	}
 
-	@Path("/{id}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getByID(@PathParam("id") Integer id) {
-		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
-		try {
-			Comment entity = service.getCommentService().getByID(id);
-			return Response.ok(entity).build();
-		} catch (BadRequestException e) {
-			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-		}
-	}
-
+	@Secured(UserRole.GUEST)
 	@Path("/{id}")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(@PathParam("id") Integer id, Comment comment) {
+	public Response update(@PathParam("id") Integer id, Comment comment, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			Comment current = service.getCommentService().getByID(id);
+			if (current != null && !user.getID().equals(current.getGuest().getID()))
+				return Response.status(Status.FORBIDDEN).build();
 			Comment entity = service.getCommentService().update(id, comment);
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
@@ -98,11 +134,16 @@ public class CommentController {
 		}
 	}
 
+	@Secured(UserRole.GUEST)
 	@Path("/{id}")
 	@DELETE
-	public Response delete(@PathParam("id") Integer id) {
+	public Response delete(@PathParam("id") Integer id, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			Comment current = service.getCommentService().getByID(id);
+			if (current != null && !user.getID().equals(current.getGuest().getID()))
+				return Response.status(Status.FORBIDDEN).build();
 			service.getCommentService().delete(id);
 			return Response.noContent().build();
 		} catch (BadRequestException e) {
@@ -110,18 +151,23 @@ public class CommentController {
 		}
 	}
 
+	@Secured(UserRole.HOST)
 	@Path("/{id}/showing")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response changeStatus(@PathParam("id") Integer id, Boolean showing) {
+	public Response changeStatus(@PathParam("id") Integer id, Boolean showing, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
+			Comment current = service.getCommentService().getByID(id);
+			if (current != null && !user.getID().equals(current.getApartment().getHost().getID()))
+				return Response.status(Status.FORBIDDEN).build();
 			Comment entity = service.getCommentService().changeStatus(id, showing);
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
-	
+
 }
