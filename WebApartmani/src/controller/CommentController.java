@@ -109,5 +109,19 @@ public class CommentController {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
+	
+	@Path("/{id}/showing")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response changeStatus(@PathParam("id") Integer id, Boolean showing) {
+		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		try {
+			Comment entity = service.getCommentService().changeStatus(id, showing);
+			return Response.ok(entity).build();
+		} catch (BadRequestException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		}
+	}
 
 }
