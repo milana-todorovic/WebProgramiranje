@@ -11,6 +11,7 @@ import repository.interfaces.ApartmentRepository;
 import repository.interfaces.CommentRepository;
 import repository.interfaces.GuestRepository;
 import repository.interfaces.ReservationRepository;
+import util.StringValidator;
 
 public class CommentService {
 
@@ -123,8 +124,20 @@ public class CommentService {
 		// apartman i gost postoje
 		// postoji rezervacija sa tačnim gostom, apartmanom, i statusom (ja bih pustila
 		// da ostavlja koliko hoće komentara ako može?)
-		// tekst nije prazan ili ne?
-		// ocjena od 1 do 10
+
+		Boolean valid = true;
+		StringBuilder error = new StringBuilder();
+
+		if (StringValidator.isNullOrEmpty(comment.getText())) {
+			valid = false;
+			error.append("Tekst komentara je obavezan.");
+		} else if (comment.getRating() < 1 || comment.getRating() > 10) {
+			valid = false;
+			error.append("Ocena je od 1 do 10.");
+		}
+
+		if (!valid)
+			throw new BadRequestException(error.toString());
 	}
 
 }
