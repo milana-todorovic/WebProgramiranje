@@ -6,6 +6,8 @@ import java.util.Collection;
 import beans.Amenity;
 import beans.Apartment;
 import beans.Comment;
+import beans.Reservation;
+import beans.ReservationStatus;
 import custom_exception.BadRequestException;
 import repository.interfaces.ApartmentRepository;
 import repository.interfaces.CommentRepository;
@@ -120,11 +122,7 @@ public class CommentService {
 	}
 
 	private void validate(Comment comment) {
-		// TODO
-		// apartman i gost postoje
-		// postoji rezervacija sa tačnim gostom, apartmanom, i statusom (ja bih pustila
-		// da ostavlja koliko hoće komentara ako može?)
-
+		
 		Boolean valid = true;
 		StringBuilder error = new StringBuilder();
 
@@ -135,7 +133,6 @@ public class CommentService {
 			valid = false;
 			error.append("Ocena je od 1 do 10.");
 		}
-
 		if (!valid)
 			throw new BadRequestException(error.toString());
 	}
