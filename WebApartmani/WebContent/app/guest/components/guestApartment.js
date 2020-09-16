@@ -15,12 +15,7 @@ Vue.component("guest-apartments",{
                 maximumNumberOfGuest:'',
                 city:'',
                 country:''
-            },
-            apartments:[
-              
-            ],
-            
-            options: [
+            },options: [
                 { text: 'Ceo', value: 'ceo' },
                 { text: 'Soba', value: 'soba' },
                
@@ -74,6 +69,18 @@ Vue.component("guest-apartments",{
         }
 
     },
+    mounted(){
+		
+		axios
+		.get("rest/apartments")
+		.then(response =>{
+			console.log(response.data);
+			this.apartments = response.data;
+
+
+		});
+		
+	},
 
     template:`
     <div style="margin-right:1%;">
