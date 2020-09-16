@@ -18,8 +18,8 @@ Vue.component("guest-apartments",{
                 city:'',
                 country:''
             },options: [
-                { text: 'Ceo', value: 'ceo' },
-                { text: 'Soba', value: 'soba' },
+                { text: 'Ceo apartman', value: 'Ceo apartman' },
+                { text: 'Soba', value: 'Soba' },
                
               ],
            
@@ -200,7 +200,7 @@ Vue.component("guest-apartments",{
                                                     </b-icon>
 
                                                     <span style="font-size:20px">
-                                                        {{apartment.location}}
+                                                        {{apartment.location.address.street}} {{apartment.location.address.number}}
                                                     </span>
                                                   
                                                     <br>

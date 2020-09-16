@@ -213,7 +213,7 @@ Vue.component("host-apartments",{
                                                     </b-icon>
 
                                                     <span style="font-size:20px">
-                                                        {{apartment.location}}
+                                                        {{apartment.location.address.street}} {{apartment.location.address.number}}
                                                     </span>
                                                   
                                                     <br>
@@ -221,7 +221,7 @@ Vue.component("host-apartments",{
                                                       <b>{{apartment.pricePerNight}}</b>
                                                     </span>
                                                     
-                                                        <i>Cena po no&#x107;enju</i>
+                                                        <i>po no&#x107;enju</i>
                                                    
                                                     <br><br><br><br><br>
                                                     <b-button variant="primary" @click="prikaziDetaljeFun(apartman)">
