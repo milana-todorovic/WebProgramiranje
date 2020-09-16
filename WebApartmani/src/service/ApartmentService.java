@@ -273,116 +273,116 @@ public class ApartmentService {
 
 		if (StringValidator.isNullOrEmpty(apartment.getName())) {
 			valid = false;
-			error.append("Naziv apartmana je obavezan.");
+			error.append("Naziv apartmana je obavezan. ");
 		} else if (!StringValidator.isAlphanumericWithSpaceDash(apartment.getName())) {
 			valid = false;
-			error.append("Naziv apartmana smije sadržati samo slova, brojeve, razmake, i crtice.");
+			error.append("Naziv apartmana smije sadržati samo slova, brojeve, razmake, i crtice. ");
 		}
 
 		if (apartment.getApartmentType() == null) {
 			valid = false;
-			error.append("Tip apartmana je obavezan.");
+			error.append("Tip apartmana je obavezan. ");
 		}
 
 		if (apartment.getLocation() == null) {
 			valid = false;
-			error.append("Lokacija apartmana je obavezna.");
+			error.append("Lokacija apartmana je obavezna. ");
 		} else if (apartment.getLocation().getAddress() == null) {
 			valid = false;
-			error.append("Adresa apartmana je obavezna.");
+			error.append("Adresa apartmana je obavezna. ");
 		} else {
 			if (apartment.getLocation().getLatitude() == null || apartment.getLocation().getLongitude() == null) {
 				valid = false;
-				error.append("Koordinate lokacije su obavezne.");
+				error.append("Koordinate lokacije su obavezne. ");
 			}
 
 			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getCity())
 					&& !StringValidator.isAlphaWithSpaceDash(apartment.getLocation().getAddress().getCity())) {
 				valid = false;
-				error.append("Naziv grada smije sadržati samo slova, razmake, i crtice.");
+				error.append("Naziv grada smije sadržati samo slova, razmake, i crtice. ");
 			}
 
 			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getCountry())
 					&& !StringValidator.isAlphaWithSpaceDash(apartment.getLocation().getAddress().getCountry())) {
 				valid = false;
-				error.append("Naziv države smije sadržati samo slova, razmake, i crtice.");
+				error.append("Naziv države smije sadržati samo slova, razmake, i crtice. ");
 			}
 
 			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getStreet())
 					&& !StringValidator.isAlphanumericWithSpaceDash(apartment.getLocation().getAddress().getStreet())) {
 				valid = false;
-				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice.");
+				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice. ");
 			}
 
 			if (apartment.getLocation().getAddress().getNumber() != null
 					&& apartment.getLocation().getAddress().getNumber() <= 0) {
 				valid = false;
-				error.append("Broj u ulici mora biti pozitivan.");
+				error.append("Broj u ulici mora biti pozitivan. ");
 			}
 
 			if (!StringValidator.isNullOrEmpty(apartment.getLocation().getAddress().getPostalCode()) && !StringValidator
 					.isAlphanumericWithSpaceDash(apartment.getLocation().getAddress().getPostalCode())) {
 				valid = false;
-				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice.");
+				error.append("Naziv ulice smije sadržati samo slova, brojeve, razmake, i crtice. ");
 			}
 		}
 
 		if (apartment.getNumberOfRooms() == null) {
 			valid = false;
-			error.append("Broj soba je obavezan.");
+			error.append("Broj soba je obavezan. ");
 		} else if (apartment.getNumberOfRooms() <= 0) {
 			valid = false;
-			error.append("Broj soba mora biti pozitivan.");
+			error.append("Broj soba mora biti pozitivan. ");
 		}
 
 		if (apartment.getNumberOfGuests() == null) {
 			valid = false;
-			error.append("Broj gostiju je obavezan.");
+			error.append("Broj gostiju je obavezan. ");
 		} else if (apartment.getNumberOfGuests() <= 0) {
 			valid = false;
-			error.append("Broj gostiju mora biti pozitivan.");
+			error.append("Broj gostiju mora biti pozitivan. ");
 		}
 
 		if (apartment.getPricePerNight() == null) {
 			valid = false;
-			error.append("Cena je obavezna.");
+			error.append("Cena je obavezna. ");
 		} else if (apartment.getPricePerNight() <= 0) {
 			valid = false;
-			error.append("Cena mora biti pozitivna.");
+			error.append("Cena mora biti pozitivna. ");
 		}
 
 		if (apartment.getCheckInTime() == null) {
 			valid = false;
-			error.append("Vreme za prijavu je obavezno.");
+			error.append("Vreme za prijavu je obavezno. ");
 		}
 
 		if (apartment.getCheckOutTime() == null) {
 			valid = false;
-			error.append("Vreme za odjavu je obavezno.");
+			error.append("Vreme za odjavu je obavezno. ");
 		}
 
 		if (apartment.getStatus() == null) {
 			valid = false;
-			error.append("Status apartmana je obavezan.");
+			error.append("Status apartmana je obavezan. ");
 		}
 
 		for (Amenity amenity : apartment.getAmenities()) {
 			Amenity found = amenityRepository.simpleGetByID(amenity.getID());
 			if (found == null || found.getDeleted()) {
 				valid = false;
-				error.append("Apartman ne može sadržati nepostojeći sadržaj apartmana.");
+				error.append("Apartman ne može sadržati nepostojeći sadržaj apartmana. ");
 				break;
 			}
 		}
 
 		if (apartment.getHost() == null || apartment.getHost().getID() == null) {
 			valid = false;
-			error.append("Mora biti zadat domaćin apartmana.");
+			error.append("Mora biti zadat domaćin apartmana. ");
 		} else {
 			Host host = hostRepository.simpleGetByID(apartment.getHost().getID());
 			if (host == null) {
 				valid = false;
-				error.append("Domaćin apartmana mora postojati.");
+				error.append("Domaćin apartmana mora postojati. ");
 			}
 		}
 

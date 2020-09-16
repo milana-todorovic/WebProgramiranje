@@ -28,6 +28,11 @@ Vue.component("admin-navbar",{
                             Korisnici
                         </router-link>
                     </b-nav-item>
+                    <b-nav-item href="#">
+                         <router-link to="/host" exact>
+                            Dodaj doma\u0107ina
+                        </router-link>
+                    </b-nav-item>
                 </b-navbar-nav>
   
                 <b-navbar-nav class="ml-auto">
