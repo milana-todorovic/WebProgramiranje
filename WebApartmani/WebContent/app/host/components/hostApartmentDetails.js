@@ -16,9 +16,18 @@ Vue.component("host-apartmentDetails",{
       },
       computed:{
     	  address: function() {
-    		  return this.apartment.location.address.street + ' ' + this.apartment.location.address.number 
-    		  + ', ' + this.apartment.location.address.city + ' ' + this.apartment.location.address.postalCode
-    		  + ', ' + this.apartment.location.address.country;
+    		  let addr = '';
+    		  if (this.apartment.location.address.street)
+    			  addr += street;
+    		  if (this.apartment.location.address.number)
+    			  addr += ' ' + this.apartment.location.address.number;
+    		  if (this.apartment.location.address.city)
+    			  addr += ', ' + this.apartment.location.address.city;
+    		  if (this.apartment.location.address.postalCode)
+    			  addr += ' ' + this.apartment.location.address.postalCode;
+    		  if (this.apartment.location.address.country)
+    			  addr += ', ' + this.apartment.location.address.country;
+    		  return addr;
     	  }
       },
       methods:{
@@ -34,14 +43,14 @@ Vue.component("host-apartmentDetails",{
     			  axios.get("/WebApartmani/rest/comments", {
     					params: { apartment: apartment.id }
     				}).then(response => this.commentsLoaded(apartment, response.data)).catch(
-    						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo učitavanje komentara."); console.log(error)});
+    						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo u\u010Ditavanje komentara."); console.log(error)});
     		  }
     	  },
     	  commentsLoaded(apartment, comments){
     		  if (apartment.id == this.$route.params.id){
     			  this.comments = comments;
     			  axios.get("/WebApartmani/rest/apartments/" + apartment.id + "/images").then(response => this.allLoaded(apartment, response.data)).catch(
-  						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo učitavanje slika."); console.log(error)});
+  						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo u\u010Ditavanje slika."); console.log(error)});
     		  }
     	  },
     	  allLoaded(apartment, images) {

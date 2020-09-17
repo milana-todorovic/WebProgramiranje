@@ -6,6 +6,9 @@ Vue.component("guest-apartmentDetails",{
           comments:[],
           images: [],
           globalAlert: { show: false, text: null },
+          date: null,
+          numberOfDays: null,
+          guestComment: null
         }
     },
     created () {
@@ -16,9 +19,18 @@ Vue.component("guest-apartmentDetails",{
       },
       computed:{
     	  address: function() {
-    		  return this.apartment.location.address.street + ' ' + this.apartment.location.address.number 
-    		  + ', ' + this.apartment.location.address.city + ' ' + this.apartment.location.address.postalCode
-    		  + ', ' + this.apartment.location.address.country;
+    		  let addr = '';
+    		  if (this.apartment.location.address.street)
+    			  addr += street;
+    		  if (this.apartment.location.address.number)
+    			  addr += ' ' + this.apartment.location.address.number;
+    		  if (this.apartment.location.address.city)
+    			  addr += ', ' + this.apartment.location.address.city;
+    		  if (this.apartment.location.address.postalCode)
+    			  addr += ' ' + this.apartment.location.address.postalCode;
+    		  if (this.apartment.location.address.country)
+    			  addr += ', ' + this.apartment.location.address.country;
+    		  return addr;
     	  }
       },
       methods:{
@@ -30,24 +42,63 @@ Vue.component("guest-apartmentDetails",{
     	  },
     	  apartmentLoaded(apartment){
     		  if (apartment.id == this.$route.params.id) {
+    			  let fixedDates = [];
+    	            for(date of apartment.availableDates){
+    	            	let realDate = new Date(date);
+    	                fixedDates.push(new Date(realDate.getTime() + realDate.getTimezoneOffset()*60*1000));
+    	            }
+    	           apartment.availableDates = fixedDates;
+    	           this.numberOfDays = 1;
+    	           this.date = null;
+    	           this.guestComment = null;
     			  this.apartment = apartment;
     			  axios.get("/WebApartmani/rest/comments", {
     					params: { apartment: apartment.id }
     				}).then(response => this.commentsLoaded(apartment, response.data)).catch(
-    						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo učitavanje komentara."); console.log(error)});
+    						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo u\u010Ditavanje komentara."); console.log(error)});
     		  }
     	  },
     	  commentsLoaded(apartment, comments){
     		  if (apartment.id == this.$route.params.id){
     			  this.comments = comments;
     			  axios.get("/WebApartmani/rest/apartments/" + apartment.id + "/images").then(response => this.allLoaded(apartment, response.data)).catch(
-  						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo učitavanje slika."); console.log(error)});
+  						error => {if (this.$route.params.id == apartment.id) this.setGlobalAlert("Nije uspelo u\u010Ditavanje slika."); console.log(error)});
     		  }
     	  },
     	  allLoaded(apartment, images) {
     		  if (apartment.id == this.$route.params.id){
     			  this.images = images;
     		  }
+    	  },
+    	  submit(event){
+    		  event.preventDefault();
+    		  let error = '';
+    		  let hasError = false;
+    		  if (!this.date){
+    			  error += "Mora biti izabran datum po\u010Detka. ";
+    			  hasError = true;
+    		  }
+    		  if (!this.numberOfDays){
+    			  error += "Mora biti izabran broj dana. ";
+    			  hasError = true;
+    		  } else if (! /^[1-9][0-9]*$/.test(this.numberOfDays)){
+    			  error += "Broj dana mora biti broj ve\u0107i od 1. ";
+    			  hasError = true;
+    		  }
+    		  
+    		  if (hasError){
+    			  this.setGlobalAlert(error);
+    			  return;
+    		  }
+    		  
+    		  axios.post("/WebApartmani/rest/reservations", 
+    				  { apartment: {id: this.apartment.id},
+    			  startDate: this.date.getTime() - this.date.getTimezoneOffset()*60*1000, 
+    			  numberOfNights: this.numberOfDays, 
+    			  message: this.guestComment}).then(
+    					  response => this.setGlobalAlert("Uspe\u0161no je kreirana rezervacija.")
+    					  ).catch(
+    							  error => {this.setGlobalAlert("Nije uspelo kreiranje rezervacije: " + error.response.data)}  );
     	  },
     	  setGlobalAlert(text) {
     	      this.globalAlert.text = text;
@@ -137,27 +188,43 @@ Vue.component("guest-apartmentDetails",{
                                 <b-row>
                                     <b-card>
                                         <h1 id="nazivApartmana">
-                                            50$ <i>po no\u0107enju</i>
+                                            {{apartment.pricePerNight}}$ <i>po no\u0107enju</i>
                                         </h1>
                                         <br>
-                                        <label><b>Dostupni datumi</label>
-                                        <br>
-                                        <b-calendar>
-                                        </b-calendar>
-                                        <br><br>
-                                        <label><b>Po\u010Detni datum</label>
-                                        <b-form-datepicker   placeholder="Izaberite po\u010Detni datum" class="mb-2"></b-form-datepicker>
-                                        <br>
-                                        <label><b>Broj no\u0107enja</label>
-                                        <b-form-input   placeholder="Unesite broj no\u0107enja"></b-form-input>
-                                        <br>
-                                        <label><b>Komentar</label>
-                                        <b-form-textarea placeholder="Ostavite poruku doma\u0107inu"></b-form-textarea>
-                                        <br><br>
-                                        <b-button variant="primary">
-                                            <b-icon icon="pen"></b-icon>
-                                            Rezervi\u0161i apartman
-                                        </b-button>
+                                        
+                                          <b-form v-on:submit="submit">
+     
+    <b-form-group
+        label="Datum po\u010Detka:"
+        >
+        <v-date-picker
+    	v-model='date'
+    	:available-dates="apartment.availableDates"/>
+      </b-form-group>
+      
+      <b-form-group
+        label="Broj no\u0107enja:"
+        >
+        <b-form-input
+          v-model="numberOfDays"
+          type="text"
+          placeholder="Unesite broj no\u0107enja"
+        ></b-form-input>
+      </b-form-group>  
+      
+    <b-form-group
+        label="Poruka za doma\u0107ina:"
+        >
+        <b-form-input
+          v-model="guestComment"
+          type="text"
+          placeholder="Unesite poruku"
+        ></b-form-input>
+      </b-form-group>                  
+      
+      <b-button class="mt-2 mb-2" type="submit" variant="primary">Rezervi\u0161i</b-button>
+    
+    </b-form> 
     
                                     </b-card>
                                 </b-row>

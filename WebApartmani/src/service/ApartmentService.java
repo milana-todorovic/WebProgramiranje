@@ -431,6 +431,7 @@ public class ApartmentService {
 				availableDates.remove(date);
 			}
 		}
+		availableDates.removeIf(date -> DateUtil.isBeforeToday(date));
 		apartment.setAvailableDates(availableDates);
 		return apartment;
 	}
