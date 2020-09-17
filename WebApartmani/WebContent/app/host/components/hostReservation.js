@@ -2,8 +2,19 @@ Vue.component("host-reservations",{
     data: function(){
         return{
             reservations:[],
+            options:[
+                { text: 'Kreirana', value: 'Kreirana' },
+                { text: 'Odbijena', value: 'Odbijena' },
+                { text: 'Otkazana',  value:'Otkazana'},
+                { text: 'Prihva\u0107ena',  value:'Prihvaćena'},
+                { text: 'Zavr\u0161ena',  value:'Završena'}
+
+
+            ],
             userSearch:{
-                "username":''
+                "guestUsername":'',
+                "sort":'',
+                "status":''
             }
            
             
@@ -16,7 +27,8 @@ Vue.component("host-reservations",{
             
 
             axios.post('rest/reservations/search', {
-                "username":this.reservations.username
+                "username":this.userSearch.username,
+                "sort":this.userSearch.sort
                
               })
               .then((response) => {
@@ -52,10 +64,10 @@ Vue.component("host-reservations",{
                         <b-card style=" padding: 0.5%;margin-left:1%;margin-top:1%;margin-right:6%;">
                             <b-card-text>
                                 <b-form inline>
-                                    <b-form-input v-model="userSearch.username"  placeholder="Korisni\u010Dko ime gosta"></b-form-input>
+                                    <b-form-input v-model="userSearch.guestUsername"  placeholder="Korisni\u010Dko ime gosta"></b-form-input>
                                     
                                     
-                                    <b-button   variant="primary" style="margin-left:2%;">
+                                    <b-button @click="searchResByUsers()"  variant="primary" style="margin-left:2%;">
                                         <b-icon icon="search"></b-icon>
                                         Pretra&#x17E;i
                                     </b-button>
@@ -71,11 +83,11 @@ Vue.component("host-reservations",{
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
-                                        <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
-                                        <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
+                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Rastuće">Rastu\u0107e</b-form-radio>
+                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Opadajuće">Opadaju\u0107e</b-form-radio>
                                     </b-form-group>
                                     <br><br>
-                                    <b-button   variant="primary"> 
+                                    <b-button @click="searchResByUsers()"  variant="primary"> 
                                         <b-icon icon="arrow-down-up"></b-icon>
                                         Sortiraj
                                     </b-button>
@@ -88,9 +100,17 @@ Vue.component("host-reservations",{
                         <div>
                             <b-card>
                                 <b-card-text>
-                                    <b>Filtriranje po statusu rezervacije</b>
-                                    <br><br>
-                                        <b-button  variant="primary">
+                                    
+                                    <b><b-form-group label="Status rezervacije"></b>
+                                        <b-form-checkbox-group
+                                            :options="options"
+                                            plain
+                                            stacked
+                                            v-model="userSearch.status"
+                                            ></b-form-checkbox-group>
+                                        </b-form-group>
+                                        <br><br>
+                                        <b-button @click="searchResByUsers()" variant="primary">
                                             <b-icon icon="funnel-fill"></b-icon>
                                                 Filtriraj
                                         </b-button>
