@@ -54,7 +54,6 @@ Vue.component("host-addApartment", {
         dates.push(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
       axios.post("/WebApartmani/rest/apartments",
         {
-          host: { id: 2 },
           name: this.name.value,
           apartmentType: this.type,
           numberOfRooms: this.numberOfRooms.value,
@@ -66,7 +65,7 @@ Vue.component("host-addApartment", {
           amenities: this.amenities,
           location: { latitude: 19, longitude: 45 }
         }
-      ).then(response => this.setGlobalAlert("Dodavanje je uspe\u0161no izvr\u0161eno.")).catch(
+      ).then(response => {this.setGlobalAlert("Dodavanje je uspe\u0161no izvr\u0161eno."); this.reset();}).catch(
         error => this.setGlobalAlert("Dodavanje nije uspelo: " + error.response.data));
     },
     reset() {

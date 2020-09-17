@@ -13,7 +13,7 @@ const router=new VueRouter({
         {path: '/apartmentDetails', component:ApartmentDetailsComponent},
         {path:'/users',component:UsersComponent},
         {path:'/addApartment',component:AddApartmentComponent},
-        { path: '/*', component: ApartmentComponent }
+        { path: '/*', component:ApartmentComponent }
     ]
 });
 
