@@ -9,7 +9,7 @@ Vue.component("admin-amenities", {
 
     },
     created() {
-    	this.fetchAmenities();
+        this.fetchAmenities();
     },
     watch: {
         '$route': 'fetchAmenities'
@@ -18,23 +18,25 @@ Vue.component("admin-amenities", {
         fetchAmenities() {
             axios.get("/WebApartmani/rest/amenities").then(
                 response => this.fetched(response.data)).catch(
-                    error => setGlobalAlert("Došlo je do greške pri učitavanju sadržaja apartmana."));
+                    error => this.setGlobalAlert("Došlo je do greške pri učitavanju sadržaja apartmana."));
         },
         addAmenity() {
             this.validateMock();
             if (this.mock.state)
                 axios.post("/WebApartmani/rest/amenities", { name: this.mock.name }).then(
                     response => this.added(response.data)).catch(
-                        error => setGlobalAlert("Dodavanje nije uspelo: " + error.response.data));
+                        error => this.setGlobalAlert("Dodavanje nije uspelo: " + error.response.data));
         },
         updateAmenity() {
             this.validateMock();
             if (this.mock.state)
                 axios.put("/WebApartmani/rest/amenities/" + this.mock.id, { name: this.mock.name, id: this.mock.id }).then(
                     response => this.updated(response.data)).catch(
-                        error => setGlobalAlert("Izmena nije uspela: " + error.response.data));
+                        error => this.setGlobalAlert("Izmena nije uspela: " + error.response.data));
         },
         deleteAmenity(amenity) {
+            if (amenity.id === this.mock.id)
+                this.cancelUpdate();
             axios.delete("/WebApartmani/rest/amenities/" + amenity.id).then(
                 response => this.deleted(amenity)).catch(
                     error => { amenity.text = "Brisanje nije uspelo: " + error.response.data; amenity.show = true; });
@@ -93,15 +95,17 @@ Vue.component("admin-amenities", {
     },
     template: `
     <b-container class="pt-2 pb-2 w-75">
-        <b-row class="border rounded p-2">
-            <b-col>
+        <b-row>
+            <b-col cols="10">
                 <b-alert
                 v-model="globalAlert.show"
                 dismissible>
                 {{ globalAlert.text }}
                 </b-alert>
 
-                <b-form inline>
+                <b-form>
+                <b-row class="border rounded p-2">
+                <b-col>
                 <b-form-group
                 id="input-group-1"
                 label="Naziv:"
@@ -113,36 +117,41 @@ Vue.component("admin-amenities", {
                   v-model="mock.name"
                   type="text"
                   placeholder="Unesite naziv sadržaja apartmana"
-                  v-on:change="validateMock"
+                  v-on:blur="validateMock"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="mock.state">
                 {{mock.error}}
                   </b-form-invalid-feedback>
               </b-form-group>
+              </b-col>
 
-              <b-button v-on:click="addAmenity" v-if="!updateMode" variant="primary" :disabled="!mock.state">Dodaj</b-button>
-              <b-button v-on:click="updateAmenity" v-if="updateMode" variant="primary" :disabled="!mock.state">Izmeni</b-button>
-              <b-button v-on:click="cancelUpdate" v-if="updateMode" variant="secondary" :disabled="!mock.state">Odustani</b-button>
-                </b-form inline>
+              <b-col align-self="end">
+              <b-button block v-on:click="addAmenity" v-if="!updateMode" variant="primary" :disabled="!mock.state">Dodaj</b-button>
+              <b-button block v-on:click="updateAmenity" v-if="updateMode" variant="primary" :disabled="!mock.state">Izmeni</b-button><br>
+              <b-button block class="mt-2" v-on:click="cancelUpdate" v-if="updateMode" variant="secondary" :disabled="!mock.state">Odustani</b-button>
+              </b-col>
+              </b-row>
+              </b-form>
             </b-col>
         </b-row>
         <b-row class="pt-2">
             <b-col>
-                <b-row v-for="amenity in amenities" class="w-100">
+                <b-row v-for="amenity in amenities">
                 <b-col class=" border rounded p-2 m-2" v-if="!amenity.deleted || amenity.show">
                 <b-alert
+                class="mt-2"
                 v-model="amenity.show"
                 dismissible>
                     {{ amenity.text }}
                 </b-alert>
 
                 <b-row v-if="!amenity.deleted">
-                    <b-col class="w-75">
+                    <b-col cols="10">
                         <p class="h3">{{amenity.name}}</p>
                     </b-col>
-                    <b-col  class="w-25">
-                        <b-button v-if="!updateMode" v-on:click="deleteAmenity(amenity)" variant="danger" class="w-100">Obriši</b-button>
-                        <b-button v-if="!updateMode" v-on:click="startUpdate(amenity)" variant="success" class="w-100 mt-2">Izmeni</b-button>
+                    <b-col>
+                        <b-button block v-on:click="deleteAmenity(amenity)" variant="danger">Obriši</b-button><br>
+                        <b-button block v-on:click="startUpdate(amenity)" variant="primary" class=" mt-2">Izmeni</b-button>
                     </b-col>
                     </b-col>
                 </b-row>
