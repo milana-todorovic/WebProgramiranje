@@ -1,6 +1,7 @@
 Vue.component("admin-reservations",{
     data: function(){
         return{
+            reservations:[],
             rezervacije:[
                 {
                     imeApartmana:'Apartmani Ivana',
@@ -55,6 +56,21 @@ Vue.component("admin-reservations",{
             
         }
     },
+     mounted(){
+		
+		axios
+		.get("rest/reservations")
+		.then(response =>{
+            console.log(response.data);
+            this.reservations=[];
+            this.reservations=response.data;
+
+        });
+        
+       
+
+    
+	},
     template:`
        
         <div>
@@ -119,7 +135,7 @@ Vue.component("admin-reservations",{
                     <b-col>
                         <div>
                             <dl>
-                                <dd v-for="rezervacija in rezervacije">
+                                <dd v-for="reservation in reservations">
                                     <b-card style="max-width: 840px;">
                                         
 
@@ -128,25 +144,25 @@ Vue.component("admin-reservations",{
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
                                                         <a href= "http://localhost:8081/WebApartmani/admin.html#/apartmentDetails" style="color:black;">
-                                                        {{rezervacija.imeApartmana}}
+                                                        {{reservation.apartment.name}}
                                                         </a>
                                                     </h1>
                                                 
                                                 
                                                     <div style="background-color:teal;padding:5%;color:white;font-size:18px">
-                                                        Gost <b>{{rezervacija.gost.imeGosta}} {{rezervacija.gost.prezimeGosta}}</b>
+                                                        Gost <b>{{reservation.guest.name}} {{reservation.guest.surname}}</b>
                                                         <br>
-                                                        Od  <b>{{rezervacija.pocetniDatum}}</b>
+                                                        Od  <b>{{reservation.startDate}}</b>
                                                         <br>
-                                                        Do  <b>{{rezervacija.krajnjiDatum}}</b>
+                                                        Broj no\u0107enja <b>{{reservation.numberOfNights}}</b>
                                                         <br>
-                                                        Po ceni  <b>{{rezervacija.cenaApartmana}}</b>
+                                                        Po ceni  <b>{{reservation.totalPrice}}</b>
                                                     </div>
                                                 </b-col>
                                                 
                                                 <b-col>
                                                         <h1 style="font-size:30px;margin-top:9%">
-                                                            <b-badge variant="success" >{{rezervacija.status}}</b-badge>
+                                                            <b-badge variant="success" >{{reservation.status}}</b-badge>
                                                         </h1>
                                                     
                                                     
@@ -162,7 +178,7 @@ Vue.component("admin-reservations",{
                                                 <b>Poruka koju je ostavio gost</b>
                                                 <br>
                                                 <div style="font-size:18px;">
-                                                        {{rezervacija.poruka}}
+                                                        {{reservation.message}}
                                                 </div>
 
                                                 </b-col>

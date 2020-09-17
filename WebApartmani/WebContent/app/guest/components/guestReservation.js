@@ -2,6 +2,9 @@ Vue.component("guest-reservations",{
     data: function(){
         return{
             name:'Rezervacije',
+            reservations:[],
+
+
             rezervacije:[
                 {
                     imeApartmana:'Apartmani Ivana',
@@ -33,7 +36,21 @@ Vue.component("guest-reservations",{
 
         }
     }
-    ,
+    , mounted(){
+		
+		axios
+		.get("rest/reservations")
+		.then(response =>{
+            console.log(response.data);
+            this.reservations=[];
+            this.reservations=response.data;
+
+        });
+        
+       
+
+    
+	},
     template:`
         <div>
             <b-container style="margin-left:1%;">
@@ -58,7 +75,7 @@ Vue.component("guest-reservations",{
                     <b-col>
                         <div>
                             <dl>
-                                <dd v-for="rezervacija in rezervacije">
+                                <dd v-for="reservation in reservations">
                                     <b-card style="max-width: 840px;margin-top:6%;">
                                         
 
@@ -67,26 +84,26 @@ Vue.component("guest-reservations",{
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
                                                         <a href= "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails" style="color:black;">
-                                                        {{rezervacija.imeApartmana}}
+                                                        {{reservation.apartment.name}}
                                                         </a>
                         
                                                     </h1>
                                                     <div style="background-color:teal;padding:5%;color:white;font-size:18px">
-                                                        Od  <b>{{rezervacija.pocetniDatum}}</b>
+                                                        Od  <b>{{reservation.startDate}}</b>
                                                         <br>
-                                                        Do  <b>{{rezervacija.krajnjiDatum}}</b>
+                                                        Broj no\u0107enja  <b>{{reservation.numberOfNights}}</b>
                                                         <br>
-                                                        Po ceni  <b>{{rezervacija.cenaApartmana}}</b>
+                                                        Po ceni  <b>{{reservation.totalPrice}}</b>
                                                     </div>
                                                 </b-col>
                                                 
                                                 <b-col>
                                                         <h1 style="font-size:30px;margin-top:9%">
-                                                            <b-badge variant="success" >{{rezervacija.status}}</b-badge>
+                                                            <b-badge variant="success" >{{reservation.status}}</b-badge>
                                                         </h1>
                                                     
                                                     <br>
-                                                    <b-button variant="outline-danger" @click="rezervacija.status='odustanak' ">
+                                                    <b-button variant="outline-danger" @click="reservation.status='odustanak' ">
                                                         Odustani
                                                     </b-button>
                                                 </b-col>

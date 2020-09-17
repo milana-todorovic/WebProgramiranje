@@ -59,6 +59,7 @@ Vue.component("admin-apartments",{
                 }
               )
         }
+       
     }, mounted(){
 		
 		axios

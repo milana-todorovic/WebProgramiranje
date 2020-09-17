@@ -35,15 +35,6 @@ Vue.component("guest-apartments",{
             window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
         },
         searchAp:function(){
-            let selectedAmenities = [];
-            this.apartmentSearch.amenities.forEach(amenityInOptions => {
-                this.amenities.forEach(amenityCorrect => {
-                    if(amenityInOptions.name == amenityCorrect.name){
-                        selectedAmenities.push(amenityCorrect);
-                        return;
-                    }
-                });
-            });
             
 
             axios.post('rest/apartments/search', {
@@ -57,7 +48,7 @@ Vue.component("guest-apartments",{
                 "maximumNumberOfGuests":this.apartmentSearch.maximumNumberOfGuest,
                 "city":this.apartmentSearch.city,
                 "country":this.apartmentSearch.country,
-                "amenities":selectedAmenities,
+                "amenities":this.apartmentSearch.amenities,
                 "types":this.apartmentSearch.types
                
               })
@@ -78,11 +69,7 @@ Vue.component("guest-apartments",{
             console.log(response.data);
             this.apartments=[];
 
-            response.data.forEach(apartment => {
-                if(apartment.status == 'Neaktivan'){
-                    this.apartments.push(apartment);
-                }
-            });
+            this.apartments=response.data;
 
         });
         
@@ -97,7 +84,7 @@ Vue.component("guest-apartments",{
                 this.options2.push(
                     {
                         text:amenity.name,
-                        value:amenity.name,
+                        value:amenity.id,
 
                     }
                 );
