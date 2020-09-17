@@ -15,18 +15,20 @@ Vue.component("host-apartments",{
                 minimumNumberOfGuests:'',
                 maximumNumberOfGuest:'',
                 city:'',
-                country:''
+                country:'',
+                amenities:[],
+                types:[]
             },
             options: [
-                { text: 'Ceo', value: 'ceo' },
-                { text: 'Soba', value: 'soba' },
+                { text: 'Ceo apartman', value: 'Ceo apartman' },
+                { text: 'Soba', value: 'Soba' },
                
               ],
          
         
             options4:[
-                {text:'Aktivan',value:'aktivan'},
-                {text:'Neaktivan',value:'neaktivan'}
+                {text:'Aktivan',value:'Aktivan'},
+                {text:'Neaktivan',value:'Neaktivan'}
             ]
         }
     
@@ -49,7 +51,9 @@ Vue.component("host-apartments",{
                 "minimumNumberOfGuests":this.minimumNumberOfGuests,
                 "maximumNumberOfGuests":this.maximumNumberOfGuest,
                 "city":this.city,
-                "country":this.country
+                "country":this.country,
+                "amenities":this.apartmentSearch.amenities,
+                "types":this.apartmentSearch.types
                
               })
               .then((response) => {
@@ -82,7 +86,7 @@ Vue.component("host-apartments",{
                 this.options2.push(
                     {
                         text:amenity.name,
-                        value:amenity.name,
+                        value:amenity.id,
 
                     }
                 );
@@ -146,6 +150,7 @@ Vue.component("host-apartments",{
                                     :options="options"
                                     plain
                                     stacked
+                                    v-model="apartmentSearch.types"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
 
@@ -156,6 +161,7 @@ Vue.component("host-apartments",{
                                         :options="options2"
                                         plain
                                         stacked
+                                        v-model="apartmentSearch.amenities"
                                         ></b-form-checkbox-group>
                                     </b-form-group>
                             
@@ -171,7 +177,7 @@ Vue.component("host-apartments",{
                         
                             <br><br>
 
-                                <b-button  variant="primary">
+                                <b-button @click="searchAp()"  variant="primary">
                                     <b-icon icon="funnel-fill"></b-icon>
                                         Filtriraj
                                 </b-button>
