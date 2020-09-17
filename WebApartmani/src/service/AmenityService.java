@@ -84,10 +84,10 @@ public class AmenityService {
 
 		if (StringValidator.isNullOrEmpty(amenity.getName())) {
 			valid = false;
-			error.append("Naziv sadržaja je obavezan.");
+			error.append("Naziv sadržaja je obavezan. ");
 		} else if (!StringValidator.isAlphanumericWithSpaceDash(amenity.getName())) {
 			valid = false;
-			error.append("Naziv sadržaja sme sadržati samo slova, brojeve, razmake i crtice.");
+			error.append("Naziv sadržaja sme sadržati samo slova, brojeve, razmake i crtice. ");
 		}
 
 		if (!valid)

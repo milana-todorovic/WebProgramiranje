@@ -19,6 +19,11 @@ Vue.component("admin-navbar",{
                         </router-link>
                     </b-nav-item>
                     <b-nav-item href="#">
+                        <router-link to="/amenities" exact>
+                            Sadržaji apartmana
+                        </router-link>
+                    </b-nav-item>
+                    <b-nav-item href="#">
                          <router-link to="/reservations" exact>
                             Rezervacije
                         </router-link>
@@ -26,6 +31,16 @@ Vue.component("admin-navbar",{
                     <b-nav-item href="#">
                          <router-link to="/users" exact>
                             Korisnici
+                        </router-link>
+                    </b-nav-item>
+                    <b-nav-item href="#">
+                         <router-link to="/host" exact>
+                            Dodaj doma\u0107ina
+                        </router-link>
+                    </b-nav-item>
+                    <b-nav-item href="#">
+                         <router-link to="/holidays" exact>
+                            Praznici
                         </router-link>
                     </b-nav-item>
                 </b-navbar-nav>
