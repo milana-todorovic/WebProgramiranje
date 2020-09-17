@@ -35,20 +35,20 @@ public class AuthenticationController {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			User user = service.getUserService().getByUsernameAndPassword(info.getUsername(), info.getPassword());
-			if (user == null || user.getBlocked())
-				return Response.status(Status.UNAUTHORIZED).build();
+			if (user != null && user.getBlocked())
+				return Response.status(Status.FORBIDDEN).entity("Blokrani ste od strane administratora.").build();
 			request.getSession().setAttribute("user", new AuthenticatedUser(user.getID(), user.getRole()));
 			return Response.ok().build();
 		} catch (BadRequestException e) {
-			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+			return Response.status(Status.UNAUTHORIZED).entity(e.getMessage()).build();
 		}
 	}
 
-	@Secured
 	@Path("/logout")
 	@POST
 	public Response logout(@Context HttpServletRequest request) {
-		request.getSession().removeAttribute("user");
+		if (request.getSession().getAttribute("user") != null)
+			request.getSession().removeAttribute("user");
 		return Response.ok().build();
 	}
 

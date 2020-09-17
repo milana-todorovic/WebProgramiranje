@@ -76,7 +76,7 @@ public class ReservationController {
 			reservation.setGuest(guest);
 		}
 		if (reservation != null && !user.getID().equals(reservation.getGuest().getID()))
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje rezervacija za druge goste.").build();
 		try {
 			Reservation entity = service.getReservationService().create(reservation);
 			return Response
@@ -98,10 +98,10 @@ public class ReservationController {
 			Reservation entity = service.getReservationService().getByID(id);
 			if (entity != null) {
 				if (user.getRole().equals(UserRole.GUEST) && !entity.getGuest().getID().equals(user.getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim rezervacijama.").build();
 				else if (user.getRole().equals(UserRole.HOST)
 						&& !user.getID().equals(entity.getApartment().getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljenje pristup samo rezervacijama na svojim apartmanima.").build();
 			}
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
@@ -119,17 +119,17 @@ public class ReservationController {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		if (user.getRole().equals(UserRole.GUEST) && !guestAllowed.contains(status))
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen traženi prelaz stanja.").build();
 		else if (user.getRole().equals(UserRole.HOST) && !hostAllowed.contains(status))
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen traženi prelaz stanja.").build();
 		try {
 			Reservation entity = service.getReservationService().getByID(id);
 			if (entity != null) {
 				if (user.getRole().equals(UserRole.GUEST) && !entity.getGuest().getID().equals(user.getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim rezervacijama.").build();
 				else if (user.getRole().equals(UserRole.HOST)
 						&& !user.getID().equals(entity.getApartment().getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljenje pristup samo rezervacijama na svojim apartmanima.").build();
 			}
 			Reservation reservation = service.getReservationService().changeStatus(id, status);
 			return Response.ok(reservation).build();

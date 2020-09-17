@@ -3,7 +3,6 @@ package auth;
 import java.io.IOException;
 
 import javax.annotation.Priority;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -19,17 +18,15 @@ import javax.ws.rs.ext.Provider;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
 	@Context
-	private ServletContext context;
-	@Context
 	private HttpServletRequest request;
 
 	@Override
 	public void filter(ContainerRequestContext arg0) throws IOException {
-		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
-		Blocklist blocklist = (Blocklist) context.getAttribute("blocklist");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");		
 
-		if (user == null || blocklist.isBlocked(user.getID()))
-			arg0.abortWith(Response.status(Status.UNAUTHORIZED).build());
+		if (user == null)
+			arg0.abortWith(Response.status(Status.UNAUTHORIZED)
+					.entity("Morate biti ulogovani kako bi pristupili traženom resursu.").build());
 	}
 
 }

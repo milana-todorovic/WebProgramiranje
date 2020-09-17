@@ -26,6 +26,18 @@ var appAdmin = new Vue({
     data: {
         title: "Admin naslov"
     },
+	mounted(){
+		axios.get("/WebApartmani/rest/profile").then(
+				response => this.redirect(response.data)).catch(
+						error => window.location.href = "http://localhost:8081/WebApartmani/index.html#/login");
+	},
+	methods:{
+		redirect(user){
+			if (!(user.role === "Administrator")){
+				window.location.href = "http://localhost:8081/WebApartmani/";
+			}
+		}
+	},
     components: { ApartmentComponent, ApartmentDetailsComponent, UsersComponent, ReservationComponent, 
         HostComponent, AmenityComponent, HolidaysComponent }
 });

@@ -61,7 +61,7 @@ public class UserController {
 	public Response create(User user) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		if (user != null && user.getRole() != null && !user.getRole().equals(UserRole.HOST))
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.FORBIDDEN).entity("Dozvoljeno je samo dodavanje domaćina.").build();
 		try {
 			User entity = service.getUserService().create(user);
 			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/users/" + entity.getID()))

@@ -42,7 +42,7 @@ Vue.component("guest-apartments",{
     	prikaziDetaljeFun: function(apartman){
             alert('radi' + apartman.ime);
 
-            window.location.href = "http://localhost:8081/WebApartmani/host.html#/apartmentDetails";
+            router.push('apartmentDetails');
         },
         searchAp(){
         	axios.post('rest/apartments/search', {

@@ -51,7 +51,7 @@ public class ApartmentController {
 			else if (user.getRole().equals(UserRole.ADMIN))
 				entities = service.getApartmentService().getAll();
 			else if (user.getRole().equals(UserRole.HOST))
-				entities = service.getApartmentService().getActive();
+				entities = service.getApartmentService().getByHostID(user.getID());
 			else
 				entities = new ArrayList<Apartment>();
 			return Response.ok(service.getApartmentService().getTitleImages(entities)).build();
@@ -73,7 +73,7 @@ public class ApartmentController {
 			apartment.setHost(host);
 		}
 		if (apartment != null && !user.getID().equals(apartment.getHost().getID()))
-			return Response.status(Status.FORBIDDEN).build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje apartmana za drugog domaćina.").build();
 		try {
 			Apartment entity = service.getApartmentService().create(apartment);
 			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/apartments/" + entity.getID()))
@@ -94,10 +94,10 @@ public class ApartmentController {
 			if (entity != null) {
 				if (user != null && user.getRole().equals(UserRole.HOST)
 						&& !user.getID().equals(entity.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 				else if ((user == null || user.getRole().equals(UserRole.GUEST))
 						&& !entity.getStatus().equals(ApartmentStatus.ACTIVE))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo aktivnim apartmanima.").build();
 			}
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
@@ -117,7 +117,7 @@ public class ApartmentController {
 			if (user.getRole().equals(UserRole.HOST)) {
 				Apartment entity = service.getApartmentService().getByID(id);
 				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 			}
 			Apartment entity = service.getApartmentService().update(id, apartment);
 			return Response.ok(entity).build();
@@ -136,7 +136,7 @@ public class ApartmentController {
 			if (user.getRole().equals(UserRole.HOST)) {
 				Apartment entity = service.getApartmentService().getByID(id);
 				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 			}
 			service.getApartmentService().delete(id);
 			return Response.noContent().build();
@@ -156,10 +156,10 @@ public class ApartmentController {
 			if (entity != null) {
 				if (user != null && user.getRole().equals(UserRole.HOST)
 						&& !user.getID().equals(entity.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 				else if ((user == null || user.getRole().equals(UserRole.GUEST))
 						&& !entity.getStatus().equals(ApartmentStatus.ACTIVE))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo aktivnim apartmanima.").build();
 			}
 			Collection<Base64Image> entities = service.getApartmentService().getImagesByApartmentID(id);
 			return Response.ok(entities).build();
@@ -180,7 +180,7 @@ public class ApartmentController {
 			if (user.getRole().equals(UserRole.HOST)) {
 				Apartment entity = service.getApartmentService().getByID(id);
 				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 			}
 			Base64Image entity = service.getApartmentService().addImage(id, new Base64Image(imageData));
 			return Response
@@ -203,7 +203,7 @@ public class ApartmentController {
 			if (user.getRole().equals(UserRole.HOST)) {
 				Apartment entity = service.getApartmentService().getByID(apartmentID);
 				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 			}
 			service.getApartmentService().deleteImage(apartmentID, imageID);
 			return Response.noContent().build();

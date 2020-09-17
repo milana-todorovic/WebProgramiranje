@@ -23,6 +23,18 @@ var appHost = new Vue({
 	data : {
 		title : "Host naslov"
     },
+	mounted(){
+    	axios.get("/WebApartmani/rest/profile").then(
+				response => this.redirect(response.data)).catch(
+						error => window.location.href = "http://localhost:8081/WebApartmani/index.html#/login");
+	},
+	methods:{
+		redirect(){
+			if (!(user.role === "Domaćin")){
+				window.location.href = "http://localhost:8081/WebApartmani/";
+			}
+		}
+	},
     components : { ApartmentComponent, ReservationComponent, 
     	ApartmentDetailsComponent, UsersComponent, AddApartmentComponent },
 });
