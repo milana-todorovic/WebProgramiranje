@@ -36,7 +36,7 @@ public class ApartmentController {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		try {
 			Collection<Apartment> entities = service.getApartmentService().getAll();
-			return Response.ok(entities).build();
+			return Response.ok(service.getApartmentService().getTitleImages(entities)).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
@@ -166,7 +166,7 @@ public class ApartmentController {
 				else
 					entities = service.getApartmentService().sortByPriceDescending(entities);
 
-			return Response.ok(entities).build();
+			return Response.ok(service.getApartmentService().getTitleImages(entities)).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}

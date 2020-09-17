@@ -3,7 +3,6 @@ Vue.component("guest-apartments",{
         return{
             name: 'Apartmani',
             apartments:[],
-            amenities:[],
             options2:[],
             apartmentSearch:{
                 //TODO:srediti datume
@@ -19,66 +18,68 @@ Vue.component("guest-apartments",{
                 country:'',
                 amenities:[],
                 types:[],
-                sort:''
-            },options: [
+                status:[],
+                sort:null
+            },
+            options: [
                 { text: 'Ceo apartman', value: 'Ceo apartman' },
                 { text: 'Soba', value: 'Soba' },
                
-              ],
-           
+              ],         
+        
+            options4:[
+                {text:'Aktivan',value:'Aktivan'},
+                {text:'Neaktivan',value:'Neaktivan'}
+            ],
+            alert: {
+                text: '',
+                show: false
+            }
         }
     
     },
     methods: {
-        prikaziDetaljeFun: function(apartman){
+    	prikaziDetaljeFun: function(apartman){
             alert('radi' + apartman.ime);
 
-            window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
+            window.location.href = "http://localhost:8081/WebApartmani/host.html#/apartmentDetails";
         },
-        searchAp:function(){
-            
-
-            axios.post('rest/apartments/search', {
+        searchAp(){
+        	axios.post('rest/apartments/search', {
                 "startDate":this.apartmentSearch.startDate,
                 "endDate":this.apartmentSearch.endDate,
                 "minimumPrice":this.apartmentSearch.minimumPrice,
                 "maximumPrice":this.apartmentSearch.maximumPrice,
-                "minimumNumberOfRooms":this.apartmentSearch.minimumNumberOfRooms,
-                "maximumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
-                "minimumNumberOfGuests":this.apartmentSearch.minimumNumberOfGuests,
-                "maximumNumberOfGuests":this.apartmentSearch.maximumNumberOfGuest,
+                "minimumNumberOfRooms":this.minimumNumberOfRooms,
+                "maixmumNumberOfRooms":this.maximumNumberOfRooms,
+                "minimumNumberOfGuests":this.minimumNumberOfGuests,
+                "maximumNumberOfGuests":this.maximumNumberOfGuest,
                 "city":this.apartmentSearch.city,
                 "country":this.apartmentSearch.country,
                 "amenities":this.apartmentSearch.amenities,
                 "types":this.apartmentSearch.types,
-                "sort":this.apartmentSearch.sort
-               
+                "status":this.apartmentSearch.status,
+                "sort":this.apartmentSearch.sort               
               })
               .then((response) => {
-                console.log(response);
-                this.apartments=[];
 				this.apartments=response.data;
                 }
-              )
+              ).catch(
+            error => {this.alert.text = "Gre\u0161ka pri pretrazi: " + error.response.data; this.alert.show = true;});
         }
-
     },
     mounted(){
 		
 		axios
 		.get("rest/apartments")
 		.then(response =>{
-            console.log(response.data);
-            this.apartments=[];
+			this.apartments = response.data;
+        }).catch(
+                error => {this.alert.text = "Gre\u0161ka pri dobavljanju apartmana: " + error.response.data; this.alert.show = true;});
 
-            this.apartments=response.data;
-
-        });
-        
         axios
         .get("rest/amenities")
-		.then(response=>{
-            console.log(response.data);
+        .then(response=>{
             this.amenities=response.data;
             this.options2=[];
 
@@ -92,15 +93,22 @@ Vue.component("guest-apartments",{
                 );
             }
 
-        })
-	},
-
+            
+        }).catch(
+                error => {this.alert.text = "Gre\u0161ka pri dobavljanju sadr\u017Eaja apartmana: " + error.response.data; this.alert.show = true;});
+    },
     template:`
     <div style="margin-right:1%;">
+    <b-col class="border rounded m-2 pt-2">
+  <b-alert
+    v-model="alert.show"
+    dismissible>
+    {{ alert.text }}
+  </b-alert>    
            
             <b-card id="pretraga">
                 <b-card-text>
-                    <b-form inline>
+                        <b-form inline>
                         <b-form-input   placeholder="Grad" v-model="apartmentSearch.city"></b-form-input>
                         <b-form-input   placeholder="Dr\u017Eava" v-model="apartmentSearch.country"></b-form-input>
                         <b-form-input   placeholder="Min osoba" v-model="apartmentSearch.minimumNumberOfGuests"></b-form-input>
@@ -112,7 +120,7 @@ Vue.component("guest-apartments",{
                         <b-form-datepicker  placeholder="Po\u010Detni datum" v-model="apartmentSearch.startDate"></b-form-datepicker>
                         <b-form-datepicker  placeholder="Krajnji datum" v-model="apartmentSearch.endDate"></b-form-datepicker>
                         
-                        <b-button  @click="searchAp()" variant="primary" style="margin-left:2%;">
+                        <b-button @click="searchAp()"   variant="primary" style="margin-left:2%;">
                             <b-icon icon="search"></b-icon>
                             Pretra&#x17E;i
                         </b-button>
@@ -167,7 +175,18 @@ Vue.component("guest-apartments",{
                             
                                 <br><br>
 
-                                <b-button @click="searchAp()" variant="primary">
+                                <b><b-form-group label="Status"></b>
+                                <b-form-checkbox-group
+                                    :options="options4"
+                                    plain
+                                    stacked
+                                    v-model="apartmentSearch.status"
+                                    ></b-form-checkbox-group>
+                                </b-form-group>
+                        
+                            <br><br>
+
+                                <b-button @click="searchAp()"  variant="primary">
                                     <b-icon icon="funnel-fill"></b-icon>
                                         Filtriraj
                                 </b-button>
@@ -192,7 +211,7 @@ Vue.component("guest-apartments",{
                     
                                     <b-row no-gutters>
                                         <b-col>
-                                            <b-card-img src="https://picsum.photos/400/400/?image=20" 			alt="Image" class="rounded-0"></b-card-img>
+                                            <b-card-img v-bind:src="apartment.imageKeys[0]" alt="Image" class="rounded-0"></b-card-img>
                                         </b-col>
                                         
                                         <b-col>
@@ -209,7 +228,7 @@ Vue.component("guest-apartments",{
                                                     </b-icon>
 
                                                     <span style="font-size:20px">
-                                                        {{apartment.location.address.street}} {{apartment.location.address.number}}
+                                                        {{apartment.location.address.street}} {{apartment.location.address.number}}, {{apartment.location.address.city}}, {{apartment.location.address.country}}
                                                     </span>
                                                   
                                                     <br>
@@ -220,7 +239,7 @@ Vue.component("guest-apartments",{
                                                         <i>po no&#x107;enju</i>
                                                    
                                                     <br><br><br><br><br>
-                                                    <b-button variant="primary" @click="prikaziDetaljeFun(apartman)">
+                                                    <b-button variant="primary" @click="prikaziDetaljeFun(apartment)">
                                                         Prika&#x17E;i detalje
                                                         <b-icon icon="arrow-right">
                                                     </b-button>
@@ -239,6 +258,7 @@ Vue.component("guest-apartments",{
                         </dl>
                     </div>
                 </b-col>
+            
             </b-row>
 
 
@@ -251,5 +271,5 @@ Vue.component("guest-apartments",{
     </div>
 
     `
-    
+
 });

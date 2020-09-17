@@ -56,6 +56,24 @@ public class ApartmentService {
 		}
 	}
 
+	public Collection<Apartment> getTitleImages(Collection<Apartment> apartments) {
+		for (Apartment apartment : apartments) {
+			Collection<String> images = new ArrayList<>();
+			String key = CollectionUtil.findFirst(apartment.getImageKeys(), blah -> true);
+			if (key == null)
+				images.add("/WebApartmani/media/noimage.jpg");
+			else {
+				Base64Image image = imageRepository.simpleGetByID(key);
+				if (image == null)
+					images.add("/WebApartmani/media/noimage.jpg");
+				else
+					images.add(image.getData());
+			}
+			apartment.setImageKeys(images);
+		}
+		return apartments;
+	}
+
 	public Collection<Apartment> getAll() {
 		Collection<Apartment> apartments = apartmentRepository.getAll();
 		apartments.removeIf(apartment -> apartment.getStatus().equals(ApartmentStatus.DELETED));

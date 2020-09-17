@@ -19,31 +19,39 @@ Vue.component("host-apartments",{
                 amenities:[],
                 types:[],
                 status:[],
-                sort:''
+                sort:null
             },
             options: [
                 { text: 'Ceo apartman', value: 'Ceo apartman' },
                 { text: 'Soba', value: 'Soba' },
                
-              ],
-         
+              ],         
         
             options4:[
                 {text:'Aktivan',value:'Aktivan'},
                 {text:'Neaktivan',value:'Neaktivan'}
-            ]
+            ],
+            alert: {
+                text: '',
+                show: false
+            }
         }
     
     },
     methods: {
+    	obrisi(apartment){
+    		console.log("here");
+    		axios.delete("rest/apartments/" + apartment.id).then(
+    				response => {this.alert.text = "Apartman je uspe\u0161no obrisan."; this.alert.show = true; this.searchAp();}).catch(
+    					error => {this.alert.text = "Brisanje apartmana nije uspelo: " + error.response.data; this.alert.show = true;});
+    	},
         prikaziDetaljeFun: function(apartman){
             alert('radi' + apartman.ime);
 
             window.location.href = "http://localhost:8081/WebApartmani/host.html#/apartmentDetails";
         },
-        searchAp:function(){
-
-            axios.post('rest/apartments/search', {
+        searchAp(){
+        	axios.post('rest/apartments/search', {
                 "startDate":this.apartmentSearch.startDate,
                 "endDate":this.apartmentSearch.endDate,
                 "minimumPrice":this.apartmentSearch.minimumPrice,
@@ -52,20 +60,18 @@ Vue.component("host-apartments",{
                 "maixmumNumberOfRooms":this.maximumNumberOfRooms,
                 "minimumNumberOfGuests":this.minimumNumberOfGuests,
                 "maximumNumberOfGuests":this.maximumNumberOfGuest,
-                "city":this.city,
-                "country":this.country,
+                "city":this.apartmentSearch.city,
+                "country":this.apartmentSearch.country,
                 "amenities":this.apartmentSearch.amenities,
                 "types":this.apartmentSearch.types,
                 "status":this.apartmentSearch.status,
-                "sort":this.apartmentSearch.sort
-               
+                "sort":this.apartmentSearch.sort               
               })
               .then((response) => {
-                console.log(response);
-                this.apartments=[];
 				this.apartments=response.data;
                 }
-              )
+              ).catch(
+            error => {this.alert.text = "Gre\u0161ka pri pretrazi: " + error.response.data; this.alert.show = true;});
         }
     },
     mounted(){
@@ -73,16 +79,13 @@ Vue.component("host-apartments",{
 		axios
 		.get("rest/apartments")
 		.then(response =>{
-			console.log(response.data);
 			this.apartments = response.data;
-
-
-        });
+        }).catch(
+                error => {this.alert.text = "Gre\u0161ka pri dobavljanju apartmana: " + error.response.data; this.alert.show = true;});
 
         axios
         .get("rest/amenities")
         .then(response=>{
-            console.log(response.data);
             this.amenities=response.data;
             this.options2=[];
 
@@ -97,10 +100,17 @@ Vue.component("host-apartments",{
             }
 
             
-        })
+        }).catch(
+                error => {this.alert.text = "Gre\u0161ka pri dobavljanju sadr\u017Eaja apartmana: " + error.response.data; this.alert.show = true;});
     },
     template:`
     <div style="margin-right:1%;">
+    <b-col class="border rounded m-2 pt-2">
+  <b-alert
+    v-model="alert.show"
+    dismissible>
+    {{ alert.text }}
+  </b-alert>    
            
             <b-card id="pretraga">
                 <b-card-text>
@@ -207,7 +217,7 @@ Vue.component("host-apartments",{
                     
                                     <b-row no-gutters>
                                         <b-col>
-                                            <b-card-img src="https://picsum.photos/400/400/?image=20" 			alt="Image" class="rounded-0"></b-card-img>
+                                            <b-card-img v-bind:src="apartment.imageKeys[0]" alt="Image" class="rounded-0"></b-card-img>
                                         </b-col>
                                         
                                         <b-col>
@@ -224,7 +234,7 @@ Vue.component("host-apartments",{
                                                     </b-icon>
 
                                                     <span style="font-size:20px">
-                                                        {{apartment.location.address.street}} {{apartment.location.address.number}}
+                                                        {{apartment.location.address.street}} {{apartment.location.address.number}}, {{apartment.location.address.city}}, {{apartment.location.address.country}}
                                                     </span>
                                                   
                                                     <br>
@@ -235,12 +245,12 @@ Vue.component("host-apartments",{
                                                         <i>po no&#x107;enju</i>
                                                    
                                                     <br><br><br><br><br>
-                                                    <b-button variant="primary" @click="prikaziDetaljeFun(apartman)">
+                                                    <b-button variant="primary" @click="prikaziDetaljeFun(apartment)">
                                                         Prika&#x17E;i detalje
                                                         <b-icon icon="arrow-right">
                                                     </b-button>
                                                     <br><br>
-                                                    <b-button variant="danger">
+                                                    <b-button variant="danger" @click="obrisi(apartment)">
                                                         <b-icon icon="x"></b-icon>
                                                         Ukloni apartman
                                                     </b-button>
