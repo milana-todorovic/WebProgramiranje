@@ -2,8 +2,19 @@ Vue.component("admin-reservations",{
     data: function(){
         return{
             reservations:[],
+            options:[
+                { text: 'Kreirana', value: 'Kreirana' },
+                { text: 'Odbijena', value: 'Odbijena' },
+                { text: 'Otkazana',  value:'Otkazana'},
+                { text: 'Prihva\u0107ena',  value:'Prihva\u0107ena'},
+                { text: 'Zavr\u0161ena',  value:'Zavr\u0161ena'}
+
+
+            ],
             userSearch:{
-                "username":''
+                guestUsername:'',
+                sort:null,
+                status:[]
             }
            
             
@@ -14,7 +25,9 @@ Vue.component("admin-reservations",{
             
 
             axios.post('rest/reservations/search', {
-                "username":this.reservations.username
+                "guestUsername":this.userSearch.guestUsername,
+                "sort":this.userSearch.sort,
+                "status":this.userSearch.status
                
               })
               .then((response) => {
@@ -53,7 +66,7 @@ Vue.component("admin-reservations",{
                         <b-card style=" padding: 0.5%;margin-left:1%;margin-top:1%;margin-right:6%;">
                             <b-card-text>
                                 <b-form inline>
-                                    <b-form-input v-model="userSearch.username"  placeholder="Korisni\u010Dko ime gosta"></b-form-input>
+                                    <b-form-input v-model="userSearch.guestUsername" placeholder="Korisni\u010Dko ime gosta"></b-form-input>
                                     
                                     
                                     <b-button @click="searchResByUsers()"  variant="primary" style="margin-left:2%;">
@@ -72,11 +85,11 @@ Vue.component("admin-reservations",{
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
-                                        <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
-                                        <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
+                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Rastu\u0107e">Rastu\u0107e</b-form-radio>
+                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Opadaju\u0107e">Opadaju\u0107e</b-form-radio>
                                     </b-form-group>
                                     <br><br>
-                                    <b-button   variant="primary"> 
+                                    <b-button @click="searchResByUsers()"  variant="primary"> 
                                         <b-icon icon="arrow-down-up"></b-icon>
                                         Sortiraj
                                     </b-button>
@@ -89,12 +102,20 @@ Vue.component("admin-reservations",{
                         <div>
                             <b-card>
                                 <b-card-text>
-                                    <b>Filtriranje po statusu rezervacije</b>
+                                    <b><b-form-group label="Status rezervacije"></b>
+                                        <b-form-checkbox-group
+                                            :options="options"
+                                            plain
+                                            stacked
+                                            v-model="userSearch.status"
+                                            ></b-form-checkbox-group>
+                                        </b-form-group>
                                     <br><br>
-                                        <b-button  variant="primary">
-                                            <b-icon icon="funnel-fill"></b-icon>
-                                                Filtriraj
-                                        </b-button>
+                                    <b-button @click="searchResByUsers()" variant="primary">
+                                        <b-icon icon="funnel-fill"></b-icon>
+                                            Filtriraj
+                                </b-button>
+                                
                                         
                                  </b-card-text>
                             </b-card>

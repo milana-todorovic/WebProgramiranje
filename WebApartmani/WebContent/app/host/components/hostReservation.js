@@ -6,15 +6,17 @@ Vue.component("host-reservations",{
                 { text: 'Kreirana', value: 'Kreirana' },
                 { text: 'Odbijena', value: 'Odbijena' },
                 { text: 'Otkazana',  value:'Otkazana'},
-                { text: 'Prihva\u0107ena',  value:'Prihvaćena'},
-                { text: 'Zavr\u0161ena',  value:'Završena'}
+                { text: 'Prihva\u0107ena',  value:'Prihva\u0107ena'},
+                { text: 'Zavr\u0161ena',  value:'Zavr\u0161ena'}
 
 
             ],
             userSearch:{
-                "guestUsername":'',
-                "sort":'',
-                "status":''
+                sort:null,
+                status:[],
+                guestUsername:'',
+              
+                
             }
            
             
@@ -27,8 +29,9 @@ Vue.component("host-reservations",{
             
 
             axios.post('rest/reservations/search', {
-                "username":this.userSearch.username,
-                "sort":this.userSearch.sort
+                "guestUsername":this.userSearch.guestUsername,
+                "sort":this.userSearch.sort,
+                "status":this.userSearch.status
                
               })
               .then((response) => {
@@ -37,6 +40,20 @@ Vue.component("host-reservations",{
 				this.reservations=response.data;
                 }
               )
+        },
+        changeStatus:function(reservation){
+
+            axios.put('rest/reservations/'+reservations.id+'/status', {
+                "status":reservation.status
+               
+              })
+              .then((response) => {
+                console.log(response);
+                this.reservations=[];
+				this.reservations=response.data;
+                }
+              )
+
         }
 
     },
@@ -83,8 +100,8 @@ Vue.component("host-reservations",{
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
-                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Rastuće">Rastu\u0107e</b-form-radio>
-                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Opadajuće">Opadaju\u0107e</b-form-radio>
+                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Rastu\u0107e">Rastu\u0107e</b-form-radio>
+                                        <b-form-radio v-model="userSearch.sort" name="some-radios" value="Opadaju\u0107e">Opadaju\u0107e</b-form-radio>
                                     </b-form-group>
                                     <br><br>
                                     <b-button @click="searchResByUsers()"  variant="primary"> 
@@ -159,15 +176,15 @@ Vue.component("host-reservations",{
                                                         </h1>
                                                     
                                                     <br>
-                                                    <b-button variant="outline-danger" @click="rezervacija.status='odustanak' ">
+                                                    <b-button @click="changeStatus(reservation)" v-if="reservation.status=='Kreirana' || reservation.status=='Prihva\u0107ena'" variant="outline-danger"  ">
                                                         Odustani
                                                     </b-button>
                                                     
-                                                    <b-button variant="outline-success">
+                                                    <b-button @click="changeStatus(reservation)" v-if="reservation.status=='Kreirana'"variant="outline-success">
                                                         Prihvati
                                                     </b-button>
                                                 
-                                                    <b-button variant="outline-secondary">
+                                                    <b-button @click="changeStatus(reservation)" variant="outline-secondary">
                                                         Zavr\u0161i
                                                     </b-button>
                                                 </b-col>

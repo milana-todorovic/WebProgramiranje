@@ -3,13 +3,47 @@ Vue.component("guest-reservations",{
         return{
             name:'Rezervacije',
             reservations:[],
+            reservationSearch:{
+                "sort":''
+            }
 
 
-           
+            
 
         }
     }
-    , mounted(){
+    ,
+    methods:{
+        searchResByPrice:function(){
+            
+
+            axios.post('rest/reservations/search', {
+                "sort":this.reservationSearch.sort
+               
+              })
+              .then((response) => {
+                console.log(response);
+                this.reservations=[];
+				this.reservations=response.data;
+                }
+              )
+        },changeStatus:function(reservation){
+
+            axios.put('rest/reservations/'+reservations.id+'/status', {
+                "status":reservation.status
+               
+              })
+              .then((response) => {
+                console.log(response);
+                this.reservations=[];
+				this.reservations=response.data;
+                }
+              )
+
+        }
+
+    },
+     mounted(){
 		
 		axios
 		.get("rest/reservations")
@@ -32,11 +66,11 @@ Vue.component("guest-reservations",{
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
-                                        <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
-                                        <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
+                                        <b-form-radio v-model="reservationSearch.sort" name="some-radios" value="Rastu\u0107e">Rastu\u0107e</b-form-radio>
+                                        <b-form-radio v-model="reservationSearch.sort" name="some-radios" value="Opadaju\u0107e">Opadaju\u0107e</b-form-radio>
                                     </b-form-group>
                                     <br><br>
-                                    <b-button   variant="primary"> 
+                                    <b-button @click="searchResByPrice()"  variant="primary"> 
                                         <b-icon icon="arrow-down-up"></b-icon>
                                         Sortiraj
                                     </b-button>
@@ -76,7 +110,7 @@ Vue.component("guest-reservations",{
                                                         </h1>
                                                     
                                                     <br>
-                                                    <b-button variant="outline-danger" @click="reservation.status='odustanak' ">
+                                                    <b-button  @click="changeStatus(reservation)" v-if="reservation.status=='Kreirana' || reservation.status=='Prihva\u0107ena'" variant="outline-danger" >
                                                         Odustani
                                                     </b-button>
                                                 </b-col>
