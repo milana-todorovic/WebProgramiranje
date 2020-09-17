@@ -164,7 +164,7 @@ Vue.component("create-host", {
           v-model="name.value"
           type="text"
           placeholder="Unesite ime"
-          v-on:change="validateName"
+          v-on:blur="validateName"
         ></b-form-input>
         <b-form-invalid-feedback :state="name.state">
         {{name.error}}
