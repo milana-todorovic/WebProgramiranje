@@ -46,9 +46,7 @@ Vue.component("admin-apartments",{
     					error => {this.alert.text = "Brisanje apartmana nije uspelo: " + error.response.data; this.alert.show = true;});
     	},
         prikaziDetaljeFun: function(apartman){
-            alert('radi' + apartman.ime);
-
-            router.push('apartmentDetails');
+            router.push({ name: 'apartmentDetails', params: { id: apartman.id }});
         },
         searchAp(){
         	axios.post('rest/apartments/search', {

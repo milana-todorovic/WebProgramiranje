@@ -7,7 +7,7 @@ const router=new VueRouter({
     mode: 'hash',
     routes:[
         {path: '/apartments', component:ApartmentComponent},
-        {path: '/apartment/:id', component:ApartmentDetailsComponent},
+        {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},
         {path: '/login', component:LoginComponent},
         {path: '/register', component:RegisterComponent},
         {path:'/*',component:ApartmentComponent}       
