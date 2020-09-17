@@ -255,6 +255,12 @@ public class ApartmentService {
 		return CollectionUtil.findAll(apartments, apartment -> include.contains(apartment.getApartmentType()));
 	}
 
+	public Collection<Apartment> filterByStatus(Collection<Apartment> apartments, Collection<ApartmentStatus> include) {
+		if (include == null || include.isEmpty())
+			return apartments;
+		return CollectionUtil.findAll(apartments, apartment -> include.contains(apartment.getStatus()));
+	}
+
 	public Collection<Apartment> sortByPriceAscending(Collection<Apartment> apartments) {
 		List<Apartment> sorted = new ArrayList<Apartment>(apartments);
 		sorted.sort(Comparator.comparing(Apartment::getPricePerNight));

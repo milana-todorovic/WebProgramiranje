@@ -18,7 +18,7 @@ Vue.component("admin-apartments",{
                 country:'',
                 amenities:[],
                 types:[],
-                //status:[]
+                status:[]
             },
             options: [
                 { text: 'Ceo apartman', value: 'Ceo apartman' },
@@ -55,7 +55,7 @@ Vue.component("admin-apartments",{
                 "country":this.country,
                 "amenities":this.apartmentSearch.amenities,
                 "types":this.apartmentSearch.types,
-                //"status":this.apartmentSearch.status
+                "status":this.apartmentSearch.status
                
               })
               .then((response) => {
@@ -175,7 +175,7 @@ Vue.component("admin-apartments",{
                                     :options="options4"
                                     plain
                                     stacked
-                                    
+                                    v-model="apartmentSearch.status"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
                         

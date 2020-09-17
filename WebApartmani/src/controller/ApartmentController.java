@@ -158,6 +158,7 @@ public class ApartmentController {
 
 			entities = service.getApartmentService().filterByAmenities(entities, searchParameters.getAmenities());
 			entities = service.getApartmentService().filterByType(entities, searchParameters.getTypes());
+			entities = service.getApartmentService().filterByStatus(entities, searchParameters.getStatus());
 
 			if (searchParameters.getSort() != null)
 				if (searchParameters.getSort().equals(SortType.ASCENDING))

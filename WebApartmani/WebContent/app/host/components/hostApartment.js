@@ -17,7 +17,8 @@ Vue.component("host-apartments",{
                 city:'',
                 country:'',
                 amenities:[],
-                types:[]
+                types:[],
+                status:[]
             },
             options: [
                 { text: 'Ceo apartman', value: 'Ceo apartman' },
@@ -53,7 +54,8 @@ Vue.component("host-apartments",{
                 "city":this.city,
                 "country":this.country,
                 "amenities":this.apartmentSearch.amenities,
-                "types":this.apartmentSearch.types
+                "types":this.apartmentSearch.types,
+                "status":this.apartmentSearch.status
                
               })
               .then((response) => {
@@ -172,6 +174,7 @@ Vue.component("host-apartments",{
                                     :options="options4"
                                     plain
                                     stacked
+                                    v-model="apartmentSearch.status"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
                         
