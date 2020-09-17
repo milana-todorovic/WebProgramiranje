@@ -20,7 +20,7 @@ Vue.component("admin-navbar",{
                     </b-nav-item>
                     <b-nav-item href="#">
                         <router-link to="/amenities" exact>
-                            Sadržaji apartmana
+                            Sadr\u017Eaji apartmana
                         </router-link>
                     </b-nav-item>
                     <b-nav-item href="#">

@@ -16,7 +16,7 @@ Vue.component("admin-holidays",{
         fetch(){
             axios.get("/WebApartmani/rest/holidays").then(
                 response => this.fetched(response.data)).catch(
-                    error => this.setAlert("Došlo je do greške pri učitavanju praznika."));
+                    error => this.setAlert("Do\u0161lo je do gre\u0161ke pri u\u010Ditavanju praznika."));
         },
         save(){
             let datesForSending = [];
@@ -24,8 +24,8 @@ Vue.component("admin-holidays",{
                 datesForSending.push(date.getTime() - date.getTimezoneOffset()*60*1000);
             }
             axios.put("/WebApartmani/rest/holidays", datesForSending).then(
-                response => this.setAlert("Praznici su uspešno sačuvani.")).catch(
-                    error => this.setAlert("Nije uspelo čuvanje praznika: " + error.response.data));
+                response => this.setAlert("Praznici su uspe\u0161no sa\u010Duvani.")).catch(
+                    error => this.setAlert("Nije uspelo \u010Duvanje praznika: " + error.response.data));
         },
         fetched(newDates){
             this.dates = [];
@@ -47,7 +47,7 @@ Vue.component("admin-holidays",{
         dismissible>
         {{ alertText }}
         </b-alert>
-        <b-button block v-on:click="save" variant="primary">Sačuvaj izmene</b-button>
+        <b-button block v-on:click="save" variant="primary">Sa\u010Duvaj izmene</b-button>
         <b-button block v-on:click="fetch" variant="secondary">Odustani od izmena</b-button>
         <v-date-picker
         v-model="dates"

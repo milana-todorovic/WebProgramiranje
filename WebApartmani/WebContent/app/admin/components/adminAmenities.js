@@ -18,7 +18,7 @@ Vue.component("admin-amenities", {
         fetchAmenities() {
             axios.get("/WebApartmani/rest/amenities").then(
                 response => this.fetched(response.data)).catch(
-                    error => this.setGlobalAlert("Došlo je do greške pri učitavanju sadržaja apartmana."));
+                    error => this.setGlobalAlert("Do\u0161lo je do gre\u0161ke pri u\u010Ditavanju sadr\u017Eaja apartmana."));
         },
         addAmenity() {
             this.validateMock();
@@ -62,7 +62,7 @@ Vue.component("admin-amenities", {
         added(amenity) {
             this.mock = { id: null, name: null, state: null, error: null };
             this.amenities.push({ name: amenity.name, id: amenity.id, deleted: false, show: false, text: null });
-            this.setGlobalAlert("Dodavanje je uspešno izvršeno.")
+            this.setGlobalAlert("Dodavanje je uspe\u0161no izvr\u0161eno.")
         },
         updated(amenity) {
             this.updateMode = false;
@@ -73,11 +73,11 @@ Vue.component("admin-amenities", {
                     current.show = false;
                     current.text = null;
                 }
-            this.setGlobalAlert("Izmena je uspešno izvršena.")
+            this.setGlobalAlert("Izmena je uspe\u0161no izvr\u0161ena.")
         },
         deleted(amenity) {
             amenity.deleted = true;
-            amenity.text = "Sadržaj apartmana je uspešno obrisan."
+            amenity.text = "Sadr\u017Eaj apartmana je uspe\u0161no obrisan."
             amenity.show = true;
         },
         setGlobalAlert(text) {
@@ -86,7 +86,7 @@ Vue.component("admin-amenities", {
         },
         validateMock() {
             if (!this.mock.name) {
-                this.mock.error = "Naziv sadržaja apartmana je obavezan."
+                this.mock.error = "Naziv sadr\u017Eaja apartmana je obavezan."
                 this.mock.state = false;
                 return;
             }
@@ -116,7 +116,7 @@ Vue.component("admin-amenities", {
                   id="name"
                   v-model="mock.name"
                   type="text"
-                  placeholder="Unesite naziv sadržaja apartmana"
+                  placeholder="Unesite naziv sadr\u017Eaja apartmana"
                   v-on:blur="validateMock"
                 ></b-form-input>
                 <b-form-invalid-feedback :state="mock.state">
@@ -150,7 +150,7 @@ Vue.component("admin-amenities", {
                         <p class="h3">{{amenity.name}}</p>
                     </b-col>
                     <b-col>
-                        <b-button block v-on:click="deleteAmenity(amenity)" variant="danger">Obriši</b-button><br>
+                        <b-button block v-on:click="deleteAmenity(amenity)" variant="danger">Obri\u0161i</b-button><br>
                         <b-button block v-on:click="startUpdate(amenity)" variant="primary" class=" mt-2">Izmeni</b-button>
                     </b-col>
                     </b-col>
