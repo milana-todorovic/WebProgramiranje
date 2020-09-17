@@ -31,7 +31,6 @@ Vue.component("admin-holidays",{
             this.dates = [];
             for(date of newDates){
             	let realDate = new Date(date);
-            	console.log(new Date(realDate.getTime() + realDate.getTimezoneOffset()*60*1000));
                 this.dates.push(new Date(realDate.getTime() + realDate.getTimezoneOffset()*60*1000));
             }
         },

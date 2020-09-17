@@ -11,7 +11,7 @@ const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/apartments', component: ApartmentComponent },
-        { path: '/apartmentDetails', component: ApartmentDetailsComponent },
+        {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},,
         { path: '/users', component: UsersComponent },
         { path: '/reservations', component: ReservationComponent },
         { path: '/host', component: HostComponent },

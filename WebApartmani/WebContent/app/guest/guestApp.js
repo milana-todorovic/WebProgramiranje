@@ -9,7 +9,7 @@ const router=new VueRouter({
     routes:[
         {path: '/apartments', component:ApartmentComponent},
         {path: '/reservations', component:ReservationComponent},
-        {path: '/apartmentDetails', component:ApartmentDetailsComponent},
+        {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},
         {path: '/profile', component:ProfileComponent},
         { path: '/*', component:ApartmentComponent }
     ]

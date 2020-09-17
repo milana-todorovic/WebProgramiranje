@@ -10,7 +10,7 @@ const router=new VueRouter({
     routes:[
         {path: '/apartments', component:ApartmentComponent},
         {path: '/reservations', component:ReservationComponent},
-        {path: '/apartmentDetails', component:ApartmentDetailsComponent},
+        {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},
         {path:'/users',component:UsersComponent},
         {path:'/addApartment',component:AddApartmentComponent},
         { path: '/*', component:ApartmentComponent }
@@ -30,7 +30,7 @@ var appHost = new Vue({
 	},
 	methods:{
 		redirect(user){
-			if (!(user.role === "Domaćin")){
+			if (!(user.role === "Doma\u0107in")){
 				window.location.href = "http://localhost:8081/WebApartmani/";
 			}
 		}

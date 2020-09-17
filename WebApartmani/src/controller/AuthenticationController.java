@@ -36,6 +36,8 @@ public class AuthenticationController {
 			User user = service.getUserService().getByUsernameAndPassword(info.getUsername(), info.getPassword());
 			if (user != null && user.getBlocked())
 				return Response.status(Status.FORBIDDEN).entity("Blokrani ste od strane administratora.").build();
+			if (user == null)
+				return Response.status(Status.UNAUTHORIZED).entity("Pogre\u0161no korisničko ime ili lozinka.").build();
 			request.getSession().setAttribute("user", new AuthenticatedUser(user.getID(), user.getRole()));
 			return Response.ok().build();
 		} catch (BadRequestException e) {

@@ -40,9 +40,7 @@ Vue.component("guest-apartments",{
     },
     methods: {
     	prikaziDetaljeFun: function(apartman){
-            alert('radi' + apartman.ime);
-
-            router.push('apartmentDetails');
+    		router.push({ name: 'apartmentDetails', params: { id: apartman.id }});
         },
         searchAp(){
         	axios.post('rest/apartments/search', {
