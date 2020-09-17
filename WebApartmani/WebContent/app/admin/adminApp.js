@@ -16,7 +16,8 @@ const router = new VueRouter({
         { path: '/reservations', component: ReservationComponent },
         { path: '/host', component: HostComponent },
         { path: '/amenities', component: AmenityComponent },
-        { path: '/holidays', component: HolidaysComponent }
+        { path: '/holidays', component: HolidaysComponent },
+        { path: '/*', component: ApartmentComponent }
     ]
 });
 

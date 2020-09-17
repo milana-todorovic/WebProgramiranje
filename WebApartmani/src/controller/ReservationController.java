@@ -119,9 +119,9 @@ public class ReservationController {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		if (user.getRole().equals(UserRole.GUEST) && !guestAllowed.contains(status))
-			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen traženi prelaz stanja.").build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen tra\u017Eeni prelaz stanja.").build();
 		else if (user.getRole().equals(UserRole.HOST) && !hostAllowed.contains(status))
-			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen traženi prelaz stanja.").build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen tra\u017Eeni prelaz stanja.").build();
 		try {
 			Reservation entity = service.getReservationService().getByID(id);
 			if (entity != null) {

@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import auth.AuthenticatedUser;
-import auth.Secured;
 import beans.User;
 import custom_exception.BadRequestException;
 import dto.LoginDTO;

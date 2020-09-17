@@ -26,7 +26,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 		if (user == null)
 			arg0.abortWith(Response.status(Status.UNAUTHORIZED)
-					.entity("Morate biti ulogovani kako bi pristupili traženom resursu.").build());
+					.entity("Morate biti ulogovani kako bi pristupili tra\u017Eenom resursu.").build());
 	}
 
 }

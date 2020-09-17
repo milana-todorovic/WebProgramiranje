@@ -73,7 +73,7 @@ public class ApartmentController {
 			apartment.setHost(host);
 		}
 		if (apartment != null && !user.getID().equals(apartment.getHost().getID()))
-			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje apartmana za drugog domaćina.").build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje apartmana za drugog doma\u0107ina.").build();
 		try {
 			Apartment entity = service.getApartmentService().create(apartment);
 			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/apartments/" + entity.getID()))

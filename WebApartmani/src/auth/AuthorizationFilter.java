@@ -42,7 +42,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if (!allowedRoles.isEmpty() && !allowedRoles.contains(user.getRole()))
 			arg0.abortWith(Response.status(Response.Status.FORBIDDEN)
-					.entity("Nemate ovlaštenje za pristup traženom resursu.").build());
+					.entity("Nemate ovla\u0161tenje za pristup tra\u017Eenom resursu.").build());
 		
 		if (blocklist.isBlocked(user.getID()))
 			arg0.abortWith(Response.status(Response.Status.FORBIDDEN)

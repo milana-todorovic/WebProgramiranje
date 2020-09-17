@@ -11,7 +11,7 @@ const router=new VueRouter({
         {path: '/reservations', component:ReservationComponent},
         {path: '/apartmentDetails', component:ApartmentDetailsComponent},
         {path: '/profile', component:ProfileComponent},
-        
+        { path: '/*', component: ApartmentComponent }
     ]
 });
 

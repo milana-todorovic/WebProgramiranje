@@ -48,7 +48,7 @@ Vue.component("login", {
 				window.location.href = "http://localhost:8081/WebApartmani/admin.html";            		
 			else if (user.role === "Gost")
 				window.location.href = "http://localhost:8081/WebApartmani/guest.html";
-			else if (user.role === "Domaćin")
+			else if (user.role === "Doma\u0107in")
 				window.location.href = "http://localhost:8081/WebApartmani/host.html";
 		},
         validateUsername() {
