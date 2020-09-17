@@ -16,7 +16,9 @@ Vue.component("guest-apartments",{
                 minimumNumberOfGuests:'',
                 maximumNumberOfGuest:'',
                 city:'',
-                country:''
+                country:'',
+                amenities:[],
+                types:[]
             },options: [
                 { text: 'Ceo apartman', value: 'Ceo apartman' },
                 { text: 'Soba', value: 'Soba' },
@@ -33,18 +35,30 @@ Vue.component("guest-apartments",{
             window.location.href = "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails";
         },
         searchAp:function(){
+            let selectedAmenities = [];
+            this.apartmentSearch.amenities.forEach(amenityInOptions => {
+                this.amenities.forEach(amenityCorrect => {
+                    if(amenityInOptions.name == amenityCorrect.name){
+                        selectedAmenities.push(amenityCorrect);
+                        return;
+                    }
+                });
+            });
+            
 
             axios.post('rest/apartments/search', {
                 "startDate":this.apartmentSearch.startDate,
                 "endDate":this.apartmentSearch.endDate,
                 "minimumPrice":this.apartmentSearch.minimumPrice,
                 "maximumPrice":this.apartmentSearch.maximumPrice,
-                "minimumNumberOfRooms":this.minimumNumberOfRooms,
-                "maixmumNumberOfRooms":this.maximumNumberOfRooms,
-                "minimumNumberOfGuests":this.minimumNumberOfGuests,
-                "maximumNumberOfGuests":this.maximumNumberOfGuest,
-                "city":this.city,
-                "country":this.country
+                "minimumNumberOfRooms":this.apartmentSearch.minimumNumberOfRooms,
+                "maixmumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
+                "minimumNumberOfGuests":this.apartmentSearch.minimumNumberOfGuests,
+                "maximumNumberOfGuests":this.apartmentSearch.maximumNumberOfGuest,
+                "city":this.apartmentSearch.city,
+                "country":this.apartmentSearch.country,
+                "amenities":selectedAmenities,
+                "types":this.apartmentSearch.types
                
               })
               .then((response) => {
@@ -65,7 +79,7 @@ Vue.component("guest-apartments",{
             this.apartments=[];
 
             response.data.forEach(apartment => {
-                if(apartment.status == 'Aktivan'){
+                if(apartment.status == 'Neaktivan'){
                     this.apartments.push(apartment);
                 }
             });
@@ -147,6 +161,7 @@ Vue.component("guest-apartments",{
                                     :options="options"
                                     plain
                                     stacked
+                                    v-model="apartmentSearch.types"
                                     ></b-form-checkbox-group>
                                 </b-form-group>
 
@@ -157,12 +172,13 @@ Vue.component("guest-apartments",{
                                         :options="options2"
                                         plain
                                         stacked
+                                        v-model="apartmentSearch.amenities"
                                         ></b-form-checkbox-group>
                                     </b-form-group>
                             
                                 <br><br>
 
-                                <b-button  variant="primary">
+                                <b-button @click="searchAp()" variant="primary">
                                     <b-icon icon="funnel-fill"></b-icon>
                                         Filtriraj
                                 </b-button>
