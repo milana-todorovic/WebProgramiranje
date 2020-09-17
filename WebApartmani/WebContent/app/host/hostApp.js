@@ -29,7 +29,7 @@ var appHost = new Vue({
 						error => window.location.href = "http://localhost:8081/WebApartmani/index.html#/login");
 	},
 	methods:{
-		redirect(){
+		redirect(user){
 			if (!(user.role === "Domaćin")){
 				window.location.href = "http://localhost:8081/WebApartmani/";
 			}

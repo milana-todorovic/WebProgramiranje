@@ -1,88 +1,81 @@
-Vue.component("guest-reservations",{
-    data: function(){
-        return{
-            name:'Rezervacije',
-            reservations:[],
-            reservationSearch:{
-                "sort":null
-            },
-            commentAdd:{
-                text:'',
-                rating:'',
-                apartment:{
-                    id:''
-                }
+Vue.component("guest-reservations", {
+    data: function () {
+        return {
+            name: 'Rezervacije',
+            reservations: [],
+            reservationSearch: {
+                "sort": null
             }
-
-
-            
 
         }
     }
     ,
-    methods:{
-        searchResByPrice:function(){
-            
-
+    methods: {
+        searchResByPrice: function () {
             axios.post('rest/reservations/search', {
-                "sort":this.reservationSearch.sort
-               
-              })
-              .then((response) => {
-                console.log(response);
-                this.reservations=[];
-				this.reservations=response.data;
+                "sort": this.reservationSearch.sort
+            })
+                .then((response) => {
+                    this.reservations = [];
+                    for (reservation of response.data) {
+                        this.reservations.push({
+                            res: reservation,
+                            comment: null,
+                            rating: 5
+                        });
+                    }
                 }
-              )
-        },changeStatus:function(reservation){
+                )
+        }, changeStatus: function (reservation) {
 
-            axios.put('rest/reservations/'+reservations.id+'/status', {
-                "status":reservation.status
-               
-              })
-              .then((response) => {
-                console.log(response);
-                this.reservations=[];
-				this.reservations=response.data;
+            axios({
+                method: 'put',
+                url: '/WebApartmani/rest/reservations/' + reservation.res.id + "/status",
+                data: "\"Otkazana\"",
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-              )
-
+            }).then((response) => { reservation.res.status = 'Otkazana' }
+            )
         },
-        addComment:function(){
-            
+        addComment: function (reservation) {
 
             axios.post('rest/comments', {
-               "rating":this.commentAdd.rating,
-               "text":this.commentAdd.text,
-               "apartment":this.commentAdd.apartment
-               
-              })
-              .then((response) => {
-                console.log(response);
-                this.comments=[];
-				this.comments=response.data;
+                "rating": reservation.rating,
+                "text": this.commentAdd.text,
+                "apartment": this.commentAdd.apartment
+            })
+                .then((response) => {
                 }
-              )
+                )
+        },
+        formatDate(date){
+            let realDate = new Date(date);
+            realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset()*60*1000);
+            return realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
         }
-        
+    },
+    mounted() {
+
+        axios
+            .get("rest/reservations")
+            .then(response => {
+                this.reservations = [];
+                for (reservation of response.data) {
+                    this.reservations.push({
+                        res: reservation,
+                        comment: null,
+                        rating: 5
+                    });
+                }
+
+            });
+
+
+
 
     },
-     mounted(){
-		
-		axios
-		.get("rest/reservations")
-		.then(response =>{
-            console.log(response.data);
-            this.reservations=[];
-            this.reservations=response.data;
-
-        });
-        
-       
-
-    
-	},
-    template:`
+    template: `
         <div>
             <b-container style="margin-left:1%;">
                 <b-row>
@@ -113,48 +106,47 @@ Vue.component("guest-reservations",{
                                         <b-container>
                                             <b-row>
                                                 <b-col>
-                                                    <h1 id="nazivApartmana">
-                                                        <a href= "http://localhost:8081/WebApartmani/guest.html#/apartmentDetails" style="color:black;">
-                                                        {{reservation.apartment.name}}
-                                                        </a>
+                                                    <h1 id="nazivApartmana">                                                        
+                                                        {{reservation.res.apartment.name}}                                                      
                         
                                                     </h1>
                                                     <div style="background-color:teal;padding:5%;color:white;font-size:18px">
-                                                        Od  <b>{{reservation.startDate}}</b>
+                                                        Od  <b>{{realDate(reservation.res.startDate)}}</b>
                                                         <br>
-                                                        Broj no\u0107enja  <b>{{reservation.numberOfNights}}</b>
+                                                        Broj no\u0107enja  <b>{{reservation.res.numberOfNights}}</b>
                                                         <br>
-                                                        Po ceni  <b>{{reservation.totalPrice}}</b>
+                                                        Po ceni  <b>{{reservation.res.totalPrice}}</b>
                                                     </div>
                                                 </b-col>
                                                 
                                                 <b-col>
                                                         <h1 style="font-size:30px;margin-top:9%">
-                                                            <b-badge variant="success" >{{reservation.status}}</b-badge>
+                                                            <b-badge variant="success" >{{reservation.res.status}}</b-badge>
                                                         </h1>
                                                     
                                                     <br>
-                                                    <b-button  @click="changeStatus(reservation)" v-if="reservation.status=='Kreirana' || reservation.status=='Prihva\u0107ena'" variant="outline-danger" >
+                                                    <b-button  @click="changeStatus(reservation)" v-if="reservation.res.status==='Kreirana' || reservation.res.status==='Prihva\u0107ena'" variant="outline-danger" >
                                                         Odustani
                                                     </b-button>
                                                 </b-col>
                                             </b-row>
                                             <br>
-                                            <hr class="solid" style=" border-top: 1px solid #bbb;">
+                                            
 
-                                            <b-row>
+                                            <b-row v-if="reservation.res.status==='Zavr\u0161ena' || reservation.res.status==='Odbijena'">
                                                 <b-col>
+                                                <hr class="solid" style=" border-top: 1px solid #bbb;">
                                                     <br>
                                                     Va&#x161; komentar:
                                                     
-                                                    <b-form-textarea v-model="commentAdd.text" placeholder="Unesite komentar"></b-form-textarea>
+                                                    <b-form-textarea v-model="reservation.text" placeholder="Unesite komentar"></b-form-textarea>
                                                     <br>
                                                     Va&#x161;a ocena:
                                                 
-                                                    <b-form-rating stars="10" v-model="commentAdd.rating" show-value precision="1"></b-form-rating>
+                                                    <b-form-rating stars="10" v-model="reservation.rating" show-value precision="1"></b-form-rating>
                                                     <br>
 
-                                                    <b-button @click="addComment()" variant="outline-primary">
+                                                    <b-button @click="addComment(reservation)" variant="outline-primary">
                                                         Ostavi komentar
                                                     </b-button>
                                                 </b-col>
