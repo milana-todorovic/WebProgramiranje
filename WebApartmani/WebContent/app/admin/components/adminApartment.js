@@ -18,7 +18,8 @@ Vue.component("admin-apartments",{
                 country:'',
                 amenities:[],
                 types:[],
-                status:[]
+                status:[],
+                sort:''
             },
             options: [
                 { text: 'Ceo apartman', value: 'Ceo apartman' },
@@ -55,7 +56,8 @@ Vue.component("admin-apartments",{
                 "country":this.country,
                 "amenities":this.apartmentSearch.amenities,
                 "types":this.apartmentSearch.types,
-                "status":this.apartmentSearch.status
+                "status":this.apartmentSearch.status,
+                "sort":this.apartmentSearch.sort
                
               })
               .then((response) => {
@@ -132,11 +134,11 @@ Vue.component("admin-apartments",{
                     <div>
                         <b-card id="filtriranje">
                             <b><b-form-group label="Sortiranje po ceni"></b>
-                                    <b-form-radio name="some-radios" value="rastuce">Rastu\u0107e</b-form-radio>
-                                    <b-form-radio name="some-radios" value="opadajuce">Opadaju\u0107e</b-form-radio>
+                                    <b-form-radio v-model="apartmentSearch.sort" name="some-radios" value="Rastuće">Rastu\u0107e</b-form-radio>
+                                    <b-form-radio v-model="apartmentSearch.sort" name="some-radios" value="Opadajuće">Opadaju\u0107e</b-form-radio>
                                 </b-form-group>
                             <br><br>
-                            <b-button   variant="primary"> 
+                            <b-button  @click="searchAp()"  variant="primary"> 
                                 <b-icon icon="arrow-down-up"></b-icon>
                                 Sortiraj
                             </b-button>
