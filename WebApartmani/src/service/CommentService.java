@@ -159,38 +159,38 @@ public class CommentService {
 
 		if (StringValidator.isNullOrEmpty(comment.getText())) {
 			valid = false;
-			error.append("Tekst komentara je obavezan.");
+			error.append("Tekst komentara je obavezan. ");
 		}
 
 		if (comment.getRating() == null) {
 			valid = false;
-			error.append("Ocena je obavezna.");
+			error.append("Ocena je obavezna. ");
 		} else if (comment.getRating() < 1 || comment.getRating() > 10) {
 			valid = false;
-			error.append("Ocena je od 1 do 10.");
+			error.append("Ocena je od 1 do 10. ");
 		}
 
 		if (comment.getGuest() == null || comment.getGuest().getID() == null) {
 			valid = false;
-			error.append("Gost koji je ostavio komentar je obavezan.");
+			error.append("Gost koji je ostavio komentar je obavezan. ");
 		} else {
 			Guest guest = guestRepository.simpleGetByID(comment.getGuest().getID());
 			comment.setGuest(guest);
 			if (guest == null) {
 				valid = false;
-				error.append("Gost koji je ostavio komentar mora postojati.");
+				error.append("Gost koji je ostavio komentar mora postojati. ");
 			}
 		}
 
 		if (comment.getApartment() == null || comment.getApartment().getID() == null) {
 			valid = false;
-			error.append("Apartmant za koji je ostavljen komentar je obavezan.");
+			error.append("Apartmant za koji je ostavljen komentar je obavezan. ");
 		} else {
 			Apartment apartment = apartmentRepository.simpleGetByID(comment.getApartment().getID());
 			comment.setApartment(apartment);
 			if (apartment == null) {
 				valid = false;
-				error.append("Apartman za koji je ostavljen komentar mora postojati.");
+				error.append("Apartman za koji je ostavljen komentar mora postojati. ");
 			}
 		}
 

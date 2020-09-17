@@ -186,57 +186,57 @@ public class UserService {
 
 	private void validate(User user) {
 		if (user == null)
-			throw new BadRequestException("Mora biti zadat korisnik.");
+			throw new BadRequestException("Mora biti zadat korisnik. ");
 
 		Boolean valid = true;
 		StringBuilder error = new StringBuilder();
 
 		if (StringValidator.isNullOrEmpty(user.getUsername())) {
 			valid = false;
-			error.append("Korisničko ime je obavezno.");
+			error.append("Korisničko ime je obavezno. ");
 		} else if (!StringValidator.isAlphanumeric(user.getUsername())) {
 			valid = false;
-			error.append("Korisničko ime smije sadržati samo slova i brojeve.");
+			error.append("Korisničko ime smije sadržati samo slova i brojeve. ");
 		} else {
 			User sameUsername = internalGetByUsername(user.getUsername());
 			if (sameUsername != null && !sameUsername.getID().equals(user.getID())) {
 				valid = false;
-				error.append("Korisničko ime mora biti jedinstveno.");
+				error.append("Korisničko ime mora biti jedinstveno. ");
 			}
 		}
 
 		if (StringValidator.isNullOrEmpty(user.getPassword())) {
 			valid = false;
-			error.append("Lozinka je obavezna.");
+			error.append("Lozinka je obavezna. ");
 		}
 
 		if (StringValidator.isNullOrEmpty(user.getName())) {
 			valid = false;
-			error.append("Ime je obavezno.");
+			error.append("Ime je obavezno. ");
 		} else if (!StringValidator.isAlphaWithSpaceDash(user.getName())) {
 			valid = false;
-			error.append("Ime smije sadržati samo slova, razmake, i crtice.");
+			error.append("Ime smije sadržati samo slova, razmake, i crtice. ");
 		}
 
 		if (StringValidator.isNullOrEmpty(user.getSurname())) {
 			valid = false;
-			error.append("Prezime je obavezno.");
+			error.append("Prezime je obavezno. ");
 		} else if (!StringValidator.isAlphaWithSpaceDash(user.getSurname())) {
 			valid = false;
-			error.append("Prezime smije sadržati samo slova, razmake, i crtice.");
+			error.append("Prezime smije sadržati samo slova, razmake, i crtice. ");
 		}
 
 		if (StringValidator.isNullOrEmpty(user.getGender())) {
 			valid = false;
-			error.append("Pol je obavezan.");
+			error.append("Pol je obavezan. ");
 		} else if (!StringValidator.isAlphaWithSpaceDash(user.getGender())) {
 			valid = false;
-			error.append("Pol smije sadržati samo slova, razmake, i crtice.");
+			error.append("Pol smije sadržati samo slova, razmake, i crtice. ");
 		}
 
 		if (user.getRole() == null) {
 			valid = false;
-			error.append("Uloga je obavezna.");
+			error.append("Uloga je obavezna. ");
 		}
 
 		if (!valid)

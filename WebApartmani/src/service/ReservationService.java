@@ -229,53 +229,53 @@ public class ReservationService {
 
 		if (reservation.getGuest() == null || reservation.getGuest().getID() == null) {
 			valid = false;
-			error.append("Gost je obavezan.");
+			error.append("Gost je obavezan. ");
 		} else {
 			Guest guest = guestRepository.simpleGetByID(reservation.getGuest().getID());
 			reservation.setGuest(guest);
 			if (guest == null || guest.getDeleted()) {
 				valid = false;
-				error.append("Ne postoji zadati gost.");
+				error.append("Ne postoji zadati gost. ");
 			} else if (guest.getBlocked()) {
 				valid = false;
-				error.append("Ne može se kreirati rezervacija za blokiranog gosta.");
+				error.append("Ne može se kreirati rezervacija za blokiranog gosta. ");
 			}
 		}
 
 		if (reservation.getNumberOfNights() == null) {
 			valid = false;
-			error.append("Broj noćenja je obavezan.");
+			error.append("Broj noćenja je obavezan. ");
 		} else if (reservation.getNumberOfNights() < 1) {
 			valid = false;
-			error.append("Broj noćenja ne može biti manji od 1.");
+			error.append("Broj noćenja ne može biti manji od 1. ");
 		}
 
 		if (reservation.getStartDate() == null) {
 			valid = false;
-			error.append("Datum početka je obavezan.");
+			error.append("Datum početka je obavezan. ");
 		} else if (!DateUtil.isAfterToday(reservation.getStartDate())) {
 			valid = false;
-			error.append("Datum početka mora biti u budućnosti.");
+			error.append("Datum početka mora biti u budućnosti. ");
 		}
 
 		if (reservation.getApartment() == null || reservation.getApartment().getID() == null) {
 			valid = false;
-			error.append("Apartman je obavezan.");
+			error.append("Apartman je obavezan. ");
 		} else {
 			Apartment apartment = apartmentService.getByID(reservation.getApartment().getID());
 			reservation.setApartment(apartment);
 			if (apartment == null) {
 				valid = false;
-				error.append("Ne postoji zadati apartman.");
+				error.append("Ne postoji zadati apartman. ");
 			} else if (!apartment.getStatus().equals(ApartmentStatus.ACTIVE)) {
 				valid = false;
-				error.append("Apartman mora biti aktivan.");
+				error.append("Apartman mora biti aktivan. ");
 			} else {
 				Collection<Date> reservationDates = DateUtil.makeList(reservation.getStartDate(),
 						reservation.getNumberOfNights());
 				if (!apartment.getAvailableDates().containsAll(reservationDates)) {
 					valid = false;
-					error.append("Apartman mora biti dostupan u toku rezervacije.");
+					error.append("Apartman mora biti dostupan u toku rezervacije. ");
 				}
 			}
 		}
