@@ -5,33 +5,6 @@ Vue.component("guest-reservations",{
             reservations:[],
 
 
-            rezervacije:[
-                {
-                    imeApartmana:'Apartmani Ivana',
-                    pocetniDatum:'25.5.2020',
-                    krajnjiDatum:'28.10.2020',
-                    cenaApartmana:'400$',
-                    status:'kreirana'
-                },
-                {
-                    imeApartmana:'Apartmani Ana',
-                    pocetniDatum:'2.8.2020',
-                    krajnjiDatum:'28.8.2020',
-                    cenaApartmana:'300$',
-                    status:'odbijena'
-                },
-                {
-                    imeApartmana:'Sobe Slobodan Bajic',
-                    pocetniDatum:'21.10.2020',
-                    krajnjiDatum:'22.10.2020',
-                    cenaApartmana:'40$',
-                    status:'prihvacena'
-                }
-            ],
-            options3:[
-                {text:'Rastu\u0107e',value:'rastuce'},
-                {text:'Opadaju\u0107e',value:'opadajuce'}
-            ]
            
 
         }

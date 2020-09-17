@@ -43,7 +43,7 @@ Vue.component("guest-apartments",{
                 "minimumPrice":this.apartmentSearch.minimumPrice,
                 "maximumPrice":this.apartmentSearch.maximumPrice,
                 "minimumNumberOfRooms":this.apartmentSearch.minimumNumberOfRooms,
-                "maixmumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
+                "maximumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
                 "minimumNumberOfGuests":this.apartmentSearch.minimumNumberOfGuests,
                 "maximumNumberOfGuests":this.apartmentSearch.maximumNumberOfGuest,
                 "city":this.apartmentSearch.city,

@@ -2,59 +2,29 @@ Vue.component("admin-reservations",{
     data: function(){
         return{
             reservations:[],
-            rezervacije:[
-                {
-                    imeApartmana:'Apartmani Ivana',
-                    pocetniDatum:'25.5.2020',
-                    krajnjiDatum:'28.10.2020',
-                    cenaApartmana:'400$',
-                    status:'kreirana',
-                    gost:
-                    {
-                        imeGosta:'Pera',
-                        prezimeGosta:'Peric',
-                        korisnickoIme:'perica12@',
-                        pol:'muski'
-                    },
-                    poruka:'Parking obezbedjen.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-                
-                },
-                {
-                    imeApartmana:'Apartmani Ana',
-                    pocetniDatum:'2.8.2020',
-                    krajnjiDatum:'28.8.2020',
-                    cenaApartmana:'300$',
-                    status:'odbijena',
-                    gost:
-                    {
-                        imeGosta:'Pera',
-                        prezimeGosta:'Peric',
-                        korisnickoIme:'perica12@',
-                        pol:'muski'
-                    },
-                    poruka:'Hocu da mi voda bude ugrijana. Ne zelim buku i zelim fen za kosu.Hvala na razumijevanju.'
-                
-                },
-                {
-                    imeApartmana:'Sobe Slobodan Bajic',
-                    pocetniDatum:'21.10.2020',
-                    krajnjiDatum:'22.10.2020',
-                    cenaApartmana:'40$',
-                    status:'prihvacena',
-                    gost:
-                    {
-                        imeGosta:'Pera',
-                        prezimeGosta:'Peric',
-                        korisnickoIme:'perica12@',
-                        pol:'muski'
-                    },
-                    poruka:'Zelim da apartman bude rashladjen.Hvala unapred.'
-                
-                }
-            ]
+            userSearch:{
+                "username":''
+            }
            
             
         }
+    },
+    methods:{
+        searchResByUsers:function(){
+            
+
+            axios.post('rest/reservations/search', {
+                "username":this.reservations.username
+               
+              })
+              .then((response) => {
+                console.log(response);
+                this.reservations=[];
+				this.reservations=response.data;
+                }
+              )
+        }
+
     },
      mounted(){
 		
@@ -66,6 +36,9 @@ Vue.component("admin-reservations",{
             this.reservations=response.data;
 
         });
+
+
+
         
        
 
@@ -80,10 +53,10 @@ Vue.component("admin-reservations",{
                         <b-card style=" padding: 0.5%;margin-left:1%;margin-top:1%;margin-right:6%;">
                             <b-card-text>
                                 <b-form inline>
-                                    <b-form-input   placeholder="Korisni\u010Dko ime gosta"></b-form-input>
+                                    <b-form-input v-model="userSearch.username"  placeholder="Korisni\u010Dko ime gosta"></b-form-input>
                                     
                                     
-                                    <b-button   variant="primary" style="margin-left:2%;">
+                                    <b-button @click="searchResByUsers()"  variant="primary" style="margin-left:2%;">
                                         <b-icon icon="search"></b-icon>
                                         Pretra&#x17E;i
                                     </b-button>
