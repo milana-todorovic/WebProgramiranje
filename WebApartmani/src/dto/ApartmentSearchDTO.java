@@ -3,6 +3,7 @@ package dto;
 import java.util.Collection;
 import java.util.Date;
 
+import beans.ApartmentStatus;
 import beans.ApartmentType;
 
 public class ApartmentSearchDTO {
@@ -11,6 +12,7 @@ public class ApartmentSearchDTO {
 
 	private Collection<Integer> amenities;
 	private Collection<ApartmentType> types;
+	private Collection<ApartmentStatus> status;
 
 	private Date startDate;
 	private Date endDate;
@@ -45,6 +47,14 @@ public class ApartmentSearchDTO {
 
 	public void setTypes(Collection<ApartmentType> types) {
 		this.types = types;
+	}
+
+	public Collection<ApartmentStatus> getStatus() {
+		return status;
+	}
+
+	public void setStatus(Collection<ApartmentStatus> status) {
+		this.status = status;
 	}
 
 	public Date getStartDate() {
