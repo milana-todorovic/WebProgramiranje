@@ -1,9 +1,6 @@
 package tests;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
@@ -16,28 +13,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import auth.Secured;
 import beans.Apartment;
 import beans.Base64Image;
 import beans.Host;
 import beans.ReservationStatus;
+import beans.UserRole;
 import repository.file_repos.FileRepositoryContainer;
 
 @Path("/test")
 public class TestService {
 
+	@Secured(UserRole.ADMIN)
 	@GET
-	@Path("/dateTest")
-	public void pathTest() {
-		System.out.println(TimeZone.getDefault());
-		System.out.println();
-		
-		Calendar calendar = new GregorianCalendar();
-		System.out.println(calendar.getTime());
-		System.out.println();
-		
-		Calendar calendar2 = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-		System.out.println(calendar2.getTime());
-		System.out.println();
+	public void pathTest() {		
 	}
 
 	@GET

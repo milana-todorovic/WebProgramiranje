@@ -49,7 +49,7 @@ public class UserService {
 		if (hostID == null)
 			throw new BadRequestException("Mora biti zadat ključ domaćina.");
 		Collection<Guest> guests = guestRepository.getAll();
-		guests.removeIf(guest -> !guest.getDeleted());
+		guests.removeIf(guest -> guest.getDeleted());
 		Collection<Guest> filtered = CollectionUtil.findAll(guests, guest -> hasGuestVisitedHost(guest, hostID));
 		filtered.forEach(guest -> guest.setPassword(""));
 		return new ArrayList<User>(filtered);
@@ -64,6 +64,12 @@ public class UserService {
 		if (id == null)
 			throw new BadRequestException("Mora biti zadat ključ.");
 		return CollectionUtil.findFirst(getAll(), user -> id.equals(user.getID()));
+	}
+
+	public User getByIDforHost(Integer id, Integer hostID) {
+		if (id == null)
+			throw new BadRequestException("Mora biti zadat ključ.");
+		return CollectionUtil.findFirst(getGuestsByHostID(hostID), user -> id.equals(user.getID()));
 	}
 
 	public User getByUsernameAndPassword(String username, String password) {

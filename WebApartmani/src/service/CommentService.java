@@ -42,8 +42,9 @@ public class CommentService {
 		return comments;
 	}
 
-	public Collection<Comment> getAllShowing() {
-		return CollectionUtil.findAll(getAll(), comment -> comment.getShowing());
+	public Collection<Comment> getAllShowingInActiveApartments() {
+		return CollectionUtil.findAll(getAll(),
+				comment -> comment.getShowing() && comment.getApartment().getStatus().equals(ApartmentStatus.ACTIVE));
 	}
 
 	public Collection<Comment> getByApartmentID(Integer apartmentID) {

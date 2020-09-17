@@ -1,9 +1,13 @@
 package controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,8 +20,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import auth.AuthenticatedUser;
+import auth.Secured;
+import beans.Guest;
 import beans.Reservation;
 import beans.ReservationStatus;
+import beans.UserRole;
 import custom_exception.BadRequestException;
 import dto.ReservationSearchDTO;
 import dto.SortType;
@@ -26,26 +34,49 @@ import service.ServiceContainer;
 @Path("/reservations")
 public class ReservationController {
 
+	private static final List<ReservationStatus> guestAllowed = Arrays.asList(ReservationStatus.CANCELLED);
+	private static final List<ReservationStatus> hostAllowed = Arrays.asList(ReservationStatus.ACCEPTED,
+			ReservationStatus.FINISHED, ReservationStatus.REJECTED);
+
 	@Context
 	ServletContext context;
 
+	@Secured
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll() {
+	public Response getAll(@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Collection<Reservation> entities = service.getReservationService().getAll();
+			Collection<Reservation> entities = null;
+			if (user.getRole().equals(UserRole.GUEST))
+				entities = service.getReservationService().getByGuestID(user.getID());
+			else if (user.getRole().equals(UserRole.ADMIN))
+				entities = service.getReservationService().getAll();
+			else if (user.getRole().equals(UserRole.HOST))
+				entities = service.getReservationService().getByApartmentHostID(user.getID());
+			else
+				entities = new ArrayList<Reservation>();
 			return Response.ok(entities).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured(UserRole.GUEST)
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(Reservation reservation) {
+	public Response create(Reservation reservation, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
+		if (reservation != null && (reservation.getGuest() == null || reservation.getGuest().getID() == null)) {
+			Guest guest = new Guest();
+			guest.setID(user.getID());
+			reservation.setGuest(guest);
+		}
+		if (reservation != null && !user.getID().equals(reservation.getGuest().getID()))
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje rezervacija za druge goste.").build();
 		try {
 			Reservation entity = service.getReservationService().create(reservation);
 			return Response
@@ -56,26 +87,50 @@ public class ReservationController {
 		}
 	}
 
+	@Secured
 	@Path("/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getByID(@PathParam("id") Integer id) {
+	public Response getByID(@PathParam("id") Integer id, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
 			Reservation entity = service.getReservationService().getByID(id);
+			if (entity != null) {
+				if (user.getRole().equals(UserRole.GUEST) && !entity.getGuest().getID().equals(user.getID()))
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim rezervacijama.").build();
+				else if (user.getRole().equals(UserRole.HOST)
+						&& !user.getID().equals(entity.getApartment().getHost().getID()))
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljenje pristup samo rezervacijama na svojim apartmanima.").build();
+			}
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
 		}
 	}
 
+	@Secured({ UserRole.HOST, UserRole.GUEST })
 	@Path("/{id}/status")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response changePassword(@PathParam("id") Integer id, ReservationStatus status) {
+	public Response changePassword(@PathParam("id") Integer id, ReservationStatus status,
+			@Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
+		if (user.getRole().equals(UserRole.GUEST) && !guestAllowed.contains(status))
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen tra\u017Eeni prelaz stanja.").build();
+		else if (user.getRole().equals(UserRole.HOST) && !hostAllowed.contains(status))
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljen tra\u017Eeni prelaz stanja.").build();
 		try {
+			Reservation entity = service.getReservationService().getByID(id);
+			if (entity != null) {
+				if (user.getRole().equals(UserRole.GUEST) && !entity.getGuest().getID().equals(user.getID()))
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim rezervacijama.").build();
+				else if (user.getRole().equals(UserRole.HOST)
+						&& !user.getID().equals(entity.getApartment().getHost().getID()))
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljenje pristup samo rezervacijama na svojim apartmanima.").build();
+			}
 			Reservation reservation = service.getReservationService().changeStatus(id, status);
 			return Response.ok(reservation).build();
 		} catch (BadRequestException e) {
@@ -83,14 +138,25 @@ public class ReservationController {
 		}
 	}
 
+	@Secured
 	@POST
 	@Path("/search")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response search(ReservationSearchDTO searchParameters) {
+	public Response search(ReservationSearchDTO searchParameters, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
+		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Collection<Reservation> entities = service.getReservationService().getAll();
+			Collection<Reservation> entities = null;
+			if (user.getRole().equals(UserRole.GUEST))
+				entities = service.getReservationService().getByGuestID(user.getID());
+			else if (user.getRole().equals(UserRole.ADMIN))
+				entities = service.getReservationService().getAll();
+			else if (user.getRole().equals(UserRole.HOST))
+				entities = service.getReservationService().getByApartmentHostID(user.getID());
+			else
+				entities = new ArrayList<Reservation>();
+
 			entities = service.getReservationService().filterByGuestUsername(entities,
 					searchParameters.getGuestUsername());
 			entities = service.getReservationService().filterByStatus(entities, searchParameters.getStatus());

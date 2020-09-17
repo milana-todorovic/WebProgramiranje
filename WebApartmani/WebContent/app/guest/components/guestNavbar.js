@@ -7,7 +7,7 @@ Vue.component("guest-navbar",{
     template:`
     <div>
         <b-navbar toggleable="lg" type="dark" variant="info">
-            <b-navbar-brand href="#">BookWebApy</b-navbar-brand>
+            <b-navbar-brand href="#">WebApartmani</b-navbar-brand>
   
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
   
@@ -32,7 +32,7 @@ Vue.component("guest-navbar",{
                     <template v-slot:button-content>
                         <em>Korisnik</em>
                     </template>
-                    <b-dropdown-item  href="#">
+                    <b-dropdown-item  href="#" @click="profile">
                         Profil
                     </b-dropdown-item>
                     <b-dropdown-item href="#" @click="logout">
@@ -47,8 +47,11 @@ Vue.component("guest-navbar",{
     `,
     methods:{
         logout: function(event){
-            event.preventDefault;
-            alert("Simulacija odjave");
+            axios.post("/WebApartmani/rest/auth/logout").then(response =>
+    		window.location.href = "http://localhost:8081/WebApartmani/").catch();
+        },
+        profile(){
+        	router.push('profile');
         }
     }
 

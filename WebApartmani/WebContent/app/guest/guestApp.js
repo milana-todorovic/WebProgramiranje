@@ -11,7 +11,7 @@ const router=new VueRouter({
         {path: '/reservations', component:ReservationComponent},
         {path: '/apartmentDetails', component:ApartmentDetailsComponent},
         {path: '/profile', component:ProfileComponent},
-        
+        { path: '/*', component:ApartmentComponent }
     ]
 });
 
@@ -21,5 +21,17 @@ var appGuest = new Vue({
 	data : {
 		title : "Guest naslov"
     },
+	mounted(){
+		axios.get("/WebApartmani/rest/profile").then(
+				response => this.redirect(response.data)).catch(
+						error => window.location.href = "http://localhost:8081/WebApartmani/index.html#/login");
+	},
+	methods:{
+		redirect(user){
+			if (!(user.role === "Gost")){
+				window.location.href = "http://localhost:8081/WebApartmani/";
+			}
+		}
+	},
 	components: {ApartmentComponent, ReservationComponent, ApartmentDetailsComponent, ProfileComponent}
 });

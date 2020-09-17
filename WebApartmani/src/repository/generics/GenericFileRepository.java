@@ -114,8 +114,9 @@ public abstract class GenericFileRepository<T extends Entity<ID>, ID> implements
 	public Collection<T> getMatching(Predicate<T> condition) {
 		List<T> entities = new ArrayList<T>();
 		for (T entity : readFile()) {
-			if (condition.test(entity))
-				entities.add(readResolve(entity));
+			T resolved = readResolve(entity);
+			if (condition.test(resolved))
+				entities.add(resolved);
 		}
 		return entities;
 	}
