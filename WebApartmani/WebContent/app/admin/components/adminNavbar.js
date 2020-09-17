@@ -38,6 +38,11 @@ Vue.component("admin-navbar",{
                             Dodaj doma\u0107ina
                         </router-link>
                     </b-nav-item>
+                    <b-nav-item href="#">
+                         <router-link to="/holidays" exact>
+                            Praznici
+                        </router-link>
+                    </b-nav-item>
                 </b-navbar-nav>
   
                 <b-navbar-nav class="ml-auto">
