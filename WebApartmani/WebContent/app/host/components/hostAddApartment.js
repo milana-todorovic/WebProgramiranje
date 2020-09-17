@@ -31,7 +31,7 @@ Vue.component("host-addApartment", {
     fetchAmenities() {
       axios.get("/WebApartmani/rest/amenities").then(
         response => this.amenitiesRead(response.data)).catch(
-          error => this.setGlobalAlert("Došlo je do greške pri učitavanju sadržaja apartmana."));
+          error => this.setGlobalAlert("Do\u0161lo je do gre\u0161ke pri u\u010Ditavanju sadr\u017Eaja apartmana."));
     },
     amenitiesRead(amenities) {
       this.allAmenities = [];
@@ -66,7 +66,7 @@ Vue.component("host-addApartment", {
           amenities: this.amenities,
           location: { latitude: 19, longitude: 45 }
         }
-      ).then(response => this.setGlobalAlert("Dodavanje je uspešno izvršeno.")).catch(
+      ).then(response => this.setGlobalAlert("Dodavanje je uspe\u0161no izvr\u0161eno.")).catch(
         error => this.setGlobalAlert("Dodavanje nije uspelo: " + error.response.data));
     },
     reset() {
@@ -95,7 +95,7 @@ Vue.component("host-addApartment", {
         return;
       }
       if (! /^[1-9][0-9]*$/.test(this.numberOfRooms.value)) {
-        this.numberOfRooms.error = "Broj soba mora biti pozitivan broj veći od 1."
+        this.numberOfRooms.error = "Broj soba mora biti pozitivan broj ve\u0107i od 1."
         this.numberOfRooms.state = false;
         return;
       }
@@ -108,7 +108,7 @@ Vue.component("host-addApartment", {
         return;
       }
       if (! /^[1-9][0-9]*$/.test(this.numberOfGuests.value)) {
-        this.numberOfGuests.error = "Broj gostiju mora biti pozitivan broj veći od 1."
+        this.numberOfGuests.error = "Broj gostiju mora biti pozitivan broj ve\u0107i od 1."
         this.numberOfGuests.state = false;
         return;
       }
@@ -214,13 +214,13 @@ Vue.component("host-addApartment", {
       </b-form-group>
 
       <b-form-group
-        label="Cena noćenja:"
+        label="Cena no\u0107enja:"
       >
         <b-form-input
           :state="pricePerNight.state"
           v-model="pricePerNight.value"
           type="text"
-          placeholder="Unesite cenu noćenja"
+          placeholder="Unesite cenu no\u0107enja"
           v-on:blur="validatePricePerNight"
         ></b-form-input>
         <b-form-invalid-feedback :state="pricePerNight.state">
@@ -264,7 +264,7 @@ Vue.component("host-addApartment", {
         />
         </b-form-group>
 
-        <b-form-group label="Sadržaji apartmana:">
+        <b-form-group label="Sadr\u017Eaji apartmana:">
         <b-form-checkbox-group v-model="amenities" name="amenities" :options="allAmenities">
         </b-form-checkbox-group>
       </b-form-group>

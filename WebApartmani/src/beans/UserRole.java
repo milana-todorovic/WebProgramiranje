@@ -3,7 +3,7 @@ package beans;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum UserRole {
-	HOST("Domaćin"), GUEST("Gost"), ADMIN("Administrator");
+	HOST("Doma\u0107in"), GUEST("Gost"), ADMIN("Administrator");
 
 	private String keyword;
 

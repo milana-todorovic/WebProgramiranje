@@ -91,7 +91,7 @@ public class UserController {
 			entities = service.getUserService().filterByRole(entities, searchParameters.getRole());
 			entities = service.getUserService().filterByUsername(entities, searchParameters.getUsername());
 			if (searchParameters.getGender() != null && searchParameters.getGender().equals("drugi"))
-				entities = service.getUserService().filterByGenderExclude(entities, Arrays.asList("muški", "ženski"));
+				entities = service.getUserService().filterByGenderExclude(entities, Arrays.asList("mu\u0161ki", "\u017Eenski"));
 			else
 				entities = service.getUserService().filterByGenderInclude(entities, searchParameters.getGender());
 			return Response.ok(entities).build();

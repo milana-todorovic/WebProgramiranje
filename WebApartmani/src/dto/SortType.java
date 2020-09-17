@@ -3,7 +3,7 @@ package dto;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SortType {
-	ASCENDING("Rastuće"), DESCENDING("Opadajuće");
+	ASCENDING("Rastu\u0107e"), DESCENDING("Opadaju\u0107e");
 
 	private String keyword;
 
