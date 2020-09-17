@@ -4,7 +4,14 @@ Vue.component("guest-reservations",{
             name:'Rezervacije',
             reservations:[],
             reservationSearch:{
-                "sort":''
+                "sort":null
+            },
+            commentAdd:{
+                text:'',
+                rating:'',
+                apartment:{
+                    id:''
+                }
             }
 
 
@@ -40,7 +47,24 @@ Vue.component("guest-reservations",{
                 }
               )
 
+        },
+        addComment:function(){
+            
+
+            axios.post('rest/comments', {
+               "rating":this.commentAdd.rating,
+               "text":this.commentAdd.text,
+               "apartment":this.commentAdd.apartment
+               
+              })
+              .then((response) => {
+                console.log(response);
+                this.comments=[];
+				this.comments=response.data;
+                }
+              )
         }
+        
 
     },
      mounted(){
@@ -123,14 +147,14 @@ Vue.component("guest-reservations",{
                                                     <br>
                                                     Va&#x161; komentar:
                                                     
-                                                    <b-form-textarea placeholder="Unesite komentar"></b-form-textarea>
+                                                    <b-form-textarea v-model="commentAdd.text" placeholder="Unesite komentar"></b-form-textarea>
                                                     <br>
                                                     Va&#x161;a ocena:
                                                 
-                                                    <b-form-rating stars="10" show-value precision="1"></b-form-rating>
+                                                    <b-form-rating stars="10" v-model="commentAdd.rating" show-value precision="1"></b-form-rating>
                                                     <br>
 
-                                                    <b-button variant="outline-primary">
+                                                    <b-button @click="addComment()" variant="outline-primary">
                                                         Ostavi komentar
                                                     </b-button>
                                                 </b-col>
