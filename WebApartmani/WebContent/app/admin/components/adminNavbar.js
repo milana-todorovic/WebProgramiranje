@@ -19,6 +19,11 @@ Vue.component("admin-navbar",{
                         </router-link>
                     </b-nav-item>
                     <b-nav-item href="#">
+                        <router-link to="/amenities" exact>
+                            Sadržaji apartmana
+                        </router-link>
+                    </b-nav-item>
+                    <b-nav-item href="#">
                          <router-link to="/reservations" exact>
                             Rezervacije
                         </router-link>
