@@ -128,7 +128,7 @@ Vue.component("admin-apartments",{
                         
                         <b-button @click="searchAp()"   variant="primary" style="margin-left:2%;">
                             <b-icon icon="search"></b-icon>
-                            Pretra&#x17E;i
+                            Pretra\u017Ei
                         </b-button>
                     </b-form>
                 </b-card-text>
@@ -143,8 +143,8 @@ Vue.component("admin-apartments",{
                     <div>
                         <b-card id="filtriranje">
                             <b><b-form-group label="Sortiranje po ceni"></b>
-                                    <b-form-radio v-model="apartmentSearch.sort" name="some-radios" value="Rastuće">Rastu\u0107e</b-form-radio>
-                                    <b-form-radio v-model="apartmentSearch.sort" name="some-radios" value="Opadajuće">Opadaju\u0107e</b-form-radio>
+                                    <b-form-radio v-model="apartmentSearch.sort" name="some-radios" value="Rastu\u0107e">Rastu\u0107e</b-form-radio>
+                                    <b-form-radio v-model="apartmentSearch.sort" name="some-radios" value="Opadaju\u0107e">Opadaju\u0107e</b-form-radio>
                                 </b-form-group>
                             <br><br>
                             <b-button @click="searchAp()"  variant="primary"> 
@@ -246,7 +246,7 @@ Vue.component("admin-apartments",{
                                                    
                                                     <br><br><br><br><br>
                                                     <b-button variant="primary" @click="prikaziDetaljeFun(apartment)">
-                                                        Prika&#x17E;i detalje
+                                                        Prika\u017Ei detalje
                                                         <b-icon icon="arrow-right">
                                                     </b-button>
                                                     <br><br>
