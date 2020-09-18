@@ -3,6 +3,7 @@ const ReservationComponent={template: '<host-reservations></host-reservations>'}
 const ApartmentDetailsComponent={template: '<host-apartmentDetails></host-apartmentDetails>'}
 const UsersComponent={template:'<host-users></host-users>'}
 const AddApartmentComponent={template:'<host-addApartment></host-addApartment'}
+const ProfileComponent={template:'<guest-profile></guest-profile'}
 
 
 const router=new VueRouter({
@@ -12,7 +13,8 @@ const router=new VueRouter({
         {path: '/reservations', component:ReservationComponent},
         {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},
         {path:'/users',component:UsersComponent},
-        {path:'/addApartment',component:AddApartmentComponent},
+		{path:'/addApartment',component:AddApartmentComponent},
+		{path: '/profile', component:ProfileComponent},
         { path: '/*', component:ApartmentComponent }
     ]
 });
@@ -36,5 +38,5 @@ var appHost = new Vue({
 		}
 	},
     components : { ApartmentComponent, ReservationComponent, 
-    	ApartmentDetailsComponent, UsersComponent, AddApartmentComponent },
+    	ApartmentDetailsComponent, UsersComponent, AddApartmentComponent, ProfileComponent },
 });

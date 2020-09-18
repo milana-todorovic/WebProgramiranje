@@ -53,7 +53,7 @@ Vue.component("admin-navbar",{
                         <em>Korisnik</em>
                     </template>
                     <b-dropdown-item  href="#" @click="profile">
-                        Profil
+                        Izmena podataka
                     </b-dropdown-item>
                     <b-dropdown-item href="#" @click="logout">
                         Odjavi se
