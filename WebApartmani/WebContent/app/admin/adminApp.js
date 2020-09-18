@@ -6,13 +6,15 @@ const HostComponent = { template: '<create-host></create-host>' }
 const AmenityComponent = { template: '<admin-amenities></admin-amenities>' }
 const HolidaysComponent = { template: '<admin-holidays></admin-holidays>' }
 const ProfileComponent={ template:'<guest-profile></guest-profile' }
+const EditComponent={template:'<edit-apartment></edit-apartment'}
 
 
 const router = new VueRouter({
     mode: 'hash',
     routes: [
         { path: '/apartments', component: ApartmentComponent },
-        {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},,
+        {path: '/apartmentDetails/:id', name: 'apartmentDetails', component:ApartmentDetailsComponent},
+        {path: '/editApartment/:id', name: 'editApartment', component:EditComponent},
         { path: '/users', component: UsersComponent },
         { path: '/reservations', component: ReservationComponent },
         { path: '/host', component: HostComponent },
@@ -42,5 +44,5 @@ var appAdmin = new Vue({
 		}
 	},
     components: { ApartmentComponent, ApartmentDetailsComponent, UsersComponent, ReservationComponent, 
-        HostComponent, AmenityComponent, HolidaysComponent, ProfileComponent }
+        HostComponent, AmenityComponent, HolidaysComponent, ProfileComponent, EditComponent }
 });

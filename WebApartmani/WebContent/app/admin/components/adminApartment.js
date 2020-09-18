@@ -237,10 +237,10 @@ Vue.component("admin-apartments",{
                                                   
                                                     <br>
                                                     <span style="font-size:25px">
-                                                      <b>{{apartment.pricePerNight}}</b>
+                                                      <b>{{apartment.pricePerNight}} $</b>
                                                     </span>
                                                     
-                                                        <i>po no&#x107;enju</i>
+                                                        <i>po no\u0107enju</i>
                                                    
                                                     <br><br><br><br><br>
                                                     <b-button variant="primary" @click="prikaziDetaljeFun(apartment)">
@@ -249,10 +249,12 @@ Vue.component("admin-apartments",{
                                                     </b-button>
                                                     <br><br>
                                                     <b-button variant="danger" @click="obrisi(apartment)">
-                                                        <b-icon icon="x"></b-icon>
                                                         Ukloni apartman
                                                     </b-button>
-                                                   
+                                                    <br><br>
+                                                    <b-button variant="secondary" @click="izmeni(apartment)">
+                                                         Izmeni apartman
+                                                     </b-button>
                         
                                     
                                                 </b-card-text>

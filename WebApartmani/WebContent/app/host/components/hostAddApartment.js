@@ -7,6 +7,13 @@ Vue.component("host-addApartment", {
       pricePerNight: { value: null, state: null, error: null },
       checkInTime: { value: "14:00:00", state: true, error: null },
       checkOutTime: { value: "10:00:00", state: true, error: null },
+      latitude: { value: null, state: null, error: null },
+      longitude: { value: null, state: null, error: null },
+      street: { value: null, state: null, error: null },
+      number: { value: null, state: null, error: null },
+      city: { value: null, state: null, error: null },
+      postalCode: { value: null, state: true, error: null },
+      country: { value: null, state: null, error: null },
       type: "Soba",
       datesForRenting: [],
       amenities: [],
@@ -24,7 +31,9 @@ Vue.component("host-addApartment", {
   computed: {
     formValid: function () {
       return this.name.state && this.numberOfRooms.state && this.numberOfGuests.state
-        && this.pricePerNight.state && this.checkInTime.state && this.checkOutTime.state;
+        && this.pricePerNight.state && this.checkInTime.state && this.checkOutTime.state
+        && this.latitude.state && this.longitude.state && this.city.state && this.country.state
+        && this.number.state && this.street.state;
     }
   },
   methods: {
@@ -63,9 +72,19 @@ Vue.component("host-addApartment", {
           checkOutTime: this.checkOutTime.value,
           datesForRenting: dates,
           amenities: this.amenities,
-          location: { latitude: 19, longitude: 45 }
+          location: {
+            latitude: this.latitude.value,
+            longitude: this.longitude.value,
+            address: {
+              street: this.street.value,
+              number: this.number.value,
+              city: this.city.value,
+              postalCode: this.postalCode.value,
+              country: this.country.value
+            }
+          }
         }
-      ).then(response => {this.setGlobalAlert("Dodavanje je uspe\u0161no izvr\u0161eno."); this.reset();}).catch(
+      ).then(response => { this.setGlobalAlert("Dodavanje je uspe\u0161no izvr\u0161eno."); this.reset(); }).catch(
         error => this.setGlobalAlert("Dodavanje nije uspelo: " + error.response.data));
     },
     reset() {
@@ -75,6 +94,13 @@ Vue.component("host-addApartment", {
       this.pricePerNight = { value: null, state: null, error: null };
       this.checkInTime = { value: null, state: null, error: null };
       this.checkOutTime = { value: null, state: null, error: null };
+      this.longitude = { value: null, state: null, error: null };
+      this.latitude = { value: null, state: null, error: null };
+      this.street = { value: null, state: null, error: null };
+      this.number = { value: null, state: null, error: null };
+      this.city = { value: null, state: null, error: null };
+      this.country = { value: null, state: null, error: null };
+      this.postalCode = { value: null, state: true, error: null };
       this.type = "Soba";
       this.datesForRenting = [];
       this.amenities = [];
@@ -145,6 +171,54 @@ Vue.component("host-addApartment", {
     setGlobalAlert(text) {
       this.globalAlert.text = text;
       this.globalAlert.show = true;
+    },
+    validateNumber() {
+      if (this.number.value && ! /^[1-9][0-9]*$/.test(this.number.value)) {
+        this.number.error = "Broj u ulici mora biti pozitivan broj ve\u0107i od 1."
+        this.number.state = false;
+        return;
+      }
+      this.number.state = true;
+    },
+    validateLatitude() {
+      if (!this.latitude.value) {
+        this.latitude.error = "Geografska \u0161irina je obavezna."
+        this.latitude.state = false;
+        return;
+      }
+      this.latitude.state = true;
+    },
+    validateLongitude() {
+      if (!this.longitude.value) {
+        this.longitude.error = "Geografska du\u017Eina je obavezna."
+        this.longitude.state = false;
+        return;
+      }
+      this.longitude.state = true;
+    },
+    validateStreet() {
+      if (!this.street.value) {
+        this.street.error = "Ulica je obavezna."
+        this.street.state = false;
+        return;
+      }
+      this.street.state = true;
+    },
+    validateCity() {
+      if (!this.city.value) {
+        this.city.error = "Grad je obavezan."
+        this.city.state = false;
+        return;
+      }
+      this.city.state = true;
+    },
+    validateCountry() {
+      if (!this.country.value) {
+        this.country.error = "Dr\u017Eava je obavezna."
+        this.country.state = false;
+        return;
+      }
+      this.country.state = true;
     }
   },
   template: `
@@ -213,6 +287,106 @@ Vue.component("host-addApartment", {
       </b-form-group>
 
       <b-form-group
+      label="Geografska du\u017Eina:"
+    >
+      <b-form-input
+        :state="latitude.state"
+        v-model="latitude.value"
+        type="text"
+        placeholder="Unesite geografsku du\u017Einu"
+        v-on:blur="validateLatitude"
+      ></b-form-input>
+      <b-form-invalid-feedback :state="latitude.state">
+      {{latitude.error}}
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      label="Geografska \u0161irina:"
+    >
+      <b-form-input
+        :state="longitude.state"
+        v-model="longitude.value"
+        type="text"
+        placeholder="Unesite geografsku \u0161irinu"
+        v-on:blur="validateLongitude"
+      ></b-form-input>
+      <b-form-invalid-feedback :state="longitude.state">
+      {{longitude.error}}
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      label="Ulica:"
+    >
+      <b-form-input
+        :state="street.state"
+        v-model="street.value"
+        type="text"
+        placeholder="Unesite ulicu"
+        v-on:blur="validateStreet"
+      ></b-form-input>
+      <b-form-invalid-feedback :state="street.state">
+      {{street.error}}
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      label="Broj u ulici:"
+    >
+      <b-form-input
+        :state="number.state"
+        v-model="number.value"
+        type="text"
+        placeholder="Unesite broj u ulici"
+        v-on:blur="validateNumber"
+      ></b-form-input>
+      <b-form-invalid-feedback :state="number.state">
+      {{number.error}}
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      label="Grad:"
+    >
+      <b-form-input
+        :state="city.state"
+        v-model="city.value"
+        type="text"
+        placeholder="Unesite grad"
+        v-on:blur="validateCity"
+      ></b-form-input>
+      <b-form-invalid-feedback :state="city.state">
+      {{city.error}}
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      label="Po\u0161tanski broj:"
+    >
+      <b-form-input
+        v-model="postalCode.value"
+        type="text"
+        placeholder="Unesite po\u0161tanski broj"
+      ></b-form-input>
+    </b-form-group>
+
+    <b-form-group
+      label="Dr\u017Eava:"
+    >
+      <b-form-input
+        :state="country.state"
+        v-model="country.value"
+        type="text"
+        placeholder="Unesite dr\u017Eavu"
+        v-on:blur="validateCountry"
+      ></b-form-input>
+      <b-form-invalid-feedback :state="country.state">
+      {{country.error}}
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+      <b-form-group
         label="Cena no\u0107enja:"
       >
         <b-form-input
@@ -268,7 +442,7 @@ Vue.component("host-addApartment", {
         </b-form-checkbox-group>
       </b-form-group>
                   
-      <b-button class="mt-2 mb-2 float-right" type="submit" variant="primary" :disabled="!formValid">Registruj</b-button>
+      <b-button class="mt-2 mb-2 float-right" type="submit" variant="primary" :disabled="!formValid">Dodaj apartman</b-button>
       <b-button class="mr-2 mt-2 mb-2 float-right" type="reset" variant="secondary">Resetuj formu</b-button>
     
     </b-form> 

@@ -131,7 +131,7 @@ Vue.component("guest-apartmentDetails",{
                             style="text-shadow: 1px 1px 2px #333;"
                             >
                             
-                            <b-carousel-slide v-for="image in images" img-src="image.data"
+                            <b-carousel-slide v-for="image in images" v-bind:img-src="image.data"
                             ></b-carousel-slide>
                             </b-carousel>
                         <br>

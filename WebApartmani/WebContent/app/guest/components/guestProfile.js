@@ -37,6 +37,10 @@ Vue.component("guest-profile", {
             alert: {
                 text: '',
                 show: false
+            },
+            palert: {
+                text: '',
+                show: false
             }
         }
     },
@@ -55,21 +59,21 @@ Vue.component("guest-profile", {
         }
     },
     methods: {
-        subPassword(event){
+        subPassword(event) {
             event.preventDefault();
             this.validatePassword();
             this.validateOldPassword();
-            if (this.password.state && this.oldPassword.state){
+            if (this.password.state && this.oldPassword.state) {
                 axios.put("/WebApartmani/rest/profile/password",
                     {
                         oldPassword: this.oldPassword.value,
                         newPassword: this.password.value
                     }).then(response => this.passChanged()).catch(
-                        error => { this.alert.text = "Izmena lozinke nije uspela: " + error.response.data; this.alert.show = true; }
+                        error => { this.palert.text = "Izmena lozinke nije uspela: " + error.response.data; this.palert.show = true; }
                     );
             }
         },
-        passChanged(){
+        passChanged() {
             this.password.value = null;
             this.password.repeatedValue = null;
             this.password.state = null;
@@ -77,8 +81,8 @@ Vue.component("guest-profile", {
             this.oldPassword.value = null;
             this.oldPassword.state = null;
             this.oldPassword.error = null;
-            this.alert.text = "Lozinka je promenjena."; 
-            this.alert.show = true;
+            this.palert.text = "Lozinka je promenjena.";
+            this.palert.show = true;
         },
         submit(event) {
             event.preventDefault();
@@ -99,12 +103,12 @@ Vue.component("guest-profile", {
                     );
             }
         },
-        updated(){
+        updated() {
             this.user.username = this.username.value;
             this.user.name = this.name.value;
             this.user.surname = this.surname.value;
             this.user.gender = this.getGender();
-            this.alert.text = "Podaci su izmenjeni."; 
+            this.alert.text = "Podaci su izmenjeni.";
             this.alert.show = true;
         },
         reset() {
@@ -117,7 +121,7 @@ Vue.component("guest-profile", {
             this.surname.value = this.user.surname;
             this.surname.state = true;
             this.surname.error = null;
-            if (this.user.gender === "mu\u0161ki" || this.user.gender === "\u017Eenski" || this.user.gender === "nepoznat"){
+            if (this.user.gender === "mu\u0161ki" || this.user.gender === "\u017Eenski" || this.user.gender === "nepoznat") {
                 this.gender.selected = this.user.gender;
                 this.gender.typed = null;
                 this.gender.state = true;
@@ -127,7 +131,7 @@ Vue.component("guest-profile", {
                 this.gender.typed = this.user.gender;
                 this.gender.state = true;
                 this.gender.error = null;
-            }            
+            }
         },
         validateName() {
             if (!this.name.value) {
@@ -175,12 +179,12 @@ Vue.component("guest-profile", {
             this.password.state = true;
         },
         validateGender(value) {
-        	console.log(value);
-            if (value === "drugi" && !this.gender.typed) {            		
-                    this.gender.error = "Pol je obavezan."
-                    this.gender.state = false;
-                    return;
-                }
+            console.log(value);
+            if (value === "drugi" && !this.gender.typed) {
+                this.gender.error = "Pol je obavezan."
+                this.gender.state = false;
+                return;
+            }
             this.gender.state = true;
         },
         getGender() {
@@ -193,32 +197,33 @@ Vue.component("guest-profile", {
             axios.delete("/WebApartmani/rest/profile").then(
                 axios.post("/WebApartmani/rest/auth/logout").then(
                     response =>
-    		            window.location.href = "http://localhost:8081/WebApartmani/"
+                        window.location.href = "http://localhost:8081/WebApartmani/"
                 )
             ).catch(
-                error => { this.alert.text = "Brisanje nije uspelo: " + error.response.data; this.alert.show = true;}
+                error => { this.alert.text = "Brisanje nije uspelo: " + error.response.data; this.alert.show = true; }
             );
         }
     },
-    created(){
+    created() {
         axios.get("/WebApartmani/rest/profile").then(
-            response => {this.user = response.data; this.reset();}
+            response => { this.user = response.data; this.reset(); }
         ).catch(
-            error => { this.alert.text = "Dobavljanje podataka nije uspelo: " + error.response.data; this.alert.show = true;}
+            error => { this.alert.text = "Dobavljanje podataka nije uspelo: " + error.response.data; this.alert.show = true; }
         )
     },
     template: `
-   <b-container class="w-50">
-    <b-row>
-    <b-col class="m-2 pt-2">
+    <b-container class="p-5" fluid>
+      <b-row align-v="start">
+
+
+      <b-col class="border rounded m-2 pt-2">
+
   <b-alert
-    v-model="alert.show"
-    dismissible>
-    {{ alert.text }}
-  </b-alert>   
-  
-  <b-row>
-  <b-col class="border rounded mt-2">
+      v-model="alert.show"
+      dismissible>
+      {{ alert.text }}
+    </b-alert> 
+
   <b-form v-on:submit="submit">
 
         <h3>Izmena li\u010Dnih podataka</h3>
@@ -296,12 +301,15 @@ Vue.component("guest-profile", {
     
     </b-form> 
  </b-col>  
-  </b-row>
 
+ 
+ <b-col class="border rounded m-2 pt-2">
+ <b-alert
+ v-model="palert.show"
+ dismissible>
+ {{ palert.text }}
+</b-alert> 
 
-
-<b-row> 
-  <b-col class="border rounded mt-2 mb-2">
     <b-form v-on:submit="subPassword">
 
     <h3>Izmena lozinke</h3>
@@ -349,11 +357,7 @@ Vue.component("guest-profile", {
     
     </b-form>
     </b-col>  
-  </b-row>
-    
-    
-    
-  </b-col> 
+
   </b-row>
 </b-container>
     `

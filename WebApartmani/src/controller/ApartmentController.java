@@ -176,13 +176,17 @@ public class ApartmentController {
 	public Response addImage(@PathParam("id") Integer id, String imageData, @Context HttpServletRequest request) {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
+		String fixedImage = null;
+		if (imageData!=null) {
+			fixedImage = imageData.substring(1, imageData.length() - 1);
+		}
 		try {
 			if (user.getRole().equals(UserRole.HOST)) {
 				Apartment entity = service.getApartmentService().getByID(id);
 				if (entity != null && user != null && !user.getID().equals(entity.getHost().getID()))
 					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
 			}
-			Base64Image entity = service.getApartmentService().addImage(id, new Base64Image(imageData));
+			Base64Image entity = service.getApartmentService().addImage(id, new Base64Image(fixedImage));
 			return Response
 					.created(URI.create(
 							"http://localhost:8081/WebApartmani/rest/apartments/" + id + "/images/" + entity.getID()))

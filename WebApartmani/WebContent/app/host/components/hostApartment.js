@@ -40,13 +40,15 @@ Vue.component("host-apartments",{
     },
     methods: {
     	obrisi(apartment){
-    		console.log("here");
     		axios.delete("rest/apartments/" + apartment.id).then(
     				response => {this.alert.text = "Apartman je uspe\u0161no obrisan."; this.alert.show = true; this.searchAp();}).catch(
     					error => {this.alert.text = "Brisanje apartmana nije uspelo: " + error.response.data; this.alert.show = true;});
     	},
         prikaziDetaljeFun: function(apartman){
         	router.push({ name: 'apartmentDetails', params: { id: apartman.id }});
+        },
+        izmeni: function(apartman){
+        	router.push({ name: 'editApartment', params: { id: apartman.id }});
         },
         searchAp(){
         	axios.post('rest/apartments/search', {
@@ -237,10 +239,10 @@ Vue.component("host-apartments",{
                                                   
                                                     <br>
                                                     <span style="font-size:25px">
-                                                      <b>{{apartment.pricePerNight}}</b>
+                                                      <b>{{apartment.pricePerNight}} $</b>
                                                     </span>
                                                     
-                                                        <i>po no&#x107;enju</i>
+                                                        <i>po no\u0107enju</i>
                                                    
                                                     <br><br><br><br><br>
                                                     <b-button variant="primary" @click="prikaziDetaljeFun(apartment)">
@@ -249,10 +251,12 @@ Vue.component("host-apartments",{
                                                     </b-button>
                                                     <br><br>
                                                     <b-button variant="danger" @click="obrisi(apartment)">
-                                                        <b-icon icon="x"></b-icon>
                                                         Ukloni apartman
                                                     </b-button>
-                                                   
+                                                    <br><br>
+                                                   <b-button variant="secondary" @click="izmeni(apartment)">
+                                                        Izmeni apartman
+                                                    </b-button>
                         
                                     
                                                 </b-card-text>
