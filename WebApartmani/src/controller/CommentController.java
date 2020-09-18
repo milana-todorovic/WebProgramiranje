@@ -72,10 +72,12 @@ public class CommentController {
 			if (apartment != null) {
 				if (user != null && user.getRole().equals(UserRole.HOST)
 						&& !user.getID().equals(apartment.getHost().getID()))
-					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.").build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo svojim apartmanima.")
+							.build();
 				else if ((user == null || user.getRole().equals(UserRole.GUEST))
 						&& !apartment.getStatus().equals(ApartmentStatus.ACTIVE))
-					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo aktivnim apartmanima.").build();
+					return Response.status(Status.FORBIDDEN).entity("Dozvoljen je pristup samo aktivnim apartmanima.")
+							.build();
 			}
 			Collection<Comment> entities = null;
 			if (user == null || user.getRole().equals(UserRole.GUEST))
@@ -105,7 +107,8 @@ public class CommentController {
 			comment.setGuest(guest);
 		}
 		if (comment != null && !user.getID().equals(comment.getGuest().getID()))
-			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje komentara za drugog gosta.").build();
+			return Response.status(Status.FORBIDDEN).entity("Nije dozvoljeno dodavanje komentara za drugog gosta.")
+					.build();
 		try {
 			Comment entity = service.getCommentService().create(comment);
 			return Response.created(URI.create("http://localhost:8081/WebApartmani/rest/comments/" + entity.getID()))
@@ -143,7 +146,8 @@ public class CommentController {
 		try {
 			Comment current = service.getCommentService().getByID(id);
 			if (current != null && !user.getID().equals(current.getGuest().getID()))
-				return Response.status(Status.FORBIDDEN).entity("Dozvoljeno je brisanje samo svojih komentara.").build();
+				return Response.status(Status.FORBIDDEN).entity("Dozvoljeno je brisanje samo svojih komentara.")
+						.build();
 			service.getCommentService().delete(id);
 			return Response.noContent().build();
 		} catch (BadRequestException e) {
@@ -151,7 +155,7 @@ public class CommentController {
 		}
 	}
 
-	@Secured(UserRole.HOST)
+	@Secured({ UserRole.HOST, UserRole.ADMIN })
 	@Path("/{id}/showing")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -160,9 +164,13 @@ public class CommentController {
 		ServiceContainer service = (ServiceContainer) context.getAttribute("service");
 		AuthenticatedUser user = (AuthenticatedUser) request.getSession().getAttribute("user");
 		try {
-			Comment current = service.getCommentService().getByID(id);
-			if (current != null && !user.getID().equals(current.getApartment().getHost().getID()))
-				return Response.status(Status.FORBIDDEN).entity("Dozvoljena je izmena statusa samo za komentare na svojim apartmanima.").build();
+			if (user.getRole().equals(UserRole.HOST)) {
+				Comment current = service.getCommentService().getByID(id);
+				if (current != null && !user.getID().equals(current.getApartment().getHost().getID()))
+					return Response.status(Status.FORBIDDEN)
+							.entity("Dozvoljena je izmena statusa samo za komentare na svojim apartmanima.").build();
+			}
+
 			Comment entity = service.getCommentService().changeStatus(id, showing);
 			return Response.ok(entity).build();
 		} catch (BadRequestException e) {

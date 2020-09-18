@@ -70,6 +70,9 @@ Vue.component("admin-apartments",{
                 }
               ).catch(
             error => {this.alert.text = "Gre\u0161ka pri pretrazi: " + error.response.data; this.alert.show = true;});
+        },
+        izmeni: function(apartman){
+        	router.push({ name: 'editApartment', params: { id: apartman.id }});
         }
     },
     mounted(){
