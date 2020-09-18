@@ -57,14 +57,14 @@ Vue.component("admin-apartments",{
                 end = start = this.apartmentSearch.endDate.getTime() - this.apartmentSearch.endDate.getTimezoneOffset() * 60 * 1000;
         
         	axios.post('rest/apartments/search', {
-                "startDate":this.apartmentSearch.startDate,
-                "endDate":this.apartmentSearch.endDate,
+                "startDate":start,
+                "endDate":end,
                 "minimumPrice":this.apartmentSearch.minimumPrice,
                 "maximumPrice":this.apartmentSearch.maximumPrice,
-                "minimumNumberOfRooms":this.minimumNumberOfRooms,
-                "maixmumNumberOfRooms":this.maximumNumberOfRooms,
-                "minimumNumberOfGuests":this.minimumNumberOfGuests,
-                "maximumNumberOfGuests":this.maximumNumberOfGuest,
+                "minimumNumberOfRooms":this.apartmentSearch.minimumNumberOfRooms,
+                "maixmumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
+                "minimumNumberOfGuests":this.apartmentSearch.minimumNumberOfGuests,
+                "maximumNumberOfGuests":this.apartmentSearch.maximumNumberOfGuest,
                 "city":this.apartmentSearch.city,
                 "country":this.apartmentSearch.country,
                 "amenities":this.apartmentSearch.amenities,

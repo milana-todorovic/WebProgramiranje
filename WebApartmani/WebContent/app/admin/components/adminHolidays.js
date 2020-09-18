@@ -48,11 +48,10 @@ Vue.component("admin-holidays",{
         {{ alertText }}
         </b-alert>
         <br>
-        <b-button block v-on:click="save" variant="primary">Sa\u010Duvaj izmene</b-button>
+        <b-button class="m-4" v-on:click="save" variant="primary">Sa\u010Duvaj izmene</b-button>
+        <b-button class="m-4" v-on:click="fetch" variant="secondary">Odustani od izmena</b-button>
         <br>
-        <b-button block v-on:click="fetch" variant="secondary">Odustani od izmena</b-button>
-        <br>
-        <v-date-picker
+        <v-date-picker is-expanded
         v-model="dates"
         mode="multiple"
         is-inline

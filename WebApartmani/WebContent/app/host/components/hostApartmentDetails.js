@@ -18,7 +18,7 @@ Vue.component("host-apartmentDetails",{
     	  address: function() {
     		  let addr = '';
     		  if (this.apartment.location.address.street)
-    			  addr += street;
+    			  addr += this.apartment.location.address.street;
     		  if (this.apartment.location.address.number)
     			  addr += ' ' + this.apartment.location.address.number;
     		  if (this.apartment.location.address.city)
@@ -65,7 +65,7 @@ Vue.component("host-apartmentDetails",{
       },
     template:`
        <div>
-    		<b-alert
+    		<b-alert class="m-3"
     		v-model="globalAlert.show"
     		dismissible>
     		{{ globalAlert.text }}

@@ -246,8 +246,10 @@ public class ApartmentService {
 
 	public Collection<Apartment> filterByNumberOfRooms(Collection<Apartment> apartments, Integer min, Integer max) {
 		Collection<Apartment> filtered = apartments;
-		if (min != null)
+		if (min != null) {
+			System.out.println("here");
 			filtered = CollectionUtil.findAll(apartments, apartment -> apartment.getNumberOfRooms() >= min);
+			}
 		if (max != null)
 			filtered = CollectionUtil.findAll(apartments, apartment -> apartment.getNumberOfRooms() <= max);
 		return filtered;
