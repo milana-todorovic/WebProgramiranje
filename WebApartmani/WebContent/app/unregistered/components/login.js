@@ -69,7 +69,7 @@ Vue.component("login", {
         }
     },
     template: `
-    <b-container class="w-50">
+    <b-container class="w-50 p-5">
     <b-row>
     <b-col class="border rounded m-2 pt-2">
   <b-alert

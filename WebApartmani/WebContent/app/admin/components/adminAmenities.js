@@ -94,7 +94,7 @@ Vue.component("admin-amenities", {
         }
     },
     template: `
-    <b-container class="pt-2 pb-2 w-75">
+    <b-container class="p-3 w-50">
         <b-row>
             <b-col cols="10">
                 <b-alert
@@ -125,14 +125,14 @@ Vue.component("admin-amenities", {
               </b-form-group>
               </b-col>
 
-              <b-col align-self="end">
+              <b-col>
               <b-button block v-on:click="addAmenity" v-if="!updateMode" variant="primary" :disabled="!mock.state">Dodaj</b-button>
               <b-button block v-on:click="updateAmenity" v-if="updateMode" variant="primary" :disabled="!mock.state">Izmeni</b-button><br>
               <b-button block class="mt-2" v-on:click="cancelUpdate" v-if="updateMode" variant="secondary" :disabled="!mock.state">Odustani</b-button>
               </b-col>
               </b-row>
               </b-form>
-            </b-col>
+              </b-col>
         </b-row>
         <b-row class="pt-2">
             <b-col>

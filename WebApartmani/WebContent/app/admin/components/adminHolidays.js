@@ -40,20 +40,26 @@ Vue.component("admin-holidays",{
         }
     },
     template:`
-    <div>
-        <b-alert
+    <b-container class="w-50 p-5">
+    <b-row>
+    <b-alert
         v-model="alertShow"
         dismissible>
         {{ alertText }}
         </b-alert>
+        <br>
         <b-button block v-on:click="save" variant="primary">Sa\u010Duvaj izmene</b-button>
+        <br>
         <b-button block v-on:click="fetch" variant="secondary">Odustani od izmena</b-button>
+        <br>
         <v-date-picker
         v-model="dates"
         mode="multiple"
         is-inline
         />
-       </div>    
+  </b-col> 
+  </b-row>
+</b-container>   
     `
 
 });

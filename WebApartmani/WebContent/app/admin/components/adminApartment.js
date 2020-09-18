@@ -49,6 +49,13 @@ Vue.component("admin-apartments",{
             router.push({ name: 'apartmentDetails', params: { id: apartman.id }});
         },
         searchAp(){
+            let start = null;
+            let end = null;
+            if (this.apartmentSearch.startDate)
+                start = this.apartmentSearch.startDate.getTime() - this.apartmentSearch.startDate.getTimezoneOffset() * 60 * 1000;
+            if (this.apartmentSearch.endDate)
+                end = start = this.apartmentSearch.endDate.getTime() - this.apartmentSearch.endDate.getTimezoneOffset() * 60 * 1000;
+        
         	axios.post('rest/apartments/search', {
                 "startDate":this.apartmentSearch.startDate,
                 "endDate":this.apartmentSearch.endDate,
@@ -106,8 +113,8 @@ Vue.component("admin-apartments",{
     },
     template:`
     <div style="margin-right:1%;">
-    <b-col class="border rounded m-2 pt-2">
-  <b-alert
+    <b-col class="m-2 pt-2">
+  <b-alert class="m-2"
     v-model="alert.show"
     dismissible>
     {{ alert.text }}
@@ -116,18 +123,18 @@ Vue.component("admin-apartments",{
             <b-card id="pretraga">
                 <b-card-text>
                         <b-form inline>
-                        <b-form-input   placeholder="Grad" v-model="apartmentSearch.city"></b-form-input>
-                        <b-form-input   placeholder="Dr\u017Eava" v-model="apartmentSearch.country"></b-form-input>
-                        <b-form-input   placeholder="Min osoba" v-model="apartmentSearch.minimumNumberOfGuests"></b-form-input>
-                        <b-form-input   placeholder="Max osoba" v-model="apartmentSearch.maximumNumberOfGuests"></b-form-input>
-                        <b-form-input   placeholder="Min soba" v-model="apartmentSearch.minimumNumberOfRooms"></b-form-input>
-                        <b-form-input   placeholder="Max soba" v-model="apartmentSearch.maximumNumberOfRooms"></b-form-input>
-                        <b-form-input   placeholder="Min cena" v-model="apartmentSearch.minimumPrice"></b-form-input>
-                        <b-form-input   placeholder="Max cena" v-model="apartmentSearch.maximumPrice"></b-form-input>
-                        <b-form-datepicker  placeholder="Po\u010Detni datum" v-model="apartmentSearch.startDate"></b-form-datepicker>
-                        <b-form-datepicker  placeholder="Krajnji datum" v-model="apartmentSearch.endDate"></b-form-datepicker>
-                        
-                        <b-button @click="searchAp()"   variant="primary" style="margin-left:2%;">
+                        <b-form inline>
+                        <b-form-input class="m-1"   placeholder="Grad" v-model="apartmentSearch.city"></b-form-input>
+                        <b-form-input  class="m-1" placeholder="Dr\u017Eava" v-model="apartmentSearch.country"></b-form-input>
+                        <b-form-input class="m-1"  placeholder="Min osoba" v-model="apartmentSearch.minimumNumberOfGuests"></b-form-input>
+                        <b-form-input  class="m-1" placeholder="Max osoba" v-model="apartmentSearch.maximumNumberOfGuests"></b-form-input>
+                        <b-form-input class="m-1"  placeholder="Min soba" v-model="apartmentSearch.minimumNumberOfRooms"></b-form-input>
+                        <b-form-input class="m-1"  placeholder="Max soba" v-model="apartmentSearch.maximumNumberOfRooms"></b-form-input>
+                        <b-form-input class="m-1"  placeholder="Min cena" v-model="apartmentSearch.minimumPrice"></b-form-input>
+                        <b-form-input class="m-1"  placeholder="Max cena" v-model="apartmentSearch.maximumPrice"></b-form-input>                        
+                        <v-date-picker class="m-1" placeholder="Datum po\u010Detka" v-model="apartmentSearch.startDate"></v-date-picker>
+                        <v-date-picker class="m-1" placeholder="Datum kraja" v-model="apartmentSearch.endDate"></v-date-picker>
+                        <b-button class="m-1" @click="searchAp()"   variant="primary" style="margin-left:2%;">
                             <b-icon icon="search"></b-icon>
                             Pretra\u017Ei
                         </b-button>
