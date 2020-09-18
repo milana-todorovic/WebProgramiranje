@@ -18,7 +18,7 @@ Vue.component("apartmentDetails",{
     	  address: function() {
     		  let addr = '';
     		  if (this.apartment.location.address.street)
-    			  addr += street;
+    			  addr += this.apartment.location.address.street;
     		  if (this.apartment.location.address.number)
     			  addr += ' ' + this.apartment.location.address.number;
     		  if (this.apartment.location.address.city)

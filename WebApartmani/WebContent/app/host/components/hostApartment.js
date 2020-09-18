@@ -64,7 +64,7 @@ Vue.component("host-apartments",{
                 "minimumPrice":this.apartmentSearch.minimumPrice,
                 "maximumPrice":this.apartmentSearch.maximumPrice,
                 "minimumNumberOfRooms":this.apartmentSearch.minimumNumberOfRooms,
-                "maixmumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
+                "maximumNumberOfRooms":this.apartmentSearch.maximumNumberOfRooms,
                 "minimumNumberOfGuests":this.apartmentSearch.minimumNumberOfGuests,
                 "maximumNumberOfGuests":this.apartmentSearch.maximumNumberOfGuest,
                 "city":this.apartmentSearch.city,
@@ -126,7 +126,7 @@ Vue.component("host-apartments",{
                         <b-form-input class="m-1"   placeholder="Grad" v-model="apartmentSearch.city"></b-form-input>
                         <b-form-input  class="m-1" placeholder="Dr\u017Eava" v-model="apartmentSearch.country"></b-form-input>
                         <b-form-input class="m-1"  placeholder="Min osoba" v-model="apartmentSearch.minimumNumberOfGuests"></b-form-input>
-                        <b-form-input  class="m-1" placeholder="Max osoba" v-model="apartmentSearch.maximumNumberOfGuests"></b-form-input>
+                        <b-form-input  class="m-1" placeholder="Max osoba" v-model="apartmentSearch.maximumNumberOfGuest"></b-form-input>
                         <b-form-input class="m-1"  placeholder="Min soba" v-model="apartmentSearch.minimumNumberOfRooms"></b-form-input>
                         <b-form-input class="m-1"  placeholder="Max soba" v-model="apartmentSearch.maximumNumberOfRooms"></b-form-input>
                         <b-form-input class="m-1"  placeholder="Min cena" v-model="apartmentSearch.minimumPrice"></b-form-input>
