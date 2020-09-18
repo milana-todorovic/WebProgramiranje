@@ -5,8 +5,8 @@ Vue.component("guest-reservations", {
             reservations: [],
             reservationSearch: {
                 "sort": null
-            }
-
+            },
+            globalAlert: { show: false, text: null }
         }
     }
     ,
@@ -18,6 +18,9 @@ Vue.component("guest-reservations", {
                 .then((response) => {
                     this.reservations = [];
                     for (reservation of response.data) {
+                        let realDate = new Date(reservation.startDate);
+                        realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset()*60*1000);
+                        reservation.startDate = realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
                         this.reservations.push({
                             res: reservation,
                             comment: null,
@@ -25,7 +28,8 @@ Vue.component("guest-reservations", {
                         });
                     }
                 }
-                )
+                ).catch(
+                    error => this.setGlobalAlert("Nije uspelo dobavljanje podataka."));
         }, changeStatus: function (reservation) {
 
             axios({
@@ -36,23 +40,22 @@ Vue.component("guest-reservations", {
                     'Content-Type': 'application/json'
                 }
             }).then((response) => { reservation.res.status = 'Otkazana' }
-            )
+            ).catch(
+                error => this.setGlobalAlert("Nije uspela izmena statusa: " + error.response.data));
         },
         addComment: function (reservation) {
 
             axios.post('rest/comments', {
                 "rating": reservation.rating,
-                "text": this.commentAdd.text,
-                "apartment": this.commentAdd.apartment
+                "text": reservation.text,
+                "apartment": reservation.res.apartment
             })
-                .then((response) => {
-                }
-                )
+                .then((response) => this.setGlobalAlert("Uspe\u0161no je dodat komentar.")).catch(
+                    error => this.setGlobalAlert("Nije uspelo dodavanje komentara: " + error.response.data));
         },
-        formatDate(date){
-            let realDate = new Date(date);
-            realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset()*60*1000);
-            return realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
+        setGlobalAlert(text) {
+            this.globalAlert.text = text;
+            this.globalAlert.show = true;
         }
     },
     mounted() {
@@ -62,6 +65,10 @@ Vue.component("guest-reservations", {
             .then(response => {
                 this.reservations = [];
                 for (reservation of response.data) {
+                    let realDate = new Date(reservation.startDate);
+                    realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset()*60*1000);
+                    reservation.startDate = realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
+                   
                     this.reservations.push({
                         res: reservation,
                         comment: null,
@@ -69,17 +76,19 @@ Vue.component("guest-reservations", {
                     });
                 }
 
-            });
-
-
-
-
+            }).catch(
+                error => this.setGlobalAlert("Nije uspelo dobavljanje podataka."));
     },
     template: `
         <div>
+            <b-alert
+                v-model="globalAlert.show"
+                dismissible>
+                {{ globalAlert.text }}
+                </b-alert>
             <b-container style="margin-left:1%;">
                 <b-row>
-                    <b-col sm="2" style="margin-left:1%;margin-top:5%;">
+                    <b-col sm="2" style="margin-left:1%;margin-top:5%;">                    
                         <div>
                             <b-card >
                                 <b><b-form-group label="Sortiranje po ceni"></b>
@@ -111,7 +120,7 @@ Vue.component("guest-reservations", {
                         
                                                     </h1>
                                                     <div style="background-color:teal;padding:5%;color:white;font-size:18px">
-                                                        Od  <b>{{realDate(reservation.res.startDate)}}</b>
+                                                        Od  <b>{{reservation.res.startDate}}</b>
                                                         <br>
                                                         Broj no\u0107enja  <b>{{reservation.res.numberOfNights}}</b>
                                                         <br>
@@ -137,18 +146,27 @@ Vue.component("guest-reservations", {
                                                 <b-col>
                                                 <hr class="solid" style=" border-top: 1px solid #bbb;">
                                                     <br>
-                                                    Va&#x161; komentar:
+                                                    <b-form>
                                                     
+                                                    
+                                                    <b-form-group
+        											label="Va\u0161 komentar:"
+    													>
                                                     <b-form-textarea v-model="reservation.text" placeholder="Unesite komentar"></b-form-textarea>
-                                                    <br>
-                                                    Va&#x161;a ocena:
+                                                    </b-form-group>
+                                                    
+                                                    
                                                 
+                                                <b-form-group
+        											label="Va\u0161a ocena:"
+    													>
                                                     <b-form-rating stars="10" v-model="reservation.rating" show-value precision="1"></b-form-rating>
-                                                    <br>
+                                                    </b-form-group>
 
                                                     <b-button @click="addComment(reservation)" variant="outline-primary">
                                                         Ostavi komentar
                                                     </b-button>
+                                                    </b-form>
                                                 </b-col>
                                             </b-row>
                                         </b-container>

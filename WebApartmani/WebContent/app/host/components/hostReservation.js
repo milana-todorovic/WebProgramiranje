@@ -1,78 +1,82 @@
-Vue.component("host-reservations",{
-    data: function(){
-        return{
-            reservations:[],
-            options:[
+Vue.component("host-reservations", {
+    data: function () {
+        return {
+            reservations: [],
+            options: [
                 { text: 'Kreirana', value: 'Kreirana' },
                 { text: 'Odbijena', value: 'Odbijena' },
-                { text: 'Otkazana',  value:'Otkazana'},
-                { text: 'Prihva\u0107ena',  value:'Prihva\u0107ena'},
-                { text: 'Zavr\u0161ena',  value:'Zavr\u0161ena'}
+                { text: 'Otkazana', value: 'Otkazana' },
+                { text: 'Prihva\u0107ena', value: 'Prihva\u0107ena' },
+                { text: 'Zavr\u0161ena', value: 'Zavr\u0161ena' }
 
 
             ],
-            userSearch:{
-                sort:null,
-                status:[],
-                guestUsername:'',
-              
-                
-            }
-           
-            
-           
-            
+            userSearch: {
+                sort: null,
+                status: [],
+                guestUsername: '',
+
+            },
+            globalAlert: { show: false, text: null }
         }
     },
-    methods:{
-        searchResByUsers:function(){
-            
-
+    methods: {
+        searchResByUsers: function () {
             axios.post('rest/reservations/search', {
-                "guestUsername":this.userSearch.guestUsername,
-                "sort":this.userSearch.sort,
-                "status":this.userSearch.status
-               
-              })
-              .then((response) => {
-                console.log(response);
-                this.reservations=[];
-				this.reservations=response.data;
+                "guestUsername": this.userSearch.guestUsername,
+                "sort": this.userSearch.sort,
+                "status": this.userSearch.status
+
+            })
+                .then((response) => {
+                    this.reservations = [];
+                    for (reservation of response.data) {
+                        let realDate = new Date(reservation.startDate);
+                        realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset() * 60 * 1000);
+                        reservation.startDate = realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
+                        this.reservations.push(reservation);
+                    }
                 }
-              )
+                )
         },
-        changeStatus:function(reservation){
+        changeStatus: function (reservation, status) {
 
-            axios.put('rest/reservations/'+reservations.id+'/status', {
-                "status":reservation.status
-               
-              })
-              .then((response) => {
-                console.log(response);
-                this.reservations=[];
-				this.reservations=response.data;
+            axios({
+                method: 'put',
+                url: '/WebApartmani/rest/reservations/' + reservation.id + "/status",
+                data: "\"" + status + "\"",
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-              )
-
+            }).then((response) => { reservation.status = status }
+            ).catch(
+                error => this.setGlobalAlert("Nije uspela izmena statusa: " + error.response.data));
+        },
+        setGlobalAlert(text) {
+            this.globalAlert.text = text;
+            this.globalAlert.show = true;
         }
 
     },
-    mounted(){
-		
-		axios
-		.get("rest/reservations")
-		.then(response =>{
-            console.log(response.data);
-            this.reservations=[];
-            this.reservations=response.data;
+    mounted() {
 
-        });
+        axios
+            .get("rest/reservations")
+            .then(response => {
+                this.reservations = [];
+                for (reservation of response.data) {
+                    let realDate = new Date(reservation.startDate);
+                    realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset() * 60 * 1000);
+                    reservation.startDate = realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
+                    this.reservations.push(reservation);
+                }
+            });
 
 
 
-    },   
-    
-    template:`
+    },
+
+    template: `
        
         <div>
             <b-container style="margin-left:1%;">
@@ -86,7 +90,7 @@ Vue.component("host-reservations",{
                                     
                                     <b-button @click="searchResByUsers()"  variant="primary" style="margin-left:2%;">
                                         <b-icon icon="search"></b-icon>
-                                        Pretra&#x17E;i
+                                        Pretra\u017Ei
                                     </b-button>
                                 </b-form>
                             </b-card-text>
@@ -152,9 +156,7 @@ Vue.component("host-reservations",{
                                             <b-row>
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
-                                                        <a href= "http://localhost:8081/WebApartmani/host.html#/apartmentDetails" style="color:black;">
                                                         {{reservation.apartment.name}}
-                                                        </a>
                         
                                                     </h1>
                                                 
@@ -176,15 +178,16 @@ Vue.component("host-reservations",{
                                                         </h1>
                                                     
                                                     <br>
-                                                    <b-button @click="changeStatus(reservation)" v-if="reservation.status=='Kreirana' || reservation.status=='Prihva\u0107ena'" variant="outline-danger"  ">
-                                                        Odustani
+                                                    <b-button @click="changeStatus(reservation, 'Odbijena')" v-if="reservation.status==='Kreirana' || reservation.status=='Prihva\u0107ena'" variant="outline-danger">
+                                                        Odbij
                                                     </b-button>
                                                     
-                                                    <b-button @click="changeStatus(reservation)" v-if="reservation.status=='Kreirana'"variant="outline-success">
+                                                    <b-button @click="changeStatus(reservation, 'Prihva\u0107ena')" v-if="reservation.status==='Kreirana' "variant="outline-success">
                                                         Prihvati
                                                     </b-button>
-                                                
-                                                    <b-button @click="changeStatus(reservation)" variant="outline-secondary">
+                                                	
+                                                	
+                                                    <b-button @click="changeStatus(reservation, 'Zavr\u0161ena')" v-if="reservation.status==='Prihva\u0107ena'" variant="outline-secondary">
                                                         Zavr\u0161i
                                                     </b-button>
                                                 </b-col>

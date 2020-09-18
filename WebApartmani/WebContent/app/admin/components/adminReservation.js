@@ -8,15 +8,12 @@ Vue.component("admin-reservations",{
                 { text: 'Otkazana',  value:'Otkazana'},
                 { text: 'Prihva\u0107ena',  value:'Prihva\u0107ena'},
                 { text: 'Zavr\u0161ena',  value:'Zavr\u0161ena'}
-
-
             ],
             userSearch:{
                 guestUsername:'',
                 sort:null,
                 status:[]
-            }
-           
+            }         
             
         }
     },
@@ -31,9 +28,13 @@ Vue.component("admin-reservations",{
                
               })
               .then((response) => {
-                console.log(response);
-                this.reservations=[];
-				this.reservations=response.data;
+                this.reservations = [];
+                    for (reservation of response.data) {
+                        let realDate = new Date(reservation.startDate);
+                        realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset()*60*1000);
+                        reservation.startDate = realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
+                        this.reservations.push(reservation);
+                    }
                 }
               )
         }
@@ -44,15 +45,14 @@ Vue.component("admin-reservations",{
 		axios
 		.get("rest/reservations")
 		.then(response =>{
-            console.log(response.data);
-            this.reservations=[];
-            this.reservations=response.data;
-
-        });
-
-
-
-        
+            this.reservations = [];
+                    for (reservation of response.data) {
+                        let realDate = new Date(reservation.startDate);
+                        realDate.setTime(realDate.getTime() + realDate.getTimezoneOffset()*60*1000);
+                        reservation.startDate = realDate.getDate() + "." + (realDate.getMonth() + 1) + "." + realDate.getFullYear();
+                        this.reservations.push(reservation);
+                    }
+                });     
        
 
     
@@ -68,10 +68,11 @@ Vue.component("admin-reservations",{
                                 <b-form inline>
                                     <b-form-input v-model="userSearch.guestUsername" placeholder="Korisni\u010Dko ime gosta"></b-form-input>
                                     
+
                                     
                                     <b-button @click="searchResByUsers()"  variant="primary" style="margin-left:2%;">
                                         <b-icon icon="search"></b-icon>
-                                        Pretra&#x17E;i
+                                        Pretra\u017Ei
                                     </b-button>
                                 </b-form>
                             </b-card-text>
@@ -137,9 +138,7 @@ Vue.component("admin-reservations",{
                                             <b-row>
                                                 <b-col>
                                                     <h1 id="nazivApartmana">
-                                                        <a href= "http://localhost:8081/WebApartmani/admin.html#/apartmentDetails" style="color:black;">
                                                         {{reservation.apartment.name}}
-                                                        </a>
                                                     </h1>
                                                 
                                                 
