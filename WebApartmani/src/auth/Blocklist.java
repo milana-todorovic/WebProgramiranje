@@ -20,9 +20,10 @@ public class Blocklist {
 	public void add(Integer userID) {
 		blockedUsers.put(userID, userID);
 	}
-	
+
 	public void remove(Integer userID) {
-		blockedUsers.put(userID, userID);
+		if (blockedUsers.containsKey(userID))
+			blockedUsers.remove(userID);
 	}
 
 	public Boolean isBlocked(Integer userID) {
